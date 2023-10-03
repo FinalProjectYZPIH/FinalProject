@@ -3,22 +3,16 @@ import helmet from "helmet"
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-// import dbConnection from "./config/dbConnection";
-// import cors from "cors";
-// import logger from "./helpers/middleware/logger";
-// import corsOptions from "./config/allowesOrigins";
-// import userRoute from "./routes/user.route";
-// import noteRoute from "./routes/note.route";
-// import authRoute from "./routes/auth.route";
-// import deserializeUser from "./helpers/middleware/deserializeUser";
-// import fileRoute from "./routes/file.route"
+import logger from "./helpers/middleware/logger.js";
+import cors from "cors";
+import corsOptions from "./config/allowesOrigins.js";
+import compression from "compression"
 
-// console.log( generateRandom64BitString("for Token"));
 
 dotenv.config();
 const port = process.env.PORT || 3500;
 const app = express();
-dbConnection();
+// dbConnection();
 
 app.use(helmet());
 
@@ -33,33 +27,29 @@ app.use(helmet.referrerPolicy()); //Setzt den Referrer-Policy-Header.
 app.use(helmet.xssFilter()); //Aktiviert den X-XSS-Protection-Header. (XSS-Angriffe in einigen Webbrowsern zu verhindern)
 
 
-
+app.use(compression()) // verringert die datenverkehrsgröße und erhöht die geschwindigkeit der datenverkehr paket>> https://www.npmjs.com/package/compression
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use(logger);
+app.use(logger);
 app.use(cookieParser());
-// app.use(cors(corsOptions));
+app.use(cors(corsOptions));  
 app.disable("x-powered-by");
 
 app.use(express.static("public"))
 
-app.use(deserializeUser)
+// app.use(deserializeUser)
 
 
 // app.use("/api/auth", authRoute);
-// app.use("/api/note", noteRoute);
 // app.use("/api/user", userRoute);
 // app.use("/dbUpload", fileRoute)
 app.listen(port, () => console.log(`server started at port http://localhost:${port}`));
 
 
 
-mongoose.connection.once("open", () => {
-  console.log("DB connected");
-  app.listen(port, () => console.log(`server started at port http://localhost:${port}`));
-});
-
-// mongoose.connection.on("error", (err) => {
-//   console.log(err, `${err.no}:${err.code}\t${err.syscall}\t${err.hostname}`);
+// mongoose.connection.once("open", () => {
+//   console.log("DB connected");
+//   app.listen(port, () => console.log(`server started at port http://localhost:${port}`));
 // });
+
