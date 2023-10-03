@@ -13,14 +13,12 @@ const verifyRole = (req, res, next) => {
   if (role === "admin") {
 
     res.locals.role = "admin";
-    console.log("Checking for cookie and refreshing using window.location.reload() in frontend")
     return next();
   }
 
   if (role === "member") {
 
     res.locals.role = "Member";
-    console.log("Checking for cookie and refreshing using window.location.reload() in frontend")
     return next();
   }
 
