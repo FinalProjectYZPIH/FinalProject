@@ -1,11 +1,13 @@
-import { CorsOptions } from "cors";
 import "dotenv/config";
 
+
+// hier werden die Whitelists festgelegt
 const localPort = `http://localhost:${process.env.PORT || 3500}`;
-const dbPort = "http://localhost:5173";  //https://example.com"  //ProductionUrl
+const dbPort = "http://localhost:5173"; 
 
 const allowedOrigins = [localPort, dbPort];
 
+// Cors Einstellungsobjekt
 export const corsOptions = {
   origin: (origin, callback) => {
     if (allowedOrigins.includes(origin ) || !origin) {
