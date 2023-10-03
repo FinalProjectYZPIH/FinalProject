@@ -1,26 +1,21 @@
+import morgan from "morgan";
+import { logError, logRequest } from "../utils/writeFile.js";
+import {nanoid} from "nanoid"
 
 
 // Für das Zeigen von Befehle und Pfade und Zeiten zur Übersicht
 const logger = async (req, res, next) => {
   if (process.env.NODE_ENV === 'development') {
-  const { method, path, params } = req;
+  // const { method, path, params } = req;
+  // console.log(`Development Mode: ${method} ${path}`);
+  // console.log("Parameters:", params);
+  logRequest(req)
 
-  const now = new Date();
-const year = now.getFullYear();
-const month = String(now.getMonth() + 1).padStart(2, '0'); // Monat ist 0-basiert
-const hours = String(now.getHours()).padStart(2, '0');
-const minutes = String(now.getMinutes()).padStart(2, '0');
-const formattedTime = `${year}-${month}${hours}:${minutes}`;
-console.log(formattedTime)
-  console.log(`Development Mode: ${method} ${path} ${formattedTime}`);
-  console.log("Parameters:", params);
-
-  if (method === "GET") {
-  } else if (method === "POST") {
-  }
+  // if (method === "GET") {
+  // } else if (method === "POST") {
+  // }
 
 //   Sie können auch Fehlerausgaben hinzufügen, um Fehler zu debuggen
-  console.error('An error occurred during development.');
   next();
 
     } else {
