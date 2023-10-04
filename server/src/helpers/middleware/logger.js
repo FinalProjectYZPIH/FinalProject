@@ -15,7 +15,6 @@ const logger = async (req, res, next) => {
   // } else if (method === "POST") {
   // }
 
-//   Sie können auch Fehlerausgaben hinzufügen, um Fehler zu debuggen
   next();
 
     } else {
