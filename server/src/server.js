@@ -11,6 +11,7 @@ import dbConnection from "./config/dbConnection.js";
 import morgan from "morgan"
 import { errorHandler } from "./helpers/middleware/errorHandler.js";
 import { logError } from "./helpers/utils/writeFile.js";
+import userRoute from "./routes/user.route.js"
 
 dotenv.config();
 const port = process.env.PORT || 3500;
@@ -47,7 +48,7 @@ app.disable("x-powered-by");
 
 
 // app.use("/api/auth", authRoute);
-// app.use("/api/user", userRoute);
+app.use("/api/user", userRoute);
 // app.use("/dbUpload", fileRoute)
 // app.listen(port, () => console.log(`server started at port http://localhost:${port}`));
 

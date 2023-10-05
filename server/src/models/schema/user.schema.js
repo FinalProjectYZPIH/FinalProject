@@ -1,18 +1,11 @@
-import zod from "zod";
+import z from "zod";
 
 // Schema zur Validierung des Datens
 
 // Benutzerdefinierte Validierungsfunktion für den Datenbank mit Regex
-const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const passwordRegex =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-export const validateEmail = (email) => {
-  return emailRegex.test(email);
-};
 
-export const validatePassword = (password) => {
-  return passwordRegex.test(password);
-};
+export const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i;
+export const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/m;
 
 //ZodValidierung
 
@@ -22,42 +15,32 @@ export const registerFormSchema = z.object({
       firstname: z
         .string()
         .min(2, { message: "minimum 2 Characters" })
-        .max(15, { message: "maximun 15 Characters" })
         .trim()
-        .toLowerCase()
-        .refine((value) => {
-          if (!value) throw { message: "name required" };
-          return true;
-        }),
+        .toLowerCase(),
       lastname: z
         .string()
         .min(2, { message: "minimum 2 Characters" })
-        .max(15, { message: "maximun 15 Characters" })
         .trim()
-        .toLowerCase()
-        .refine((value) => {
-          if (!value) throw { message: "name required" };
-          return true;
-        }),
-        username: z
+        .toLowerCase(),
+      username: z
         .string()
         .min(2, { message: "minimum 2 Characters" })
-        .max(15, { message: "maximun 15 Characters" })
         .trim()
         .toLowerCase()
         .optional(),
       dateTime: z
         .string()
-        .dateTime({ message: "Invalid datetime string! Must be UTC." }), // genaue Info >>https://zod.dev/?id=basic-usage  datetime Key eingeben
+        .datetime({ message: "Invalid datetime string! Must be UTC." }), // genaue Info >>https://zod.dev/?id=basic-usage  datetime Key eingeben
       email: z
         .string()
         .trim()
         .toLowerCase()
         .email()
         .refine((value) => {
-          if (!value) throw { message: "email required" };
+          if (validateEmail(value))
+            throw { message: "Ungültige Email-Adresse" };
 
-          return validateEmail(value);
+          return true;
         }),
       emailConfirmation: z.string({
         required_error: "passwordConfirmation is required",
@@ -67,8 +50,13 @@ export const registerFormSchema = z.object({
         .min(8, { message: "minimun 8 Characters" })
         .trim()
         .refine((value) => {
-          if (!value) throw { message: "password required" };
-          return validatePassword(value);
+          if (!passwordRegex.test(value)) {
+            throw {
+              message:
+                "Mindestens 8 Zeichen lang \n Mindestens ein Kleinbuchstabe \n Mindestens ein Großbuchstabe \n Mindestens eine Ziffer ",
+            };
+          }
+          return true;
         }),
       passwordConfirmation: z.string({
         required_error: "passwordConfirmation is required",
@@ -84,53 +72,98 @@ export const registerFormSchema = z.object({
     }),
 });
 
-
 export const emailLoginSchema = z.object({
   email: z
-  .string()
-  .trim()
-  .toLowerCase()
-  .email()
-  .refine((value) => {
-    if (!value) throw { message: "email required" };
-    return validateEmail(value);
-  }),
+    .string()
+    .trim()
+    .toLowerCase()
+    .email()
+    .refine((value) => {
+      if (!validateEmail(value)) throw { message: "Ungültige Email-Adresse" };
+
+      return true;
+    }),
   password: z
-  .string()
-  .min(8, { message: "minimun 8 Characters" })
-  .trim()
-  .refine((value) => {
-    if (!value) throw { message: "password required" };
-    return validatePassword(value);
-  }),
+    .string()
+    .min(8, { message: "minimun 8 Characters" })
+    .trim()
+    .refine((value) => {
+      if (!passwordRegex.test(value)) {
+        throw {
+          message:
+            "Mindestens 8 Zeichen lang \n Mindestens ein Kleinbuchstabe \n Mindestens ein Großbuchstabe \n Mindestens eine Ziffer ",
+        };
+      }
+      return true;
+    }),
 });
 
 export const nameLoginSchema = z.object({
   username: z
-  .string()
-  .min(2, { message: "minimum 2 Characters" })
-  .max(15, { message: "maximun 15 Characters" })
-  .trim()
-  .toLowerCase()
-  .refine((value) => {
-    if (!value) throw { message: "name required" };
-    return true;
-  }),
+    .string()
+    .min(2, { message: "minimum 2 Characters" })
+    .trim()
+    .toLowerCase()
+    .optional(),
   password: z
-  .string()
-  .min(8, { message: "minimun 8 Characters" })
-  .trim()
-  .refine((value) => {
-    if (!value) throw { message: "password required" };
-    return validatePassword(value);
-  }),
+    .string()
+    .min(8, { message: "minimun 8 Characters" })
+    .trim()
+    .refine((value) => {
+      if (!passwordRegex.test(value)) {
+        throw {
+          message:
+            "Mindestens 8 Zeichen lang \n Mindestens ein Kleinbuchstabe \n Mindestens ein Großbuchstabe \n Mindestens eine Ziffer ",
+        };
+      }
+      return true;
+    }),
 });
-
 
 export const mixLoginSchema = nameLoginSchema || emailLoginSchema;
 
-
-
+export const updatePasswordSchema = z
+  .object({
+    username: z
+      .string()
+      .min(2, { message: "minimum 2 Characters" })
+      .trim()
+      .toLowerCase()
+      .optional(),
+    oldPassword: z
+      .string()
+      .min(8, { message: "minimun 8 Characters" })
+      .trim()
+      .refine((value) => {
+        if (!passwordRegex.test(value)) {
+          throw {
+            message:
+              "Mindestens 8 Zeichen lang \n Mindestens ein Kleinbuchstabe \n Mindestens ein Großbuchstabe \n Mindestens eine Ziffer ",
+          };
+        }
+        return true;
+      }),
+    newPassword: z
+      .string()
+      .min(8, { message: "minimun 8 Characters" })
+      .trim()
+      .refine((value) => {
+        if (!passwordRegex.test(value)) {
+          throw {
+            message:
+              "Mindestens 8 Zeichen lang \n Mindestens ein Kleinbuchstabe \n Mindestens ein Großbuchstabe \n Mindestens eine Ziffer ",
+          };
+        }
+        return true;
+      }),
+    newPasswordConfirmation: z.string({
+      required_error: "passwordConfirmation is required",
+    }),
+  })
+  .refine((data) => data.newPassword === data.newPasswordConfirmation, {
+    message: "Passwords do not match",
+    path: ["passwordConfirmation"],
+  });
 
 // const loginFieldEnum = z.enum(["nickname", "email"]); // enum heißt   der value kann nur einen der beiden value sein
 
