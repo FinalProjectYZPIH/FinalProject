@@ -12,7 +12,7 @@ export const validateInput = (zodSchema , req, res) => {
             ? { errors: error }
             : { success: true };
             console.log({ message: message })
-            return res.status(409);
+            return res.status(400).json({ errors: error });
       }
 
       return true

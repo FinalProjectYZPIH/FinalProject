@@ -1,7 +1,6 @@
 // model fürs Datenbank >> MongdoDB
 
 import mongoose from "mongoose";
-import { validateEmail, validatePassword } from "./schema/user.schema.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -25,7 +24,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       unique: true,
       required: true,
-      validate: [validateEmail, "Ungültige Email-Adresse"],
+      // validate: {  validation bei mongoose  kommen oft unknow validationsfehler
+      //   validator: (v) => validateEmail(v),
+      //   message: (v) => v.value +"ist nicht gültig ",
+      // },
     },
     role: {
       type: String,
@@ -36,10 +38,10 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      validate: [
-        validatePassword,
-        "Mindestens 8 Zeichen lang \n Mindestens ein Kleinbuchstabe \n Mindestens ein Großbuchstabe \n Mindestens eine Ziffer \n Mindestens ein Sonderzeichen (z. B. @$!%*?&)",
-      ],
+      // validate: { 
+      //   validator: (v) => validatePassword(v),
+      //   message:"<< is no valid  =Mindestens 8 Zeichen lang \n Mindestens ein Kleinbuchstabe \n Mindestens ein Großbuchstabe \n Mindestens eine Ziffer ",
+      // },
     },
     avatarImage: String,
     birthday: {

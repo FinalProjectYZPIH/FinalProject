@@ -14,6 +14,7 @@ export const createUser = async (
 ) => {
   try {
     validateInput(registerFormSchema, req, res);
+    
     const user = await UserService.dbCreateUser(req, res);
 
     //  await createSession(user?._id, req.get("user-agent" || ""));
@@ -41,16 +42,16 @@ export const findAllUsers = async (
 };
 
 export const findOneUser = async (req, res) => {
-  const cookies = req.cookies;
-  if (!cookies.jwt)
-    return res.status(401).json({ message: "Json Web Token not found" });
+  // const cookies = req.cookies;
+  // if (!cookies.jwt)
+  //   return res.status(401).json({ message: "Json Web Token not found" });
 
-  const { decoded } = verifyJwt(cookies.accessToken, process.env.ACCESS_TOKEN_SECRET || "");
+  // const { decoded } = verifyJwt(cookies.accessToken, process.env.ACCESS_TOKEN_SECRET || "");
 
 
   const { id } = req.params;
   try {
-    await UserService.dbFindOneUser(res, decoded?.UserInfo.id, "notes");
+    await UserService.dbFindOneUser(res, /*decoded?.UserInfo.id*/ id /*, "notes"*/);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "server error" });
@@ -60,7 +61,7 @@ export const findOneUser = async (req, res) => {
 export const updateUserById = async (req, res) => {
   const { id } = req.params;
 
-  validateInput(updateFormSchema, req.body, res);
+  // validateInput(updateFormSchema, req.body, res); validation wurde an UserService übergeben
 
   try {
     await UserService.dbUpdateUser(req, res, id);
