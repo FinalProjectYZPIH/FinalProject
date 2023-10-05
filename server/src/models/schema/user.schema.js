@@ -39,7 +39,7 @@ export const registerFormSchema = z.object({
           if (!value) throw { message: "name required" };
           return true;
         }),
-      nickname: z
+        username: z
         .string()
         .min(2, { message: "minimum 2 Characters" })
         .max(15, { message: "maximun 15 Characters" })
@@ -106,7 +106,7 @@ export const emailLoginSchema = z.object({
 });
 
 export const nameLoginSchema = z.object({
-  nickname: z
+  username: z
   .string()
   .min(2, { message: "minimum 2 Characters" })
   .max(15, { message: "maximun 15 Characters" })

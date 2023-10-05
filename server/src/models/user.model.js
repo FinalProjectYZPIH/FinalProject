@@ -15,10 +15,11 @@ const userSchema = new mongoose.Schema(
       min: [2, "Mindestens 2 Buchstaben"],
       match: [/^[A-Za-z]+$/, "Nur Buchstaben erlaubt"],
     },
-    nickname: {
+    username: {
       type: String,
       min: [2, "Mindestens 2 Buchstaben"],
       match: [/^[A-Za-z0-9]+$/, "Kein Sonderzeichen erlaubt"],
+      unique:true,
     },
     email: {
       type: String,
