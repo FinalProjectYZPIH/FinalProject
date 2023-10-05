@@ -1,4 +1,4 @@
-import zod from "zod";
+import z from "zod";
 
 // Schema zur Validierung des Datens
 
@@ -48,16 +48,16 @@ export const registerFormSchema = z.object({
         .optional(),
       dateTime: z
         .string()
-        .dateTime({ message: "Invalid datetime string! Must be UTC." }), // genaue Info >>https://zod.dev/?id=basic-usage  datetime Key eingeben
+        .datetime({ message: "Invalid datetime string! Must be UTC." }), // genaue Info >>https://zod.dev/?id=basic-usage  datetime Key eingeben
       email: z
         .string()
         .trim()
         .toLowerCase()
         .email()
         .refine((value) => {
-          if (!value) throw { message: "email required" };
+          if (validateEmail(value)) throw { message: "Ungültige Email-Adresse" };
 
-          return validateEmail(value);
+          return true;
         }),
       emailConfirmation: z.string({
         required_error: "passwordConfirmation is required",
@@ -67,8 +67,8 @@ export const registerFormSchema = z.object({
         .min(8, { message: "minimun 8 Characters" })
         .trim()
         .refine((value) => {
-          if (!value) throw { message: "password required" };
-          return validatePassword(value);
+          if (validatePassword(value)) throw { message: "Mindestens 8 Zeichen lang \n Mindestens ein Kleinbuchstabe \n Mindestens ein Großbuchstabe \n Mindestens eine Ziffer \n Mindestens ein Sonderzeichen (z. B. @$!%*?&)" };
+          return true;
         }),
       passwordConfirmation: z.string({
         required_error: "passwordConfirmation is required",
@@ -92,8 +92,9 @@ export const emailLoginSchema = z.object({
   .toLowerCase()
   .email()
   .refine((value) => {
-    if (!value) throw { message: "email required" };
-    return validateEmail(value);
+    if (validateEmail(value)) throw { message: "Ungültige Email-Adresse" };
+
+    return true;
   }),
   password: z
   .string()

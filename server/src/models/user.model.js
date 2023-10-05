@@ -1,7 +1,7 @@
 // model fürs Datenbank >> MongdoDB
 
 import mongoose from "mongoose";
-import { validateEmail, validatePassword } from "./schema/user.schema";
+import { validateEmail, validatePassword } from "./schema/user.schema.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -48,3 +48,11 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+
+const User = mongoose.model("User", userSchema, "UserModel");
+
+
+
+
+export default User;
