@@ -19,7 +19,7 @@ app.use(morgan("short"))  // console Übersicht logs   anpassbar short tiny comb
 dbConnection();
 
 app.use(helmet());
-
+/// ändern
 
 
 app.use(helmet.contentSecurityPolicy());  //Aktiviert eine Content-Security-Policy, um XSS-Angriffe zu verhindern. (die Verwendung von nicht vertrauenswürdigem JavaScript und anderen Ressourcen auf Ihren Seiten einschränkt)
