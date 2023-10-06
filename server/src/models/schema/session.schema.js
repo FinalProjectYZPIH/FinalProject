@@ -1,14 +1,14 @@
 import z from "zod";
 
 
-export const SessionSchema = z.object({
+export const cookieSessionSchema = z.object({
   UserInfo: z.object({
     id: z.string(),
-    email: z.string({
-      required_error: "Email is required",
-    }).email(),
-    role: z.enum(["member", "admin"]).optional(),
-    session: z.string()
+    email: z.string().email(),
+    role: z.enum(["member", "admin"]).nullish(),
+    session: z.string(), // maybe another infos needed to add?
+    // Ein Zod-Schema für die Uhrzeit im HH:MM-Format
+    darkModeTime: z.string().regex(/^\d{2}:\d{2}$/),
   })
 });
 

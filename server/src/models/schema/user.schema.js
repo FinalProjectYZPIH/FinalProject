@@ -37,7 +37,7 @@ export const registerFormSchema = z.object({
         .toLowerCase()
         .email()
         .refine((value) => {
-          if (validateEmail(value))
+          if (!emailRegex.test(value))
             throw { message: "Ungültige Email-Adresse" };
 
           return true;
@@ -79,7 +79,7 @@ export const emailLoginSchema = z.object({
     .toLowerCase()
     .email()
     .refine((value) => {
-      if (!validateEmail(value)) throw { message: "Ungültige Email-Adresse" };
+      if (!emailRegex.test(value)) throw { message: "Ungültige Email-Adresse" };
 
       return true;
     }),
@@ -87,15 +87,7 @@ export const emailLoginSchema = z.object({
     .string()
     .min(8, { message: "minimun 8 Characters" })
     .trim()
-    .refine((value) => {
-      if (!passwordRegex.test(value)) {
-        throw {
-          message:
-            "Mindestens 8 Zeichen lang \n Mindestens ein Kleinbuchstabe \n Mindestens ein Großbuchstabe \n Mindestens eine Ziffer ",
-        };
-      }
-      return true;
-    }),
+
 });
 
 export const nameLoginSchema = z.object({
@@ -109,15 +101,6 @@ export const nameLoginSchema = z.object({
     .string()
     .min(8, { message: "minimun 8 Characters" })
     .trim()
-    .refine((value) => {
-      if (!passwordRegex.test(value)) {
-        throw {
-          message:
-            "Mindestens 8 Zeichen lang \n Mindestens ein Kleinbuchstabe \n Mindestens ein Großbuchstabe \n Mindestens eine Ziffer ",
-        };
-      }
-      return true;
-    }),
 });
 
 export const mixLoginSchema = nameLoginSchema || emailLoginSchema;

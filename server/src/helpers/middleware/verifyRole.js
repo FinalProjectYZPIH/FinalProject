@@ -25,5 +25,5 @@ const verifyRole = (req, res, next) => {
   return next();
 };
 
-export default verifyAdmin;
+export default verifyRole;
 

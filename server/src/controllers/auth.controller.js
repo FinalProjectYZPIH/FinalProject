@@ -1,74 +1,91 @@
-import { validateInput } from "../helpers/utils/validateInput.js";
-import { User } from "../models/user.model.js";
-import { loginFormSchema } from "../models/schema/user.schema.js";
-import { compareDBPassword } from "../service/user.service";
-import { findSessions, updateSession } from "../service/auth.service.js";
+// helper
 import { signJwt, verifyJwt } from "../helpers/utils/jwt.utils.js";
+import { getCurrentTime } from "../helpers/utils/currentTime.js";
+
+// models schema
+import User from "../models/user.model.js";
+import {
+  emailLoginSchema,
+  mixLoginSchema,
+  nameLoginSchema,
+} from "../models/schema/user.schema.js";
 import SessionModel from "../models/session.model.js";
-import { Session } from "../models/schema/session.schema.js";
+import { cookieSessionSchema } from "../models/schema/session.schema.js";
+
+// services
+import { compareDBPassword } from "../services/user.service.js";
+import {
+  acceptCookie,
+  findSessions,
+  updateSession,
+} from "../services/auth.service.js";
+
+// import { Session } from "../models/schema/session.schema.js";
 
 const accessTokenP = process.env.ACCESS_TOKEN_SECRET || "";
 const refreshTokenP = process.env.REFRESH_TOKEN_SECRET || "";
 export const login = async (req, res) => {
-  validateInput(loginFormSchema, req, res);
-
   const { email, password } = req.body;
-  await compareDBPassword(email, password);
-  const updatedUser = await User.findOneAndUpdate(
-    { email: email },
-    { $set: { role: "admin" , valid: true} }
-  );
+  let loginSchema;
 
-  res.locals.role = updatedUser?.role;
+  if (req.body.email) {
+    loginSchema = emailLoginSchema;
+  } else {
+    loginSchema = nameLoginSchema;
+  }
 
-  //mit gefundenen User finde dem erstellten Session und speichern dem _id auf client
-  const session = await SessionModel.findOne({
-    user: updatedUser?._id,
-  });
+  try {
+    const loginResult = loginSchema.safeParse(req.body);
+    console.log(loginResult.error)
 
-  const accessToken = signJwt(
-    {
-      UserInfo: {
-        id: updatedUser?._id || "",
-        email: updatedUser?.email,
-        role: updatedUser?.role,
-        session: session?._id || "",
-      },
-    },
-    accessTokenP,
-    { expiresIn: 5, algorithm: "HS256" }
-  );
+    if (!loginResult.success)
+      return res.status(400).json({ message: "3"+loginResult.error.message });
 
-  const refreshToken = signJwt(
-    {
-      UserInfo: {
-        id: updatedUser?._id || "",
-        email: updatedUser?.email,
-        role: updatedUser?.role,
-        session: session?._id || "",
-      },
-    },
-    refreshTokenP,
-    { expiresIn: 60, algorithm: "HS256" }
-  );
+    const { isValid, user } = await compareDBPassword(email, password);
 
-  res
-    .cookie("accessJwt", accessToken, {
-      httpOnly: false,
-      secure: false,
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    })
-    .cookie("refreshJwt", refreshToken, {
-      httpOnly: false, //accessible only by web server
-      secure: false, //https
-      sameSite: "lax", //cross-site cookie
-      maxAge: 7 * 24 * 60 * 60 * 1000, //cookie expiry: set to match rT
+    if (!isValid) {
+      return res.status(400).json({ message: "password invalid" });
+    }
+
+    //mit gefundenen User finde dem bereits erstellten Session im db und update es falls nötig
+    const session = await SessionModel.findOne({
+      user: user?._id,
     });
 
-    res.locals.role = "admin"
+    console.log(session);
+    if (!session.emailVerified) {
+      console.log("bestätige erst dem emailseingang");
+    }
+console.log(user)
+    const cookieInfo = cookieSessionSchema.safeParse({
+      UserInfo: {
+        id: `${user?._id}`|| "",
+        email: user?.email,
+        role: null,
+        session: `${session?._id}` || "",
+        darkModeTime: getCurrentTime(),
+      },
+    });
 
-  res.status(200).json({ message: "success logging in" });
+    const accessValid = cookieInfo.success
+      ? acceptCookie(cookieInfo.data, res)
+      : console.log("1",cookieInfo.error);
+
+    if (session.emailVerified) {
+      res.locals.role = user?.role;
+    }
+
+    if (accessValid)
+      return res
+        .status(200)
+        .json({
+          message: "Thanx for using cookies, you are success logging in",
+        });
+
+    res.status(200).json({ message: "success logging in without cookie" });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
 };
 
 export const sessionRefreshHandler = async (req, res) => {

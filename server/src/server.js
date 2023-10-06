@@ -1,17 +1,28 @@
+// external module
 import express from "express";
 import helmet from "helmet"
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import logger from "./helpers/middleware/logger.js";
 import cors from "cors";
-import corsOptions from "./config/allowesOrigins.js";
 import compression from "compression"
-import dbConnection from "./config/dbConnection.js";
 import morgan from "morgan"
+
+// routes
+import userRoute from "./routes/user.route.js"
+import authRoute from "./routes/auth.route.js"
+
+// config 
+import corsOptions from "./config/allowesOrigins.js";
+import dbConnection from "./config/dbConnection.js";
+
+
+// helper
+import logger from "./helpers/middleware/logger.js";
 import { errorHandler } from "./helpers/middleware/errorHandler.js";
 import { logError } from "./helpers/utils/writeFile.js";
-import userRoute from "./routes/user.route.js"
+import deserializeUser from "./helpers/middleware/deserializeUser.js";
+
 
 dotenv.config();
 const port = process.env.PORT || 3500;
@@ -47,7 +58,7 @@ app.disable("x-powered-by");
 // app.use(deserializeUser)
 
 
-// app.use("/api/auth", authRoute);
+app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
 // app.use("/dbUpload", fileRoute)
 // app.listen(port, () => console.log(`server started at port http://localhost:${port}`));

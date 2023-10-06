@@ -34,6 +34,7 @@ const userSchema = new mongoose.Schema(
       enum: {
         values: ["member", "admin"],
       },
+      default: "member"
     },
     password: {
       type: String,
