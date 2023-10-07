@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema(
       min: [2, "Mindestens 2 Buchstaben"],
       match: [/^[A-Za-z0-9]+$/, "Kein Sonderzeichen erlaubt"],
       unique:true,
+      required: true
     },
     email: {
       type: String,
@@ -47,15 +48,18 @@ const userSchema = new mongoose.Schema(
     avatarImage: String,
     birthday: {
       type: Date,
+      match: [/^\d{4}-\d{2}-\d{2}$/, "JJJJ-MM-TT Format"]
     },
+
+    chats: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Chat' }],
   },
   { timestamps: true }
 );
 
 
-const User = mongoose.model("User", userSchema, "UserModel");
+const UserModel = mongoose.model("User", userSchema, "Users");
 
 
 
 
-export default User;
+export default UserModel;

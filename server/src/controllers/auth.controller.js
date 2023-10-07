@@ -3,10 +3,8 @@ import { signJwt, verifyJwt } from "../helpers/utils/jwt.utils.js";
 import { getCurrentTime } from "../helpers/utils/currentTime.js";
 
 // models schema
-import User from "../models/user.model.js";
 import {
   emailLoginSchema,
-  mixLoginSchema,
   nameLoginSchema,
 } from "../models/schema/user.schema.js";
 import SessionModel from "../models/session.model.js";
@@ -52,16 +50,16 @@ export const login = async (req, res) => {
       user: user?._id,
     });
 
-    console.log(session);
     if (!session.emailVerified) {
       console.log("bestätige erst dem emailseingang");
     }
-console.log(user)
+
+    //cookie Inhalt wird validiert und gespeichert
     const cookieInfo = cookieSessionSchema.safeParse({
       UserInfo: {
         id: `${user?._id}`|| "",
         email: user?.email,
-        role: null,
+        role: user?.role,
         session: `${session?._id}` || "",
         darkModeTime: getCurrentTime(),
       },
@@ -69,7 +67,7 @@ console.log(user)
 
     const accessValid = cookieInfo.success
       ? acceptCookie(cookieInfo.data, res)
-      : console.log("1",cookieInfo.error);
+      : console.log("cookie abgelehnt",cookieInfo.error);
 
     if (session.emailVerified) {
       res.locals.role = user?.role;
@@ -88,27 +86,36 @@ console.log(user)
   }
 };
 
-export const sessionRefreshHandler = async (req, res) => {
-  const cookies = req.cookies;
-  if (!cookies.jwt)
-    return res.status(401).json({ message: "Json Web Token not found" });
+export const sessionRefreshHandler = async (req, res,next) => {
 
-  const { decoded } = verifyJwt(cookies.refreshJwt, refreshTokenP);
+  try {
+    const cookies = req.cookies;
+    if (!cookies.accessJwt)
+      return res.status(401).json({ message: "Json Web Token not found" });
+  
+    const { decoded } = verifyJwt(cookies.refreshJwt, refreshTokenP);
 
-  const session = await findSessions({
-    _id: decoded?.UserInfo.session,
-    valid: true,
-  });
-
-  if (!session) return res.status(500).json({ message: "Unauthorized" });
-
-  res.status(200).json({ message: "session refreshed" });
+    res.locals.role = decoded?.UserInfo.role
+  
+    const session = await findSessions({
+      _id: decoded?.UserInfo.session,
+      valid: true,
+    });
+  
+    if (!session) return res.status(500).json({ message: "Unauthorized" });
+  
+    res.status(200).json({ message: "session refreshed" });
+    
+  } catch (error) {
+    // next(error)
+    res.status(500).json({message: error})
+  }
 };
 
 export const logout = async (req, res) => {
-  const session = req.cookies.accessToken;
+  const aceessJWT = req.cookies.accessJwt;
 
-  const { decoded } = verifyJwt(session, accessTokenP);
+  const { decoded } = verifyJwt(aceessJWT, accessTokenP);
 
   await updateSession({ _id: decoded?.UserInfo.session }, { valid: false });
 

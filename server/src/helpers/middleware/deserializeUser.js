@@ -1,8 +1,11 @@
+//helper
 import { verifyJwt } from "../utils/jwt.utils.js";
+//services
 import { reSignToken } from "../../services/auth.service.js";
 
-const accessTokenP = process.env.ACCESS_TOKEN_SECRET || "";
-const refreshTokenP = process.env.REFRESH_TOKEN_SECRET || "";
+// variables
+const accessTokenP = process.env.ACCESS_TOKEN || "";
+const refreshTokenP = process.env.REFRESH_TOKEN || "";
 const deserializeUser = async (
   req,
   res,

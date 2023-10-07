@@ -55,7 +55,7 @@ app.disable("x-powered-by");
 
 // app.use(express.static("public"))
 
-// app.use(deserializeUser)
+app.use(deserializeUser)
 
 
 app.use("/api/auth", authRoute);

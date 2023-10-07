@@ -1,14 +1,21 @@
 //Controller für user festlegen import { User } from "../models/user.model";
 import { registerFormSchema } from "../models/schema/user.schema.js";
+
+//services
 import * as UserService from "../services/user.service.js";
 import { createSession } from "../services/auth.service.js";
+
+//helper
 import { signJwt, verifyJwt } from "../helpers/utils/jwt.utils.js";
 export const createUser = async (req, res, next) => {
   try {
+    console.log(req.body)
     const registerResult = registerFormSchema.safeParse(req.body);
 
-    if (!registerResult.success)
+    if (!registerResult.success){
+
       return res.status(400).json({ message: registerResult.error });
+    }
 
     const user = await UserService.dbCreateUser(req, res);
     //bei erstellen einen neuen User, wird zugleich auch einen session im db erstellt

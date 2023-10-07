@@ -1,7 +1,11 @@
-import { signJwt, verifyJwt } from "../helpers/utils/jwt.utils.js";
 import SessionModel from "../models/session.model.js";
-import User from "../models/user.model.js";
+import UserModel from "../models/user.model.js";
+//helper
+import { signJwt, verifyJwt } from "../helpers/utils/jwt.utils.js";
+
+//external Modul
 import jwt from "jsonwebtoken";
+
 export async function createSession(userId, userAgent) {
   const session = await SessionModel.create({ user: userId, userAgent });
 
@@ -28,7 +32,7 @@ export async function acceptCookie(memberInfo, res, ipAdress = "") {
 
   try {
     const accessToken = signJwt(memberInfo, process.env.ACCESS_TOKEN || "", {
-      expiresIn: 5,
+      expiresIn: 20,
       algorithm: "HS256",
     });
     
@@ -68,7 +72,7 @@ export async function reSignToken(refreshToken, keyName) {
 
   if (!session || !session.valid) return false;
 
-  const user = await User.findOne({ _id: session.user });
+  const user = await UserModel.findOne({ _id: session.user });
 
   if (!user) return false;
 

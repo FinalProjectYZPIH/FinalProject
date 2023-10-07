@@ -1,10 +1,12 @@
 import { updatePasswordSchema } from "../models/schema/user.schema.js";
-import User from "../models/user.model.js";
+import UserModel from "../models/user.model.js";
+
+// external module
 import bcrypt from "bcrypt";
 
 export async function compareDBPassword(email, password) {
   try {
-    const user = await User.findOne({ email });
+    const user = await UserModel.findOne({ email });
   
     if (!user) {
       return false;
@@ -24,14 +26,14 @@ export const dbCreateUser = async (req, res) => {
   if (!email || !password)
     return res.json({ message: "email and password are required!" });
 
-  const duplicateEmail = await User.findOne({ email }).collation({
+  const duplicateEmail = await UserModel.findOne({ email }).collation({
     locale: "en",
     strength: 2,
   });
   if (duplicateEmail)
     return res.status(409).json({ message: "account already exist!" });
 
-  const duplicateUsername = await User.findOne({ username }).collation({
+  const duplicateUsername = await UserModel.findOne({ username }).collation({
     locale: "en",
     strength: 2,
   });
@@ -40,7 +42,7 @@ export const dbCreateUser = async (req, res) => {
     return res.status(409).json({ message: "account already exist!" });
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  const user = await User.create({ ...req.body, password: hashedPassword });
+  const user = await UserModel.create({ ...req.body, password: hashedPassword });
 
   if (user) {
     console.log({ message: `${user} created` });
@@ -52,7 +54,7 @@ export const dbCreateUser = async (req, res) => {
 };
 
 export const dbFindAllUsers = async (res) => {
-  const users = await User.find().select("-password");
+  const users = await UserModel.find().select("-password");
 
   if (!users.length) return res.json({ message: "no users found" });
 
@@ -60,7 +62,7 @@ export const dbFindAllUsers = async (res) => {
 };
 
 export const dbFindOneUserById = async (res, params, populateKey = "") => {
-  const user = await User.findById(params)
+  const user = await UserModel.findById(params)
     .select("-password")
     .populate(populateKey);
   if (user) return res.status(200).json(user);
@@ -68,7 +70,7 @@ export const dbFindOneUserById = async (res, params, populateKey = "") => {
 };
 
 export const dbFindUOneUserByKey = async (res, key, value, populateKey = "") => {
-  const foundUser = await User.findOne({ [key]: value })
+  const foundUser = await UserModel.findOne({ [key]: value })
     .select("-password")
     .populate(populateKey);
     if(foundUser) return res.status(200).json({message: value +" found"})
@@ -78,7 +80,7 @@ export const dbFindUOneUserByKey = async (res, key, value, populateKey = "") => 
 export const dbUpdateUser = async (req, res, userIDParams) => {
   const { username, oldPassword, newPassword } = req.body;
 
-  const user = await User.findById(userIDParams);
+  const user = await UserModel.findById(userIDParams);
 
   if (!user) return res.json({ message: "id not found" });
 
@@ -86,7 +88,7 @@ export const dbUpdateUser = async (req, res, userIDParams) => {
 
   if (!compareResult) return res.json({ message: "wrong password input" });
 
-  const usernameExist = await User.findOne({ username: username || "" });
+  const usernameExist = await UserModel.findOne({ username: username || "" });
 
   const validateResult = updatePasswordSchema.safeParse(req.body)
 
