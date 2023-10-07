@@ -9,7 +9,7 @@ import { createSession } from "../services/auth.service.js";
 import { signJwt, verifyJwt } from "../helpers/utils/jwt.utils.js";
 export const createUser = async (req, res, next) => {
   try {
-    console.log(req.body)
+
     const registerResult = registerFormSchema.safeParse(req.body);
 
     if (!registerResult.success){

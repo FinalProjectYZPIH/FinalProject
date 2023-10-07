@@ -23,10 +23,10 @@ import {
 const accessTokenP = process.env.ACCESS_TOKEN_SECRET || "";
 const refreshTokenP = process.env.REFRESH_TOKEN_SECRET || "";
 export const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = req?.body;
   let loginSchema;
 
-  if (req.body.email) {
+  if (req?.body.email) {
     loginSchema = emailLoginSchema;
   } else {
     loginSchema = nameLoginSchema;

@@ -62,11 +62,18 @@ export const dbFindAllUsers = async (res) => {
 };
 
 export const dbFindOneUserById = async (res, params, populateKey = "") => {
-  const user = await UserModel.findById(params)
-    .select("-password")
-    .populate(populateKey);
-  if (user) return res.status(200).json(user);
-  res.json({ message: "User by Id not found" });
+  try {
+    const user = await UserModel.findById(params)
+      .select("-password")
+      .populate(populateKey);
+    if (!user) return res.status(400).json({ message: "User by Id not found" });
+
+
+    res.status(200);
+    return user
+  } catch (error) {
+    res.status(500).json({message:error.message})
+  }
 };
 
 export const dbFindUOneUserByKey = async (res, key, value, populateKey = "") => {
@@ -78,34 +85,39 @@ export const dbFindUOneUserByKey = async (res, key, value, populateKey = "") => 
 };
 
 export const dbUpdateUser = async (req, res, userIDParams) => {
-  const { username, oldPassword, newPassword } = req.body;
-
-  const user = await UserModel.findById(userIDParams);
-
-  if (!user) return res.json({ message: "id not found" });
-
-  const compareResult = await bcrypt.compare(oldPassword, user.password);
-
-  if (!compareResult) return res.json({ message: "wrong password input" });
-
-  const usernameExist = await UserModel.findOne({ username: username || "" });
-
-  const validateResult = updatePasswordSchema.safeParse(req.body)
-
-  if (!usernameExist && validateResult.success) {
-    if (compareResult) {
-      user.password = await bcrypt.hash(newPassword, 10); //nur wenn username nicht im datenbank existiert und nach validierung der request body, wirds geändert
+  try {
+    const { username, oldPassword, newPassword } = req.body;
+  
+    const user = await UserModel.findById(userIDParams);
+  
+    if (!user) return res.json({ message: "id not found" });
+  
+    const compareResult = await bcrypt.compare(oldPassword, user.password);
+  
+    if (!compareResult) return res.json({ message: "wrong password input" });
+  
+    const usernameExist = await UserModel.findOne({ username: username || "" });
+  
+    const validateResult = updatePasswordSchema.safeParse(req.body)
+  
+    if (!usernameExist && validateResult.success) {
+      if (compareResult) {
+        user.password = await bcrypt.hash(newPassword, 10); //nur wenn username nicht im datenbank existiert und nach validierung der request body, wirds geändert
+      }
     }
+  
+    // user.email = email;  email kann nicht geändert werden nur password
+  
+    const updatedUser = await user.save();
+    if (updatedUser) {
+      return res
+        .status(200)
+        .json({ message: `${updatedUser.username} updated!` });
+    }
+  
+    return res.status(400).json({ message: "update User failed" });
+    
+  } catch (error) {
+    res.status(500).json({message:error.message})
   }
-
-  // user.email = email;  email kann nicht geändert werden nur password
-
-  const updatedUser = await user.save();
-  if (updatedUser) {
-    return res
-      .status(200)
-      .json({ message: `${updatedUser.username} updated!` });
-  }
-
-  return res.status(400).json({ message: "update User failed" });
 };

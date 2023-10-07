@@ -11,6 +11,8 @@ import morgan from "morgan"
 // routes
 import userRoute from "./routes/user.route.js"
 import authRoute from "./routes/auth.route.js"
+import messengerTestRoute from "./routes/messengerTest.route.js"
+
 
 // config 
 import corsOptions from "./config/allowesOrigins.js";
@@ -57,11 +59,10 @@ app.disable("x-powered-by");
 
 app.use(deserializeUser)
 
-
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
+app.use("/api/test", messengerTestRoute)
 // app.use("/dbUpload", fileRoute)
-// app.listen(port, () => console.log(`server started at port http://localhost:${port}`));
 
 app.use(errorHandler)
 
