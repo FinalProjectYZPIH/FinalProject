@@ -5,72 +5,74 @@ import z from "zod";
 // Benutzerdefinierte Validierungsfunktion für den Datenbank mit Regex
 
 export const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i;
-export const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/m;
-
+export const passwordRegex =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/m;
+  const birthdayRegex = /^\d{4}-\d{2}-\d{2}$/;
 //ZodValidierung
 
-export const registerFormSchema = z.object({
-  body: z // Für die Registrungsvalidation Achtung >>  Achte auf body key vom request
-    .object({
-      firstname: z
-        .string()
-        .min(2, { message: "minimum 2 Characters" })
-        .trim()
-        .toLowerCase(),
-      lastname: z
-        .string()
-        .min(2, { message: "minimum 2 Characters" })
-        .trim()
-        .toLowerCase(),
-      username: z
-        .string()
-        .min(2, { message: "minimum 2 Characters" })
-        .trim()
-        .toLowerCase()
-        .optional(),
-      dateTime: z
-        .string()
-        .datetime({ message: "Invalid datetime string! Must be UTC." }), // genaue Info >>https://zod.dev/?id=basic-usage  datetime Key eingeben
-      email: z
-        .string()
-        .trim()
-        .toLowerCase()
-        .email()
-        .refine((value) => {
-          if (validateEmail(value))
-            throw { message: "Ungültige Email-Adresse" };
+export const registerFormSchema = z
+  .object({
+    firstname: z
+      .string()
+      .min(2, { message: "minimum 2 Characters" })
+      .trim()
+      .toLowerCase()
+      .regex(/^[A-Za-z]+$/, {message: "Nur Buchstaben erlaubt"}),
+    lastname: z
+      .string()
+      .min(2, { message: "minimum 2 Characters" })
+      .trim()
+      .toLowerCase()
+      .regex(/^[A-Za-z]+$/, {message: "Nur Buchstaben erlaubt"}),
+    username: z
+      .string()
+      .min(2, { message: "minimum 2 Characters" })
+      .trim()
+      .toLowerCase()
+      .regex(/^[A-Za-z0-9]+$/, {message:"Kein Sonderzeichen erlaubt"})
+      .optional(),
+    dateTime: z
+      .string()
+      .regex(birthdayRegex,{message:"JJJJ-MM-TT dateformat"}), // genaue Info >>https://zod.dev/?id=basic-usage  datetime Key eingeben
+    email: z
+      .string()
+      .trim()
+      .toLowerCase()
+      .email()
+      .refine((value) => {
+        if (!emailRegex.test(value))
+          throw { message: "Ungültige Email-Adresse" };
 
-          return true;
-        }),
-      emailConfirmation: z.string({
-        required_error: "passwordConfirmation is required",
+        return true;
       }),
-      password: z
-        .string()
-        .min(8, { message: "minimun 8 Characters" })
-        .trim()
-        .refine((value) => {
-          if (!passwordRegex.test(value)) {
-            throw {
-              message:
-                "Mindestens 8 Zeichen lang \n Mindestens ein Kleinbuchstabe \n Mindestens ein Großbuchstabe \n Mindestens eine Ziffer ",
-            };
-          }
-          return true;
-        }),
-      passwordConfirmation: z.string({
-        required_error: "passwordConfirmation is required",
-      }),
-    })
-    .refine((data) => data.password === data.passwordConfirmation, {
-      message: "Passwords do not match",
-      path: ["passwordConfirmation"],
-    })
-    .refine((data) => data.email === data.emailConfirmation, {
-      message: "Emails do not match",
-      path: ["emailConfirmation"],
+    emailConfirmation: z.string({
+      required_error: "passwordConfirmation is required",
     }),
-});
+    password: z
+      .string()
+      .min(8, { message: "minimun 8 Characters" })
+      .trim()
+      .refine((value) => {
+        if (!passwordRegex.test(value)) {
+          throw {
+            message:
+              "Mindestens 8 Zeichen lang \n Mindestens ein Kleinbuchstabe \n Mindestens ein Großbuchstabe \n Mindestens eine Ziffer ",
+          };
+        }
+        return true;
+      }),
+    passwordConfirmation: z.string({
+      required_error: "passwordConfirmation is required",
+    }),
+  })
+  .refine((data) => data.password === data.passwordConfirmation, {
+    message: "Passwords do not match",
+    path: ["passwordConfirmation"],
+  })
+  .refine((data) => data.email === data.emailConfirmation, {
+    message: "Emails do not match",
+    path: ["emailConfirmation"],
+  });
 
 export const emailLoginSchema = z.object({
   email: z
@@ -79,23 +81,11 @@ export const emailLoginSchema = z.object({
     .toLowerCase()
     .email()
     .refine((value) => {
-      if (!validateEmail(value)) throw { message: "Ungültige Email-Adresse" };
+      if (!emailRegex.test(value)) throw { message: "Ungültige Email-Adresse" };
 
       return true;
     }),
-  password: z
-    .string()
-    .min(8, { message: "minimun 8 Characters" })
-    .trim()
-    .refine((value) => {
-      if (!passwordRegex.test(value)) {
-        throw {
-          message:
-            "Mindestens 8 Zeichen lang \n Mindestens ein Kleinbuchstabe \n Mindestens ein Großbuchstabe \n Mindestens eine Ziffer ",
-        };
-      }
-      return true;
-    }),
+  password: z.string().min(8, { message: "minimun 8 Characters" }).trim(),
 });
 
 export const nameLoginSchema = z.object({
@@ -104,20 +94,9 @@ export const nameLoginSchema = z.object({
     .min(2, { message: "minimum 2 Characters" })
     .trim()
     .toLowerCase()
+    .regex(/^[A-Za-z0-9]+$/, {message:"Kein Sonderzeichen erlaubt"})
     .optional(),
-  password: z
-    .string()
-    .min(8, { message: "minimun 8 Characters" })
-    .trim()
-    .refine((value) => {
-      if (!passwordRegex.test(value)) {
-        throw {
-          message:
-            "Mindestens 8 Zeichen lang \n Mindestens ein Kleinbuchstabe \n Mindestens ein Großbuchstabe \n Mindestens eine Ziffer ",
-        };
-      }
-      return true;
-    }),
+  password: z.string().min(8, { message: "minimun 8 Characters" }).trim(),
 });
 
 export const mixLoginSchema = nameLoginSchema || emailLoginSchema;
@@ -129,6 +108,7 @@ export const updatePasswordSchema = z
       .min(2, { message: "minimum 2 Characters" })
       .trim()
       .toLowerCase()
+      .regex(/^[A-Za-z0-9]+$/, {message:"Kein Sonderzeichen erlaubt"})
       .optional(),
     oldPassword: z
       .string()

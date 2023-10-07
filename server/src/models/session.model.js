@@ -4,7 +4,8 @@ import mongoose from "mongoose";
 const sessionSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    valid: { type: Boolean, default: true },
+    emailVerified: { type: Boolean, default: false },
+    valid: {type: Boolean, default: false},
     userAgent: { type: String },
   },
   {
@@ -12,6 +13,7 @@ const sessionSchema = new mongoose.Schema(
   }
 );
 
-const SessionModel = mongoose.model("Session", sessionSchema);
+const SessionModel = mongoose.model("Session", sessionSchema,"Sessions");
+
 
 export default SessionModel;
