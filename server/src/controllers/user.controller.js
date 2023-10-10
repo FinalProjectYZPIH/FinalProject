@@ -9,68 +9,72 @@ import { createSession } from "../services/auth.service.js";
 import { signJwt, verifyJwt } from "../helpers/utils/jwt.utils.js";
 export const createUser = async (req, res, next) => {
   try {
-
     const registerResult = registerFormSchema.safeParse(req.body);
 
-    if (!registerResult.success){
-
-      return res.status(400).json({ message: registerResult.error });
+    if (!registerResult.success) {
+      return next(registerResult.error.issues[0]);
     }
 
     const user = await UserService.dbCreateUser(req, res);
-    //bei erstellen einen neuen User, wird zugleich auch einen session im db erstellt
-    await createSession(user?._id, req.get("user-agent" || ""));
 
-    res.json({ message: "user created" });
+    if (!user) return next(new Error("User creation failed"));
+    //bei erstellen einen neuen User, wird zugleich auch einen session im db erstellt
+    
+    const session = user ? await createSession(user?._id, req.get("user-agent" || "")) : null;
+    if (!session) return next(new Error("Session creation failed"));
+    res.status(202).json({ message: "user created" });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Server Error" });
+    res.status(500);
     next(error);
   }
 };
 
 export const findAllUsers = async (req, res, next) => {
   try {
-    await UserService.dbFindAllUsers(res);
+    const users = await UserService.dbFindAllUsers(res);
+    if (!users || users.length === 0) {
+      return res.status(404).json({ message: "No users found" });
+    }
+
+    res.status(200).json(users);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "server Error" });
+    res.status(500);
+    next(error);
   }
 };
 
-export const findOneUser = async (req, res) => {
-  const cookies = req.cookies;
-  if (!cookies.jwt)
-    return res.status(401).json({ message: "Json Web Token not found" });
-
-  const { decoded } = verifyJwt(
-    cookies.accessToken,
-    process.env.ACCESS_TOKEN_SECRET || ""
-  );
-
-  const { id } = req.params;
+export const findOneUser = async (req, res, next) => {
   try {
-    if (decoded?.UserInfo.id) {
-      await UserService.dbFindOneUserById(res, decoded?.UserInfo.id);
-    } else if (id && !decoded) {
-      await UserService.dbFindOneUserById(res, id);
+    const { id } = req.params; //id is username
+
+    if (id) {
+      // const user = await UserService.dbFindOneUserById( id);
+      const user = await UserService.dbFindUserByUsername(id);
+      if (!user) return next(new Error("User not found"));
+      res.status(200).json({ message: user });
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "server error" });
+    next(error);
   }
 };
 
-export const updateUserById = async (req, res) => {
+export const updateUserById = async (req, res, next) => {
   const { id } = req.params;
 
-  // validateInput(updateFormSchema, req.body, res); validation wurde an UserService übergeben
+  //validation wurde an UserService übergeben
 
   try {
-    await UserService.dbUpdateUser(req, res, id);
+    const user = await UserService.dbUpdateUser(req, res, id);
+
+    if (!user) return res.status(400).json({ message: "update User failed" });
+    return res
+      .status(200)
+      .json({ message: `${user.username} updated!` });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: error.message });
+    next(error)
   }
 };
 

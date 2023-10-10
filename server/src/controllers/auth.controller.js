@@ -19,9 +19,12 @@ import {
 } from "../services/auth.service.js";
 
 // import { Session } from "../models/schema/session.schema.js";
-
+//variables
 const accessTokenP = process.env.ACCESS_TOKEN_SECRET || "";
 const refreshTokenP = process.env.REFRESH_TOKEN_SECRET || "";
+
+
+
 export const login = async (req, res) => {
   const { email, password } = req?.body;
   let loginSchema;
@@ -52,6 +55,7 @@ export const login = async (req, res) => {
 
     if (!session.emailVerified) {
       console.log("bestätige erst dem emailseingang");
+      // return res.json({message: "bestaetige die bestaetigungsemail und logge nochmals ein"})
     }
 
     //cookie Inhalt wird validiert und gespeichert
@@ -86,6 +90,8 @@ export const login = async (req, res) => {
   }
 };
 
+
+
 export const sessionRefreshHandler = async (req, res,next) => {
 
   try {
@@ -112,6 +118,7 @@ export const sessionRefreshHandler = async (req, res,next) => {
   }
 };
 
+
 export const logout = async (req, res) => {
   const aceessJWT = req.cookies.accessJwt;
 
@@ -135,3 +142,6 @@ export const logout = async (req, res) => {
     .status(200)
     .json({ message: "user success logged out" });
 };
+
+
+

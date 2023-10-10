@@ -1,10 +1,11 @@
 import { logError } from "../utils/writeFile.js";
 
 export async function errorHandler(err, req, res, next) {
-  try {
-    logError(err);
-  } catch (error) {
-    // Führen Sie die Fehlerbehandlung durch.
-    res.status(500).send("Internal Server Error");
-  }
+    // logError(err);  // als file ausschreiben 
+    const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+    res.status(statusCode);
+    res.json({
+      message: err?.message,
+      // stack: process.env.NODE_ENV === "production" ? null : err.stack,
+    });
 }

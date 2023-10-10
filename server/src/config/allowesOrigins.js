@@ -5,8 +5,9 @@ import "dotenv/config";
 const localPort = `http://localhost:${process.env.PORT || 3500}`;
 const dbPort = "http://localhost:5173"; 
 
-const allowedOrigins = [localPort, dbPort];
 
+const allowedOrigins = [localPort, dbPort];
+console.log(allowedOrigins.includes(dbPort))
 // Cors Einstellungsobjekt
 export const corsOptions = {
   origin: (origin, callback) => {
@@ -17,7 +18,6 @@ export const corsOptions = {
     }
   },
   credentials: true,
-  optionsSuccessStatus: 200,
 };
 
 export default corsOptions;
