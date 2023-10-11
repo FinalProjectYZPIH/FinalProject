@@ -4,36 +4,36 @@ import UserModel from "../models/user.model.js";
 // external module
 import bcrypt from "bcrypt";
 
-export async function compareDBPassword(email, password) {
+export async function compareDBPassword( password,loginData, next,) {
   try {
-    const user = await UserModel.findOne({ email });
+    const user = await UserModel.findOne({ email: loginData});
+    const userOpt = await UserModel.findOne({ username: loginData});
 
-    if (!user) {
+
+    if (!user && !userOpt) {
       return false;
     }
-    const isValid = await bcrypt.compare(password, user.password);
+    const userResult = user || userOpt;
+    const isValid = await bcrypt.compare(password, userResult.password);
+    console.log(isValid)
 
-    return { isValid: isValid, user: user };
+    return { isValid: isValid, user: userResult };
   } catch (error) {
     console.log(error);
-    return false;
+    return next(error);
   }
 }
 
-export const dbCreateUser = async (req, res) => {
+export const dbCreateUser = async (req, res, next) => {
   try {
     const { email, password, username } = req.body;
-    if (!email || !password)
-      return res
-        .status(400)
-        .json({ message: "Email and Password are Required!" });
+    if (!email || !password) {throw new Error("Email and Password are Required!")}
 
     const duplicateEmail = await UserModel.findOne({ email }).collation({
       locale: "en",
       strength: 2,
     });
-    if (duplicateEmail)
-      return res.status(409).json({ message: "account already exist!" });
+    if (duplicateEmail){ throw new Error( "Account already exist!" )}
 
     const duplicateUsername = await UserModel.findOne({ username }).collation({
       // nicht auf groß und kleinschreibungen achten
@@ -41,8 +41,7 @@ export const dbCreateUser = async (req, res) => {
       strength: 2,
     });
 
-    if (duplicateUsername)
-      return res.status(409).json({ message: "Account already exist!" });
+    if (duplicateUsername){ throw new Error( "Account already exist!" )}
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await UserModel.create({
@@ -50,15 +49,10 @@ export const dbCreateUser = async (req, res) => {
       password: hashedPassword,
     });
 
-    if (user && user?.email) {
-      console.log({ message: `${user} created` });
-      res.status(201);
-      return user;
-    } else {
-      return false;
-    }
+    if (!user) return false;
+    return user
   } catch (error) {
-    throw error;
+    next(error)
   }
 };
 
@@ -72,7 +66,7 @@ export const dbFindAllUsers = async (res) => {
 
     return users;
   } catch (error) {
-    throw error;
+    next(error);
   }
 };
 
@@ -88,7 +82,7 @@ export const dbFindAllUsers = async (res) => {
 //   }
 // };
 
-export const dbFindUserByUsername = async ( value, populateKey = "") => {
+export const dbFindUserByUsername = async ( value, next, populateKey = "") => {
   try {
     
     const foundUser = await UserModel.findOne({ username: value })
@@ -97,11 +91,11 @@ export const dbFindUserByUsername = async ( value, populateKey = "") => {
     if (!foundUser) return false;
     return foundUser
   } catch (error) {
-    throw error
+   next( error)
   }
 };
 
-export const dbUpdateUser = async (req, res, userIDParams) => {
+export const dbUpdateUser = async (req, res, userIDParams, next) => {
   try {
     const { username, oldPassword, newPassword } = req.body;
 
@@ -113,7 +107,7 @@ export const dbUpdateUser = async (req, res, userIDParams) => {
     if (!compareResult) return res.json({ message: "wrong password input" });
 
 
-    const usernameExist = await UserModel.findOne({ username: username || "" });
+    const usernameExist = await UserModel.findOne({ username: username });
     const validateResult = updatePasswordSchema.safeParse(req.body);
 
     if (usernameExist && !validateResult.success) {
@@ -123,6 +117,7 @@ export const dbUpdateUser = async (req, res, userIDParams) => {
       user.password = await bcrypt.hash(newPassword, 10); //nur wenn username nicht im datenbank existiert und nach validierung der request body, wirds geändert
     }
 
+    user.username = username;
     // user.email = email;  email kann nicht geändert werden nur password
 
     const updatedUser = await user.save();
@@ -133,6 +128,6 @@ export const dbUpdateUser = async (req, res, userIDParams) => {
     return updatedUser;
   } catch (error) {
     console.log("dbUpdateUser error");
-    throw error;
+    next(error)
   }
 };

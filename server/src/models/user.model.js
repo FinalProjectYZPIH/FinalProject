@@ -25,10 +25,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       unique: true,
       required: true,
-      // validate: {  validation bei mongoose  kommen oft unknow validationsfehler
-      //   validator: (v) => validateEmail(v),
-      //   message: (v) => v.value +"ist nicht gültig ",
-      // },
+      match:[/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i, "Ungültige Email-Adresse"]
     },
     role: {
       type: String,
@@ -40,10 +37,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      // validate: { 
-      //   validator: (v) => validatePassword(v),
-      //   message:"<< is no valid  =Mindestens 8 Zeichen lang \n Mindestens ein Kleinbuchstabe \n Mindestens ein Großbuchstabe \n Mindestens eine Ziffer ",
-      // },
+      match: [/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/m, "Password >> Mindestens 8 Zeichen lang. Mindestens ein Kleinbuchstabe. Mindestens ein Großbuchstabe. Mindestens eine Ziffer"]
     },
     avatarImage: String,
     birthday: {

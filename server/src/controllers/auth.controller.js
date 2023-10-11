@@ -23,10 +23,8 @@ import {
 const accessTokenP = process.env.ACCESS_TOKEN_SECRET || "";
 const refreshTokenP = process.env.REFRESH_TOKEN_SECRET || "";
 
-
-
-export const login = async (req, res) => {
-  const { email, password } = req?.body;
+export const login = async (req, res, next) => {
+  const { password } = req?.body;
   let loginSchema;
 
   if (req?.body.email) {
@@ -37,111 +35,124 @@ export const login = async (req, res) => {
 
   try {
     const loginResult = loginSchema.safeParse(req.body);
-    console.log(loginResult.error)
+    console.log(loginResult.error);
 
-    if (!loginResult.success)
-      return res.status(400).json({ message: "3"+loginResult.error.message });
+    if (!loginResult.success) {
+      res.status(400);
+      next(loginResult.error.issues[0]);
+    }
 
-    const { isValid, user } = await compareDBPassword(email, password);
+    const loginData = req.body?.email || req.body?.username;
+    console.log(loginData);
+    const { isValid, user } = await compareDBPassword(
+      password,
+      loginData,
+      next
+    );
 
     if (!isValid) {
-      return res.status(400).json({ message: "password invalid" });
+      return next("password invalid");
     }
 
     //mit gefundenen User finde dem bereits erstellten Session im db und update es falls nötig
-    const session = await SessionModel.findOne({
-      user: user?._id,
-    });
 
-    if (!session.emailVerified) {
-      console.log("bestätige erst dem emailseingang");
-      // return res.json({message: "bestaetige die bestaetigungsemail und logge nochmals ein"})
-    }
+    if (isValid) {
+      const session = await SessionModel.findOne({
+        user: user?._id,
+      });
 
-    //cookie Inhalt wird validiert und gespeichert
-    const cookieInfo = cookieSessionSchema.safeParse({
-      UserInfo: {
-        id: `${user?._id}`|| "",
-        email: user?.email,
-        role: user?.role,
-        session: `${session?._id}` || "",
-        darkModeTime: getCurrentTime(),
-      },
-    });
+      if (!session.emailVerified) {
+        console.log("bestätige erst dem emailseingang");
+        // return res.json({message: "bestaetige die bestaetigungsemail und logge nochmals ein"})
+      }
 
-    const accessValid = cookieInfo.success
-      ? acceptCookie(cookieInfo.data, res)
-      : console.log("cookie abgelehnt",cookieInfo.error);
+      //cookie Inhalt wird validiert und gespeichert
+      const cookieInfo = cookieSessionSchema.safeParse({
+        UserInfo: {
+          id: `${user?._id}` || "",
+          email: user?.email,
+          role: user?.role,
+          session: `${session?._id}` || "",
+          darkModeTime: getCurrentTime(),
+        },
+      });
 
-    if (session.emailVerified) {
-      res.locals.role = user?.role;
-    }
+      const accessValid = cookieInfo.success
+        ? acceptCookie(cookieInfo.data, res)
+        : null;
 
-    if (accessValid)
-      return res
-        .status(200)
-        .json({
+      if (session.emailVerified) {
+        res.locals.role = user?.role;
+      }
+
+      if (accessValid)
+        return res.status(200).json({
           message: "Thanx for using cookies, you are success logging in",
         });
 
-    res.status(200).json({ message: "success logging in without cookie" });
+      res.status(200).json({ message: "success logging in without cookie" });
+    }
+    return next("Login failed");
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
-
-
-export const sessionRefreshHandler = async (req, res,next) => {
-
+export const sessionRefreshHandler = async (req, res, next) => {
   try {
     const cookies = req.cookies;
-    if (!cookies.accessJwt)
-      return res.status(401).json({ message: "Json Web Token not found" });
-  
-    const { decoded } = verifyJwt(cookies.refreshJwt, refreshTokenP);
+    if (!cookies.accessJwt) return next("Json Web Token not found");
 
-    res.locals.role = decoded?.UserInfo.role
-  
-    const session = await findSessions({
-      _id: decoded?.UserInfo.session,
-      valid: true,
-    });
-  
-    if (!session) return res.status(500).json({ message: "Unauthorized" });
-  
-    res.status(200).json({ message: "session refreshed" });
-    
+    const { decoded, valid } = verifyJwt(cookies.refreshJwt, refreshTokenP);
+
+    if (valid) {
+      res.locals.role = decoded?.UserInfo.role;
+
+      const session = await findSessions({
+        _id: decoded?.UserInfo.session,
+        valid: true,
+      });
+
+      if (!session) {
+        return next("Session Refresh Request Failed");
+      }
+
+      res.status(200).json({ message: "session refreshed" });
+    }
   } catch (error) {
     // next(error)
-    res.status(500).json({message: error})
+    res.status(500).json({ message: error });
   }
 };
 
+export const logout = async (req, res, next) => {
+  try {
+    const aceessJWT = req.cookies.accessJwt;
 
-export const logout = async (req, res) => {
-  const aceessJWT = req.cookies.accessJwt;
+    const { decoded } = verifyJwt(aceessJWT, accessTokenP);
 
-  const { decoded } = verifyJwt(aceessJWT, accessTokenP);
+    const session = await updateSession(
+      { _id: decoded?.UserInfo.session },
+      { valid: false }
+    );
 
-  await updateSession({ _id: decoded?.UserInfo.session }, { valid: false });
-
-  res.locals.role = "";
-  res.clearCookie("accessJwt", {
-    httpOnly: false,
-    sameSite: "lax",
-    secure: false,
-  });
-
-  res
-    .clearCookie("refreshJwt", {
+    if (!session) return next("session logout failed");
+    res.locals.role = "";
+    res.clearCookie("accessJwt", {
       httpOnly: false,
       sameSite: "lax",
       secure: false,
-    })
-    .status(200)
-    .json({ message: "user success logged out" });
+    });
+
+    res
+      .clearCookie("refreshJwt", {
+        httpOnly: false,
+        sameSite: "lax",
+        secure: false,
+      })
+      .status(200)
+      .json({ message: "user success logged out" });
+  } catch (error) {
+    next(error);
+  }
 };
-
-
-
