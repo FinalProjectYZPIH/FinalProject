@@ -28,4 +28,9 @@ tmp/
 *.sln
 *.sw?
 
+# Jest test files
+**/__tests__/
+**/__mocks__/
+**/*.test.js
+**/*.spec.js
 

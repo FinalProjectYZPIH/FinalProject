@@ -10,6 +10,6 @@ router
   .get("/:id", UserController.findOneUser)
   .patch("/updateUserById/:id", UserController.updateUserById)
   .delete("/deleteOneUser/:id", UserController.deleteOneUser)
-  .delete("/deleteAllUsers", UserController.deleteAllUsers);
+  // .delete("/deleteAllUsers", UserController.deleteAllUsers);
 
 export default router;

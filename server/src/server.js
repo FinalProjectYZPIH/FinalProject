@@ -1,17 +1,21 @@
 // external module
 import express from "express";
-import helmet from "helmet"
+import {Server} from "socket.io";
+import { createServer } from "http";
+import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
-import compression from "compression"
-import morgan from "morgan"
+import compression from "compression";
+import morgan from "morgan";
+import mongoSanitize from "express-mongo-sanitize";
+
 
 // routes
-import userRoute from "./routes/user.route.js"
-import authRoute from "./routes/auth.route.js"
-import messengerTestRoute from "./routes/messengerTest.route.js"
+import userRoute from "./routes/user.route.js";
+import authRoute from "./routes/auth.route.js";
+import messengerTestRoute from "./routes/messengerTest.route.js";
 
 
 // config 
@@ -26,12 +30,33 @@ import { logError } from "./helpers/utils/writeFile.js";
 import deserializeUser from "./helpers/middleware/deserializeUser.js";
 
 
+// generate random Token
+//import crypto from "crypto"
+// function generateToken() {
+//   const token = crypto.randomBytes(108).toString('hex'); // 32 Byte zufällige Daten als Hexadezimalstring
+//   return token;
+// }
+// console.log(generateToken())
+
 dotenv.config();
 const port = process.env.PORT || 3500;
 const app = express();
+
+app.use(cors(corsOptions));  
+const httpServer = createServer(app)
+const io = new Server(httpServer, {
+  cors: {
+    origin: "*", // Hier können Sie die gewünschten Ursprünge festlegen oder "*" verwenden, um alle Ursprünge zuzulassen
+    methods: ["GET", "POST"], // Erlaubte HTTP-Methoden
+  }})
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 app.use(morgan("short"))  // console Übersicht logs   anpassbar short tiny combined dev >>https://github.com/expressjs/morgan#readme
 dbConnection();
 
+
+app.use(mongoSanitize()) // Schützt vor absichtigen query Befehleangriffe bei mongodb
 app.use(helmet());
 
 
@@ -52,12 +77,21 @@ app.use(compression()) // verringert die datenverkehrsgröße und erhöht die ge
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(cors(corsOptions));  
 app.disable("x-powered-by");
 
 // app.use(express.static("public"))
 
-app.use(deserializeUser)
+// app.use(deserializeUser)
+
+io.on("connection", (socket) => {
+  console.log("a user connected"),
+  console.log(socket.id)
+  socket.on("message", (message) => {
+    console.log(message)
+    io.emit('socket', `${socket.id.substring(0,2)} said ${message}`)
+  })
+})
+
 
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
@@ -69,7 +103,7 @@ app.use(errorHandler)
 // Bei der einmalige connection mit Datenbank wird app.listen erst aufgerufen
 mongoose.connection.once("open", () => {
   console.log("DB connected");
-  app.listen(port, () => console.log(`server started at port http://localhost:${port}`));
+  httpServer.listen(port, () => console.log(`server started at port http://localhost:${port}`));
 });
 
 mongoose.connection.on("error", (err) => {

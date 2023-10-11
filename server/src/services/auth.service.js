@@ -39,7 +39,7 @@ export async function acceptCookie(memberInfo, res, ipAdress = "") {
     });
     
     const refreshToken = signJwt(memberInfo, process.env.REFRESH_TOKEN || "", {
-      expiresIn: 60,
+      expiresIn: 10,
       algorithm: "HS256",
     });
     
