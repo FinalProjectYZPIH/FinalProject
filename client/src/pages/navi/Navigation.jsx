@@ -1,6 +1,6 @@
 
 export default function Navigation() {
   return (
-    <div>Navigation</div>
+    <div className="bg-red-400">Navigation</div>
   )
 }

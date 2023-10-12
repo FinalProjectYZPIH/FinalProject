@@ -22,7 +22,7 @@ const MessageSchema = new mongoose.Schema({
 
 const ChatSchema = new mongoose.Schema(
   {
-    chatId: { type: String, unique: true, default: () => `note_${nanoid()}` },
+    // chatId: { type: String, unique: true, default: () => `note_${nanoid()}` },
     chatName: {type: String, default: false},
     isGroupChat: {type: Boolean, default: false},
     chatMessages: {type: mongoose.Schema.Types.ObjectId, ref: "Message"}, //speichert nur die letzte Nachricht, sonst vorerst im localstorage

@@ -1,12 +1,12 @@
 import './index.css'
-import { createBrowserRouter, createRoutesFromElements, Route, Outlet } from "react-router-dom";
+import { createBrowserRouter, createRoutesFromElements, Route } from "react-router-dom";
 import AuthLayout from './pages/layout/AuthLayout';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import RootLayout from './pages/layout/RootLayout';
 import Home from './components/Home';
 import Navigation from './pages/navi/Navigation';
-import AuthProvider from './context/auth/AuthProvider';
+import { ContextWrapper } from './context/data/ContextWrapper';
 
 
 // function App() {
@@ -36,10 +36,3 @@ export const router  = createBrowserRouter(    //Template für React-router-dom
     )
 )
 
-export function ContextWrapper() {
-    return <AuthProvider> 
-      {/* Hier kann man Notifikation oder anderen Provider wrappen */}
-        <Outlet />
-
-    </AuthProvider>
-}

@@ -1,8 +1,10 @@
 import { Outlet } from "react-router-dom";
 
+
 export default function AuthProvider() {
   return (
-    <div>AuthProvider
+    <div>
+      AuthProvider
       <Outlet />
     </div>
   )
