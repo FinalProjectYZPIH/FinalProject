@@ -1,18 +1,29 @@
+import { useState } from "react"
+import { createContext, useContext } from "react"
 import {Toaster} from "react-hot-toast" 
-// import toast from "react-hot-toast"
-// <button onClick={() => toast("hello world")}>Toast Test</button>
 
+const ToastTheme = createContext(null)
 
-
+export function useToastProvider(){
+  return useContext(ToastTheme)
+}
 
 
 
 export default function ToastProvider({children}) {
+  
+  // const useToast = (content, status, config) => {
+  //   return toast?.[status](content,config )
+  // }
+  
+  
   return (
-    <>
-        <Toaster />
+    
+    <ToastTheme.Provider value={null}>
 
+        <Toaster />
+        
         {children}
-    </>
+    </ToastTheme.Provider>
   )
 }

@@ -9,7 +9,6 @@ export const UserNav = [   // grobe Datentypen
     {isOnline: false},
     {avatar: "Image" && false},
     {config: "path"},
-
 ]
 
 export const PageNav = [
