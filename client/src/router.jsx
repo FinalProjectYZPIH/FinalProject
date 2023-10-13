@@ -6,7 +6,7 @@ import Signup from './components/Signup';
 import RootLayout from './pages/layout/RootLayout';
 import Home from './components/Home';
 import Navigation from './pages/navi/Navigation';
-import { ContextWrapper } from './context/data/ContextWrapper';
+import { AppWrapper} from './context/data/AppWrapper';
 
 
 // function App() {
@@ -22,7 +22,7 @@ import { ContextWrapper } from './context/data/ContextWrapper';
 
 export const router  = createBrowserRouter(    //Template für React-router-dom
     createRoutesFromElements(
-        <Route element={<ContextWrapper />}>
+        <Route element={<AppWrapper />}>
             <Route element={<AuthLayout />}>
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
