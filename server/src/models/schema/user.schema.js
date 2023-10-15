@@ -7,7 +7,7 @@ import z from "zod";
 export const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i;
 export const passwordRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/m;
-const birthdayRegex = /^\d{4}-\d{2}-\d{2}$/;
+const birthdayRegex = /^\d{2}-\d{2}-\d{4}$/;
 //ZodValidierung
 
 export const registerFormSchema = z
@@ -32,9 +32,9 @@ export const registerFormSchema = z
       .regex(/^[A-Za-z0-9]+$/, {
         message: "Username Kein Sonderzeichen erlaubt",
       }),
-    dateTime: z
+    birthday: z
       .string({ message: "Datetime Nur String erlaubt" })
-      .regex(birthdayRegex, { message: "JJJJ-MM-TT dateformat" }), // genaue Info >>https://zod.dev/?id=basic-usage  datetime Key eingeben
+      .regex(birthdayRegex, { message: "TT-MM-JJJJ dateformat" }), // genaue Info >>https://zod.dev/?id=basic-usage  datetime Key eingeben
     email: z
       .string({ message: "Email Nur String erlaubt" })
       .trim()

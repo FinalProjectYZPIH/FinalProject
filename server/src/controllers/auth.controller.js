@@ -1,6 +1,6 @@
 // helper
 import { signJwt, verifyJwt } from "../helpers/utils/jwt.utils.js";
-import { getCurrentTime } from "../helpers/utils/currentTime.js";
+// import { getCurrentTime } from "../helpers/utils/currentTime.js";
 
 // models schema
 import {
@@ -73,7 +73,7 @@ export const login = async (req, res, next) => {
           email: user?.email,
           role: user?.role,
           session: `${session?._id}` || "",
-          darkModeTime: getCurrentTime(),
+          // darkModeTime: getCurrentTime(),
         },
       });
 

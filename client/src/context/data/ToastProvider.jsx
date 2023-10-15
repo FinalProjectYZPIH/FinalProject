@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { createContext, useContext } from "react"
 import {Toaster} from "react-hot-toast" 
 
@@ -12,11 +11,7 @@ export function useToastProvider(){
 
 export default function ToastProvider({children}) {
   
-  // const useToast = (content, status, config) => {
-  //   return toast?.[status](content,config )
-  // }
-  
-  
+
   return (
     
     <ToastTheme.Provider value={null}>

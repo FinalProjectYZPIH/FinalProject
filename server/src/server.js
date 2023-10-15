@@ -47,7 +47,7 @@ const httpServer = createServer(app)
 const io = new Server(httpServer, {
   cors: {
     origin: "*", // Hier können Sie die gewünschten Ursprünge festlegen oder "*" verwenden, um alle Ursprünge zuzulassen
-    methods: ["GET", "POST"], // Erlaubte HTTP-Methoden
+    methods: ["GET", "POST", "PATCH"], // Erlaubte HTTP-Methoden
   }})
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));

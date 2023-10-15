@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema(
     avatarImage: String,
     birthday: {
       type: Date,
-      match: [/^\d{4}-\d{2}-\d{2}$/, "JJJJ-MM-TT Format"]
+      match: [/^\d{2}-\d{2}-\d{4}$/, "TT-MM-JJJJ Format"]
     },
 
     chats: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Chat' }],

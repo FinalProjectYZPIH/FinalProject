@@ -21,7 +21,7 @@ export const PageNav = [
 ]
 
 export const ThemeColors = [
-    "red",
+    "bg-red-200",
     "blue",
     "yellow",
     "green",
