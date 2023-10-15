@@ -9,10 +9,6 @@ const refreshTokenP = process.env.REFRESH_TOKEN || "";
 const deserializeUser = async (req, res, next) => {
   const { accessJwt } = req?.cookies;
   const { refreshJwt } = req?.cookies;
-  // const {decoded :decode} = verifyJwt(accessJwt,accessTokenP)
-  // console.log("refreshcode", decode)
-  //   const session:any = await SessionModel.findById("650764f3a98d4221fbcebe77")
-  // console.log(session.user)
   
   if (!accessJwt) {
     res.locals.role = "";
@@ -28,8 +24,8 @@ const deserializeUser = async (req, res, next) => {
       return next();
     }
     if (expired && refreshJwt && !valid) {
-      const newAccessToken = await reSignToken(refreshJwt, refreshTokenP);
-
+      const newAccessToken = await reSignToken(refreshJwt, refreshTokenP, next);
+          
       if (newAccessToken) {
         res.cookie("accessJwt", newAccessToken, {
           httpOnly: false,
@@ -41,7 +37,7 @@ const deserializeUser = async (req, res, next) => {
 
       const { decoded } = verifyJwt(newAccessToken, accessTokenP);
       console.log("5",decoded)
-      if(!decoded) {console.log({message: "sitzung abgelaufen"}); return next()}
+      if(!decoded) return next(new Error("sitzung abgelaufen"))
       res.locals.role = decoded?.UserInfo.role;
       return next();
     }
@@ -53,7 +49,7 @@ const deserializeUser = async (req, res, next) => {
     return next();
   } catch (error) {
     console.log("deserilize fehler", error);
-    throw error;
+    next(error)
   }
 };
 

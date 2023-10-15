@@ -8,7 +8,7 @@ export const cookieSessionSchema = z.object({
     role: z.enum(["member", "admin"]).nullish(),
     session: z.string(), // maybe another infos needed to add?
     // Ein Zod-Schema für die Uhrzeit im HH:MM-Format
-    darkModeTime: z.string().regex(/^\d{2}:\d{2}$/),
+    // darkModeTime: z.string().regex(/^\d{2}:\d{2}$/),  nicht nötig
   })
 });
 

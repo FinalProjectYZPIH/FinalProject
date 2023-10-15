@@ -27,11 +27,10 @@ export default function Home() {
       <div
         style={{ backgroundColor: color, width: "100px", height: "100px" }}
       ></div>
-      <div className={`${color} w-full h-10 text-[${color}]-200 font-bold`}>
+      <div className={`${color} w-full h-10 font-bold`}>
         {" "}
         FONT TEST
       </div>{" "}
-      {/*tailwindcss funktioniert nicht beim klicken*/}
       <button
         className="border border-1 mx-2 rounded p-1"
         onClick={() => setColorPosition()}
@@ -91,7 +90,7 @@ export default function Home() {
         onClick={() => lightMode && toast.success("Hello World")}
         className="bg-green-400 border border-1 mx-2 rounded p-1"
       >
-        TOAST TEST
+        TOAST CONDITION
       </button>
       {lightMode ? "Light  " : "Dark  "}
         <button onClick={setDarkMode} className="border border-1 p-2 rounded">SwitchLight</button> 

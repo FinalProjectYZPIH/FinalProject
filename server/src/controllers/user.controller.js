@@ -3,7 +3,7 @@ import { registerFormSchema } from "../models/schema/user.schema.js";
 
 //services
 import * as UserService from "../services/user.service.js";
-import { createSession } from "../services/auth.service.js";
+import { createSession, findSessions } from "../services/auth.service.js";
 
 //helper
 import { signJwt, verifyJwt } from "../helpers/utils/jwt.utils.js";
@@ -20,7 +20,7 @@ export const createUser = async (req, res, next) => {
     if (!user) return next(new Error("User creation failed"));
     //bei erstellen einen neuen User, wird zugleich auch einen session im db erstellt
     
-    const session = user ? await createSession(user?._id, req.get("user-agent" || "")) : null;
+    const session = user ? await createSession(user?._id, req.get("user-agent" || "", next)) : null;
     if (!session) return next(new Error("Session creation failed"));
     if (user && user?.email) {
       console.log({ message: `${user} created` });
@@ -36,6 +36,7 @@ export const createUser = async (req, res, next) => {
 };
 
 export const findAllUsers = async (req, res, next) => {
+
   try {
     const users = await UserService.dbFindAllUsers(res,next);
     if (!users || users.length === 0) {

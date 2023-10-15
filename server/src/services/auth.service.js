@@ -6,12 +6,21 @@ import { signJwt, verifyJwt } from "../helpers/utils/jwt.utils.js";
 //external Modul
 import jwt from "jsonwebtoken";
 import { cookieSessionSchema } from "../models/schema/session.schema.js";
-import { getCurrentTime } from "../helpers/utils/currentTime.js";
 
-export async function createSession(userId, userAgent) {
-  const session = await SessionModel.create({ user: userId, userAgent });
+export async function createSession(userId, userAgent,next) {
+  try {
+    
+    const duplicate = await SessionModel.findOne({user: userId})
 
-  return session.toJSON();
+    if(duplicate) return false
+
+
+    const session = await SessionModel.create({ user: userId, userAgent });
+    return session.toJSON();
+  } catch (error) {
+    next(error)
+  }
+
 }
 
 export async function findSessions(query) {
@@ -66,36 +75,40 @@ export async function acceptCookie(memberInfo, res, ipAdress = "") {
   }
 }
 
-export async function reSignToken(refreshToken, keyName) {
-  const { decoded } = verifyJwt(refreshToken, keyName);
-  if (!decoded || !decoded?.UserInfo.session) return console.log("1");
-
-  console.log(decoded)
-  const session = await SessionModel.findById(decoded?.UserInfo.session);
-
-  if (!session || session.valid) return console.log("2");
-
-  const user = await UserModel.findOne({ _id: session.user });
-
-
-
-  if (!user) return console.log("3");
-  const cookieInfo = cookieSessionSchema.safeParse({
-    UserInfo: {
-      id: `${user?._id}`|| "",
-      email: user?.email,
-      role: user?.role,
-      session: `${session?._id}` || "",
-      darkModeTime: getCurrentTime(),
-    },
-  });
-
-  const newAccessToken = jwt.sign(
-    cookieInfo.data,
-    process.env.ACCESS_TOKEN || "",
-    { expiresIn: 60 }
-  );
-  if (!newAccessToken) return console.log("4");
-
-  return newAccessToken;
+export async function reSignToken(refreshToken, keyName, next) {
+  try {
+    
+    const { decoded } = verifyJwt(refreshToken, keyName);
+    if (!decoded || !decoded?.UserInfo.session) return next(new Error("Refresh Token failed"));
+  
+    console.log(decoded)
+    const session = await SessionModel.findById(decoded?.UserInfo.session);
+  
+    if (!session || session.valid) return next(new Error("deserilize session not found"));
+  
+    const user = await UserModel.findOne({ _id: session.user });
+  
+  
+  
+    if (!user) return next(new Error("deserilize user not found"));
+    const cookieInfo = cookieSessionSchema.safeParse({
+      UserInfo: {
+        id: `${user?._id}`|| "",
+        email: user?.email,
+        role: user?.role,
+        session: `${session?._id}` || "",
+      },
+    });
+  
+    const newAccessToken = jwt.sign(
+      cookieInfo.data,
+      process.env.ACCESS_TOKEN || "",
+      { expiresIn: 60 }
+    );
+    if (!newAccessToken) return next(new Error("new Accesstoken generate failed"));
+  
+    return newAccessToken;
+  } catch (error) {
+    next(error)
+  }
 }

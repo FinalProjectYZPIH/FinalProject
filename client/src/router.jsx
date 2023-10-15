@@ -1,11 +1,11 @@
 import './index.css'
 import { createBrowserRouter, createRoutesFromElements, Route } from "react-router-dom";
 import AuthLayout from './pages/layout/AuthLayout';
-import Login from './components/Login';
-import Signup from './components/Signup';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
 import RootLayout from './pages/layout/RootLayout';
-import Home from './components/Home';
-import Navigation from './pages/navi/Navigation';
+import Home from './pages/Home';
+import Navigation from './components/Navigation';
 import { AppWrapper} from './context/data/AppWrapper';
 
 
