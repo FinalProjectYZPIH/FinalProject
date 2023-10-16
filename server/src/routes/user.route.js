@@ -4,6 +4,8 @@ import * as UserController from "../controllers/user.controller.js";
 //Routen einstellungen für user
 const router = express.Router();
 
+
+
 router
   .post("/createUser", UserController.createUser)
   .get("/", UserController.findAllUsers)
