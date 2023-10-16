@@ -7,20 +7,17 @@ import { signJwt, verifyJwt } from "../helpers/utils/jwt.utils.js";
 import jwt from "jsonwebtoken";
 import { cookieSessionSchema } from "../models/schema/session.schema.js";
 
-export async function createSession(userId, userAgent,next) {
+export async function createSession(userId, userAgent, next) {
   try {
-    
-    const duplicate = await SessionModel.findOne({user: userId})
+    const duplicate = await SessionModel.findOne({ user: userId });
 
-    if(duplicate) return false
-
+    if (duplicate) return false;
 
     const session = await SessionModel.create({ user: userId, userAgent });
     return session.toJSON();
   } catch (error) {
-    next(error)
+    next(error);
   }
-
 }
 
 export async function findSessions(query) {
@@ -31,7 +28,7 @@ export async function updateSession(query, update) {
   return SessionModel.updateOne(query, update);
 }
 
-export async function acceptCookie(memberInfo, res, ipAdress = "") {
+export function acceptCookie(memberInfo, res, ipAdress = "") {
   // {  CookieUser BeispielsObject
   //   UserInfo: {
   //     id: updatedUser?._id || "",
@@ -42,17 +39,11 @@ export async function acceptCookie(memberInfo, res, ipAdress = "") {
   // },
 
   try {
-    const accessToken = signJwt(memberInfo, process.env.ACCESS_TOKEN || "", {
-      expiresIn: 5,
-      algorithm: "HS256",
-    });
-    
-    const refreshToken = signJwt(memberInfo, process.env.REFRESH_TOKEN || "", {
-      expiresIn: 10,
-      algorithm: "HS256",
-    });
-    
-    if(accessToken && refreshToken){
+    const accessToken = signJwt(memberInfo, process.env.ACCESS_TOKEN || "");
+
+    const refreshToken = signJwt(memberInfo, process.env.REFRESH_TOKEN || "");
+
+    if (accessToken && refreshToken) {
       res
         .cookie("accessJwt", accessToken, {
           httpOnly: false,
@@ -68,47 +59,45 @@ export async function acceptCookie(memberInfo, res, ipAdress = "") {
         });
       return true;
     }
-    return false
+    return false;
   } catch (error) {
     console.log("cookie Überschreibungserror: ", error);
     return false;
   }
 }
 
-export async function reSignToken(refreshToken, keyName, next) {
+export async function reSignToken(refreshToken, refreshkey, next) {
   try {
-    
-    const { decoded } = verifyJwt(refreshToken, keyName);
-    if (!decoded || !decoded?.UserInfo.session) return next(new Error("Refresh Token failed"));
-  
-    console.log(decoded)
+    const { decoded } = verifyJwt(refreshToken, refreshkey);
+    console.log("refresh", decoded);
+    if (!decoded || !decoded?.UserInfo.session)
+      return next("Refresh Token failed");
+
     const session = await SessionModel.findById(decoded?.UserInfo.session);
-  
-    if (!session || session.valid) return next(new Error("deserilize session not found"));
-  
+
+    if (!session || session.valid) return next("deserilize session not found");
+
     const user = await UserModel.findOne({ _id: session.user });
-  
-  
-  
-    if (!user) return next(new Error("deserilize user not found"));
+
+    if (!user) return next("deserilize user not found");
     const cookieInfo = cookieSessionSchema.safeParse({
       UserInfo: {
-        id: `${user?._id}`|| "",
+        id: `${user?._id}` || "",
         email: user?.email,
         role: user?.role,
         session: `${session?._id}` || "",
       },
     });
-  
+
     const newAccessToken = jwt.sign(
       cookieInfo.data,
       process.env.ACCESS_TOKEN || "",
       { expiresIn: 60 }
     );
-    if (!newAccessToken) return next(new Error("new Accesstoken generate failed"));
-  
+    if (!newAccessToken) return next("new Accesstoken generate failed");
+
     return newAccessToken;
   } catch (error) {
-    next(error)
+    next(error);
   }
 }

@@ -31,12 +31,12 @@ import deserializeUser from "./helpers/middleware/deserializeUser.js";
 
 
 // generate random Token
-//import crypto from "crypto"
-// function generateToken() {
-//   const token = crypto.randomBytes(108).toString('hex'); // 32 Byte zufällige Daten als Hexadezimalstring
-//   return token;
-// }
-// console.log(generateToken())
+// import crypto from "crypto"
+// const generateRandomKey = (length) => {
+//   return crypto.randomBytes(length).toString('base64');
+// };
+// console.log(generateRandomKey(32));
+
 
 dotenv.config();
 const port = process.env.PORT || 3500;
@@ -81,7 +81,6 @@ app.disable("x-powered-by");
 
 // app.use(express.static("public"))
 
-// app.use(deserializeUser)
 
 io.on("connection", (socket) => {
   console.log("a user connected"),
@@ -92,6 +91,7 @@ io.on("connection", (socket) => {
   })
 })
 
+app.use(deserializeUser)
 
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);

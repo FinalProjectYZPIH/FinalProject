@@ -3,48 +3,46 @@ import { verifyJwt } from "../utils/jwt.utils.js";
 //services
 import { reSignToken } from "../../services/auth.service.js";
 
-// variables
-const accessTokenP = process.env.ACCESS_TOKEN || "";
-const refreshTokenP = process.env.REFRESH_TOKEN || "";
+//allgemeine id kontrolle und id aktualisierung
 const deserializeUser = async (req, res, next) => {
   const { accessJwt } = req?.cookies;
   const { refreshJwt } = req?.cookies;
-  
+  // falls keine jwt in cookie zu finden ist
   if (!accessJwt) {
     res.locals.role = "";
     return next();
   }
-  const { decoded, expired, valid } = verifyJwt(accessJwt, accessTokenP);
-  
-  console.log(decoded)
+
+  // jwt decoden 
+  const { decoded, expired, valid } = verifyJwt(accessJwt, process.env.ACCESS_TOKEN);
+   
+    console.log("Status:",decoded,"expired",expired, "valid", valid)
   try {
-    console.log(decoded, expired, valid);
+    //falls jwt nicht abläuft
     if (!expired) {
-      res.locals.role = decoded?.UserInfo.role;
       return next();
     }
-    if (expired && refreshJwt && !valid) {
-      const newAccessToken = await reSignToken(refreshJwt, refreshTokenP, next);
-          
-      if (newAccessToken) {
+      // falls refreshtoken vorhaden ist und accetoken abläuft und nicht valid ist udn decoded vorhanden ist
+    if (expired && refreshJwt && !valid && decoded) {
+      const newAccessToken = await reSignToken(refreshJwt, process.env.REFRESH_TOKEN || "", next);
+          // console.log("new",newAccessToken)
+      if (!newAccessToken) return next("newAccessToken failed")
+      
         res.cookie("accessJwt", newAccessToken, {
           httpOnly: false,
           secure: false,
           sameSite: "none",
           maxAge: 7 * 24 * 60 * 60 * 1000,
         });
-      }
+      
 
-      const { decoded } = verifyJwt(newAccessToken, accessTokenP);
+      const { decoded } = verifyJwt(newAccessToken, process.env.ACCESS_TOKEN || "");
       console.log("5",decoded)
-      if(!decoded) return next(new Error("sitzung abgelaufen"))
+      if(!decoded) next(("newAcesstoken decoded failed"))
       res.locals.role = decoded?.UserInfo.role;
       return next();
     }
 
-    if (!accessJwt) {
-      return next();
-    }
 
     return next();
   } catch (error) {

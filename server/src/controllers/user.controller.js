@@ -3,10 +3,11 @@ import { registerFormSchema } from "../models/schema/user.schema.js";
 
 //services
 import * as UserService from "../services/user.service.js";
-import { createSession, findSessions } from "../services/auth.service.js";
+import { createSession } from "../services/auth.service.js";
 
 //helper
-import { signJwt, verifyJwt } from "../helpers/utils/jwt.utils.js";
+import { verifyJwt } from "../helpers/utils/jwt.utils.js";
+
 export const createUser = async (req, res, next) => {
   try {
     const registerResult = registerFormSchema.safeParse(req.body);
@@ -17,18 +18,20 @@ export const createUser = async (req, res, next) => {
 
     const user = await UserService.dbCreateUser(req, res, next);
 
-    if (!user) return next(new Error("User creation failed"));
+    if (!user) return next("User creation failed");
     //bei erstellen einen neuen User, wird zugleich auch einen session im db erstellt
-    
-    const session = user ? await createSession(user?._id, req.get("user-agent" || "", next)) : null;
-    if (!session) return next(new Error("Session creation failed"));
-    if (user && user?.email) {
-      console.log({ message: `${user} created` });
-      res.status(201);
-      return user;
-    } else {
-     throw new Error("User creation failed");
+
+    const session = user
+      ? await createSession(user?._id, req.get("user-agent" || "", next))
+      : null;
+    if (!session) return next("Session creation failed");
+
+    if (!user) {
+      next("User creation failed");
     }
+    console.log({ message: `${user} created` });
+    res.status(201).json({ message: `${user} created` });
+    return user;
   } catch (error) {
     res.status(500);
     next(error);
@@ -36,62 +39,113 @@ export const createUser = async (req, res, next) => {
 };
 
 export const findAllUsers = async (req, res, next) => {
-
+  const { accessJwt } = req?.cookies;
+  const { valid } = verifyJwt(accessJwt, process.env.ACCESS_TOKEN);
+  console.log(accessJwt);
   try {
-    const users = await UserService.dbFindAllUsers(res,next);
-    if (!users || users.length === 0) {
-      return res.status(404).json({ message: "No users found" });
-    }
+    if (valid) {
+      const users = await UserService.dbFindAllUsers(res, next);
+      if (!users || users.length === 0) {
+        return next("No users found");
+      }
 
-    res.status(200).json(users);
+      return res.status(200).json(users);
+    }
+    return next("findAllUsers Invalid Token ID");
   } catch (error) {
     console.log(error);
-    res.status(500);
     next(error);
   }
 };
 
 export const findOneUser = async (req, res, next) => {
+  //die Daten aus cookie entziehen
+  const { accessJwt } = req?.cookies;
+  const { valid } = verifyJwt(accessJwt, process.env.ACCESS_TOKEN);
+  // hier kann frontend bestimmten user finden mit username request
   try {
-    const { id } = req.params; //id is username
+    const { username } = req.params; //id is username
 
-    if (id) {
+    if (valid) {
       // const user = await UserService.dbFindOneUserById( id);
-      const user = await UserService.dbFindUserByUsername(id,next);
-      if (!user) return next(new Error("User not found"));
+      const user = await UserService.dbFindUserByUsername(username, next);
+      if (!user) return next("User not found");
       res.status(200).json({ message: user });
     }
+    res.status(400);
+    return next("findOneUser Invalid Token ID");
   } catch (error) {
     console.log(error);
     next(error);
+  }
+};
+
+export const getProfile = async (req, res, next) => {
+  const { accessJwt } = req?.cookies;
+  console.log("acess token",req.cookies.accessJwt);
+  if (!accessJwt) {
+    // Wenn kein Token im Cookie vorhanden ist, wird ein Fehler zurückgegeben.
+    return res.status(400).next("Access token not found in cookies");
+  }
+
+  const { decoded, valid } = verifyJwt(accessJwt, process.env.ACCESS_TOKEN);
+
+  if (!valid) {
+    // Wenn das Token ungültig ist, wird ein Fehler zurückgegeben.
+    return res.status(400).next("Invalid access token");
+  }
+
+  try {
+    // const { id } = req.params; //id is username
+    const userId = decoded?.UserInfo.id;
+    console.log("userid", userId);
+    const user = await UserService.dbFindOneUserById(userId, next);
+    if (!user) return res.status(400).next("User not found");
+    res.status(200).json({ message: user + " found" });
+  } catch (error) {
+    console.log(error);
+    next("geProfile" + error);
   }
 };
 
 export const updateUserById = async (req, res, next) => {
-  const { id } = req.params;
+  const { accessJwt } = req?.cookies;
+  const { decoded, valid } = verifyJwt(accessJwt, process.env.ACCESS_TOKEN);
+  // const { id } = req.params;
 
   //validation wurde an UserService übergeben
 
   try {
-    const user = await UserService.dbUpdateUser(req, res, id, next);
+    if (valid) {
+      const user = await UserService.dbUpdateUser(
+        req,
+        res,
+        decoded?.UserInfo.id,
+        next
+      );
 
-    if (!user) return res.status(400).json({ message: "update User failed" });
-    return res
-      .status(200)
-      .json({ message: `${user.username} updated!` });
+      if (!user) return res.status(400).json({ message: "update User failed" });
+      return res.status(200).json({ message: `${user.username} updated!` });
+    }
+    res.status(400).json("updateuser Invalid Token ID");
   } catch (error) {
     console.log(error);
-    next(error)
+    next(error);
   }
 };
 
 export const deleteOneUser = async (req, res) => {
-  const { id } = req.params;
+  const { accessJwt } = req?.cookies;
+  const { decoded, valid } = verifyJwt(accessJwt, process.env.ACCESS_TOKEN);
+  // const { id } = req.params;
 
   try {
-    await User.findByIdAndRemove(id);
+    if (valid) {
+      await User.findByIdAndRemove(decoded.UserInfo.id);
 
-    res.status(200).json({ message: "success deleted!" });
+      res.status(200).json({ message: "success deleted!" });
+    }
+    res.status(400).json("Invalid Token ID");
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
