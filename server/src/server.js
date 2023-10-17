@@ -37,6 +37,7 @@ import deserializeUser from "./helpers/middleware/deserializeUser.js";
 // };
 // console.log(generateRandomKey(32));
 
+
 dotenv.config();
 const port = process.env.PORT || 3500;
 const app = express();
