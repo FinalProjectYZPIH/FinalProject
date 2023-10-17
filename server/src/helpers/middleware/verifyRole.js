@@ -8,12 +8,16 @@ export const verifyMember = (req, res, next) => {
 
 
   if (role === "member") {
+
     res.locals.role = "member";
+
     console.log("member");
     return next();
   }
 
+
 return next("not member") ;
+
   
 };
 
@@ -26,7 +30,9 @@ export const verifyAdmin = (req,res,next) => {
     console.log("admin");
     return next();
   }
+
   return next("not admin");
+
 }
 
 

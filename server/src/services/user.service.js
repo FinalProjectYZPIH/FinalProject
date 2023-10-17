@@ -58,7 +58,9 @@ export const dbCreateUser = async (req, res, next) => {
 
 export const dbFindAllUsers = async (res,next) => {
   try {
+
     const users = await UserModel.find().select("-password -birthday");
+
 
     return users;
   } catch (error) {
