@@ -2,7 +2,11 @@ import jwt from "jsonwebtoken";
 export function signJwt(
   object,
   keyName,
-  options
+  options ={
+    expiresIn: 10,
+    algorithm: "HS256",
+    allowInsecureKeySizes: true,
+  }
 ) {
   return jwt.sign(object, keyName, options);
 }
@@ -10,8 +14,7 @@ export function signJwt(
 export function verifyJwt(token , keyName) {
   
   try {
-    const decoded = jwt.verify(token, keyName);
-
+    const decoded = jwt.verify(token, keyName, {algorithms: 'HS256'});
     if (decoded)
       return {
         valid: true,
@@ -31,4 +34,3 @@ export function verifyJwt(token , keyName) {
     };
   }
 }
-
