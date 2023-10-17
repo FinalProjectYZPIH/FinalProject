@@ -20,6 +20,7 @@ const deserializeUser = async (req, res, next) => {
   try {
     //falls jwt nicht abläuft
     if (!expired) {
+      res.locals.role = decoded?.UserInfo.role
       return next();
     }
       // falls refreshtoken vorhaden ist und accetoken abläuft und nicht valid ist udn decoded vorhanden ist

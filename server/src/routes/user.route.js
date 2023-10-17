@@ -1,5 +1,6 @@
 import express from "express";
 import * as UserController from "../controllers/user.controller.js";
+import { verifyMember } from "../helpers/middleware/verifyRole.js";
 
 //Routen einstellungen für user
 const router = express.Router();
@@ -8,9 +9,10 @@ const router = express.Router();
 
 router
   .post("/createUser", UserController.createUser)
+  .use(verifyMember)
   .get("/getProfile", UserController.getProfile)
-  .patch("/updateUserById/:id", UserController.updateUserById)
-  .delete("/deleteOneUser/:id", UserController.deleteOneUser)
+  .patch("/updateUserById", UserController.updateUserById)
+  .delete("/deleteAccount", UserController.deleteAccount)
   .get("/", UserController.findAllUsers)
   .get("/:username", UserController.findOneUser)
   // .delete("/deleteAllUsers", UserController.deleteAllUsers);

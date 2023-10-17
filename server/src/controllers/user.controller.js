@@ -1,5 +1,6 @@
 //Controller für user festlegen import { User } from "../models/user.model";
 import { registerFormSchema } from "../models/schema/user.schema.js";
+import UserModel from "../models/user.model.js";
 
 //services
 import * as UserService from "../services/user.service.js";
@@ -7,6 +8,7 @@ import { createSession } from "../services/auth.service.js";
 
 //helper
 import { verifyJwt } from "../helpers/utils/jwt.utils.js";
+import SessionModel from "../models/session.model.js";
 
 export const createUser = async (req, res, next) => {
   try {
@@ -82,17 +84,19 @@ export const findOneUser = async (req, res, next) => {
 
 export const getProfile = async (req, res, next) => {
   const { accessJwt } = req?.cookies;
-  console.log("acess token",req.cookies.accessJwt);
+  console.log("acess token", req.cookies.accessJwt);
   if (!accessJwt) {
     // Wenn kein Token im Cookie vorhanden ist, wird ein Fehler zurückgegeben.
-    return res.status(400).next("Access token not found in cookies");
+    res.status(400)
+    return next("Access token not found in cookies");
   }
 
   const { decoded, valid } = verifyJwt(accessJwt, process.env.ACCESS_TOKEN);
 
   if (!valid) {
     // Wenn das Token ungültig ist, wird ein Fehler zurückgegeben.
-    return res.status(400).next("Invalid access token");
+    res.status(400)
+    return next("Invalid access token");
   }
 
   try {
@@ -110,7 +114,18 @@ export const getProfile = async (req, res, next) => {
 
 export const updateUserById = async (req, res, next) => {
   const { accessJwt } = req?.cookies;
+  if (!accessJwt) {
+    // Wenn kein Token im Cookie vorhanden ist, wird ein Fehler zurückgegeben.
+    res.status(400)
+    return next("Access token not found in cookies");
+  }
   const { decoded, valid } = verifyJwt(accessJwt, process.env.ACCESS_TOKEN);
+
+  if (!valid) {
+    // Wenn das Token ungültig ist, wird ein Fehler zurückgegeben.
+    res.status(400)
+    return next("Invalid access token");
+  }
   // const { id } = req.params;
 
   //validation wurde an UserService übergeben
@@ -124,33 +139,47 @@ export const updateUserById = async (req, res, next) => {
         next
       );
 
-      if (!user) return res.status(400).json({ message: "update User failed" });
+      if (!user) return res.status(400).next("update User failed");
       return res.status(200).json({ message: `${user.username} updated!` });
     }
-    res.status(400).json("updateuser Invalid Token ID");
+    return res.status(400).next("updateuser Invalid Token ID");
   } catch (error) {
     console.log(error);
     next(error);
   }
 };
 
-export const deleteOneUser = async (req, res) => {
+export const deleteAccount = async (req, res, next) => {
   const { accessJwt } = req?.cookies;
-  const { decoded, valid } = verifyJwt(accessJwt, process.env.ACCESS_TOKEN);
-  // const { id } = req.params;
+  if (!accessJwt) {
+    res.status(400)
+    return next("Access token not found in cookies");
+  }
+  const {decoded, valid } = verifyJwt(accessJwt, process.env.ACCESS_TOKEN);
 
+  if (!valid) {
+    // Wenn das Token ungültig ist, wird ein Fehler zurückgegeben.
+    res.status(400)
+    return next("Invalid access token");
+  }
+  // const { id } = req.params;
   try {
     if (valid) {
-      await User.findByIdAndRemove(decoded.UserInfo.id);
+      const user = await UserModel.findByIdAndRemove(decoded?.UserInfo.id);
+      
+      if(!user) return next("user delete failed")
+      const session = await SessionModel.findByIdAndRemove(decoded?.UserInfo.session)
 
+      if(!session) return next("session delete failed")
       res.status(200).json({ message: "success deleted!" });
     }
-    res.status(400).json("Invalid Token ID");
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
   }
 };
+
+
 
 // export const deleteAllUsers = async (req, res) => {
 //   try {

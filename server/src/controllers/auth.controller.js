@@ -9,6 +9,7 @@ import {
 } from "../models/schema/user.schema.js";
 import SessionModel from "../models/session.model.js";
 import { cookieSessionSchema } from "../models/schema/session.schema.js";
+import UserModel from "../models/user.model.js";
 
 // services
 import { compareDBPassword } from "../services/user.service.js";
@@ -23,15 +24,22 @@ import {
 
 
 export const login = async (req, res, next) => {
+  
   const { password } = req?.body;
   let loginSchema;
-
+  
   if (req?.body.email) {
     loginSchema = emailLoginSchema;
+    const foundEmail = await UserModel.findOne({ email: req.body.email })
+    if(!foundEmail ) return next("User Notfound pls Sign up")
   } else {
     loginSchema = nameLoginSchema;
+    const foundUser = await UserModel.findOne({ username: req.body.username })
+    if(!foundUser  ) return next("User Notfound pls Sign up")
   }
-
+  
+  
+  
   try {
     const loginResult = loginSchema.safeParse(req.body);
     console.log(loginResult.error);

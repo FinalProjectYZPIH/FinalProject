@@ -97,18 +97,19 @@ export const dbUpdateUser = async (req, res, userIDParams, next) => {
     const { username, oldPassword, newPassword } = req.body;
 
     const user = await UserModel.findById(userIDParams);
-    if (!user) return res.json({ message: "id not found" });
+    if (!user) return next("id not found");
 
 
     const compareResult = await bcrypt.compare(oldPassword, user.password);
-    if (!compareResult) return res.json({ message: "wrong password input" });
+    if (!compareResult) return next( "wrong password input");
 
 
     const usernameExist = await UserModel.findOne({ username: username });
     const validateResult = updatePasswordSchema.safeParse(req.body);
 
     if (usernameExist && !validateResult.success) {
-      res.status(400).json({ message: "Invalid username or request body" });
+      res.status(400)
+      return next( "Invalid username or request body" );
     }
     if (compareResult) {
       user.password = await bcrypt.hash(newPassword, 10); //nur wenn username nicht im datenbank existiert und nach validierung der request body, wirds geändert
