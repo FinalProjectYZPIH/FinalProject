@@ -27,13 +27,13 @@ export async function compareDBPassword( password,loginData, next,) {
 export const dbCreateUser = async (req, res, next) => {
   try {
     const { email, password, username } = req.body;
-    if (!email || !password) return next( new Error("Email and Password are Required!"))
+    if (!email || !password) return next( "Email and Password are Required!")
 
     const duplicateEmail = await UserModel.findOne({ email }).collation({
       locale: "en",
       strength: 2,
     });
-    if (duplicateEmail) return next( new Error( "Account already exist!" ))
+    if (duplicateEmail) return next( "Account already exist!" )
 
     const duplicateUsername = await UserModel.findOne({ username }).collation({
       // nicht auf groß und kleinschreibungen achten
@@ -41,7 +41,7 @@ export const dbCreateUser = async (req, res, next) => {
       strength: 2,
     });
 
-    if (duplicateUsername) return next( new Error( "Account already exist!" ))
+    if (duplicateUsername) return next(  "Account already exist!")
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await UserModel.create({
@@ -56,13 +56,9 @@ export const dbCreateUser = async (req, res, next) => {
   }
 };
 
-export const dbFindAllUsers = async (res) => {
+export const dbFindAllUsers = async (res,next) => {
   try {
     const users = await UserModel.find().select("-password");
-
-    if (!users.length) {
-      res.json({ message: "no users found" });
-    }
 
     return users;
   } catch (error) {

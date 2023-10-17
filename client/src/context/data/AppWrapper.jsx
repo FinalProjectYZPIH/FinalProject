@@ -6,7 +6,7 @@ import ToastProvider from "./ToastProvider";
 export function AppWrapper() {
   return (
     <ToastProvider>
-      <AuthProvider>
+      <AuthProvider isAllowed={true}>
         <Outlet />
       </AuthProvider>
     </ToastProvider>

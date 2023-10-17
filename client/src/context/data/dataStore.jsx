@@ -13,14 +13,14 @@ export const useColorStore = create(
       setColorPosition: () =>
         set((state) => {
           const nextColorPosition =
-            (state.colorPosition + 1) % ThemeColors.length;
+            (state.colorPosition + 1) % themeLength;
           return {
             colorPosition: nextColorPosition,
             color: ThemeColors[nextColorPosition], // Aktualisiere die Farbe
           };
         }),
       setSpecificColor: (index) => {
-        if (index >= 0 && index < ThemeColors.length) {
+        if (index >= 0 && index < themeLength) {
           set((state) => ({
             colorPosition: index,
             color: ThemeColors[index], // Aktualisiere die Farbe
@@ -50,13 +50,13 @@ export const useDarkLightMode = create(
 );
 
 
-// export const useAuthStore = create(
-//     persist(
-//         (set,get)=> ({
-//             role: null,
-//             profile:null,
-//             isAuth:false,
-//             errors:null,
+export const useAuthStore = create(
+    persist(
+        (set,get)=> ({
+            role: null,
+            profile:null,
+            isAuth:false,
+            errors:null,
 
-//     }))
-// )
+    }))
+)

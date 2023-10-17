@@ -27,3 +27,16 @@ export async function loginRequest ({user, password}){
         throw new Error(errorMessage);
     }
 }
+
+
+export async function refreshRequest (){
+
+    const refreshHandler = axios.post("/api/auth/tokenRefresh");
+
+    if(!refreshHandler.ok) {
+        const errorResponse = await loginHandler.json();
+        const errorMessage = errorResponse.message || "Failed to login.";
+        throw new Error(errorMessage);
+    }
+}
+
