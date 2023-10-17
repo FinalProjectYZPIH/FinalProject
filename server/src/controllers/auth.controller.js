@@ -20,8 +20,7 @@ import {
 
 // import { Session } from "../models/schema/session.schema.js";
 //variables
-const accessTokenP = process.env.ACCESS_TOKEN_SECRET || "";
-const refreshTokenP = process.env.REFRESH_TOKEN_SECRET || "";
+
 
 export const login = async (req, res, next) => {
   const { password } = req?.body;
@@ -103,7 +102,7 @@ export const sessionRefreshHandler = async (req, res, next) => {
     const cookies = req.cookies;
     if (!cookies.accessJwt) return next("Json Web Token not found");
 
-    const { decoded, valid } = verifyJwt(cookies.refreshJwt, refreshTokenP);
+    const { decoded, valid } = verifyJwt(cookies.refreshJwt, process.env.REFRESH_TOKEN_SECRET || "");
 
     if (valid) {
       res.locals.role = decoded?.UserInfo.role;
@@ -129,7 +128,7 @@ export const logout = async (req, res, next) => {
   try {
     const aceessJWT = req.cookies.accessJwt;
 
-    const { decoded } = verifyJwt(aceessJWT, accessTokenP);
+    const { decoded } = verifyJwt(aceessJWT, process.env.ACCESS_TOKEN_SECRET || "");
 
     const session = await updateSession(
       { _id: decoded?.UserInfo.session },
