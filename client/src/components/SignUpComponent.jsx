@@ -11,7 +11,7 @@ export const SignUpComponent = () => {
                     <Inputs label="First Name" ph="Enter your first name" />
                     <Inputs label="Last Name" ph="Enter your last name" />
                     <Inputs label="Username" ph="Choose a username" />
-                    <Inputs label="Email" ph="Enter your email" />
+                    <Inputs label="Email" ph="Enter your email" type="email" />
                     <Inputs label="Confirm Email" ph="Confirm your email" />
                     <Inputs label="Birthday" ph="Enter your birthday" />
                     <Inputs label="Password" ph="Choose a password" />
