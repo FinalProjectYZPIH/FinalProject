@@ -7,7 +7,7 @@ import { Inputs } from './Inputs.jsx';
 
 export const LoginComponent = () => {
     return (
-        <div className='flex items-center justify-center'>
+        <div className='flex items-center justify-center' style={{ background: 'url("./src/assets/bg1.jpg")', backgroundPosition:'center' }}>
             <div className="bg-slate-800 border border-slate-400 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-30 relative">
                 <h1 className="text-4xl text-white-bold text-center mb-6">LOGIN</h1>
                 <ButtonGoogle />
