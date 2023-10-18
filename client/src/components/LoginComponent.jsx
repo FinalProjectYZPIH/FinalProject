@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ButtonGoogle } from '../components/Buttons.jsx';
@@ -29,4 +30,5 @@ export const LoginComponent = () => {
             </div>
         </div>
     );
+
 };

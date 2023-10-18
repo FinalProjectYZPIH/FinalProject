@@ -9,6 +9,7 @@ import {
 } from "../models/schema/user.schema.js";
 import SessionModel from "../models/session.model.js";
 import { cookieSessionSchema } from "../models/schema/session.schema.js";
+import UserModel from "../models/user.model.js";
 
 // services
 import { compareDBPassword } from "../services/user.service.js";
@@ -20,19 +21,25 @@ import {
 
 // import { Session } from "../models/schema/session.schema.js";
 //variables
-const accessTokenP = process.env.ACCESS_TOKEN_SECRET || "";
-const refreshTokenP = process.env.REFRESH_TOKEN_SECRET || "";
+
 
 export const login = async (req, res, next) => {
+  
   const { password } = req?.body;
   let loginSchema;
-
+  
   if (req?.body.email) {
     loginSchema = emailLoginSchema;
+    const foundEmail = await UserModel.findOne({ email: req.body.email })
+    if(!foundEmail ) return next("User Notfound pls Sign up")
   } else {
     loginSchema = nameLoginSchema;
+    const foundUser = await UserModel.findOne({ username: req.body.username })
+    if(!foundUser  ) return next("User Notfound pls Sign up")
   }
-
+  
+  
+  
   try {
     const loginResult = loginSchema.safeParse(req.body);
     console.log(loginResult.error);
@@ -103,7 +110,7 @@ export const sessionRefreshHandler = async (req, res, next) => {
     const cookies = req.cookies;
     if (!cookies.accessJwt) return next("Json Web Token not found");
 
-    const { decoded, valid } = verifyJwt(cookies.refreshJwt, refreshTokenP);
+    const { decoded, valid } = verifyJwt(cookies.refreshJwt, process.env.REFRESH_TOKEN_SECRET || "");
 
     if (valid) {
       res.locals.role = decoded?.UserInfo.role;
@@ -129,7 +136,7 @@ export const logout = async (req, res, next) => {
   try {
     const aceessJWT = req.cookies.accessJwt;
 
-    const { decoded } = verifyJwt(aceessJWT, accessTokenP);
+    const { decoded } = verifyJwt(aceessJWT, process.env.ACCESS_TOKEN_SECRET || "");
 
     const session = await updateSession(
       { _id: decoded?.UserInfo.session },

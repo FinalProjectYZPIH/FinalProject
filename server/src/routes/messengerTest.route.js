@@ -1,11 +1,9 @@
 import express from "express";
 import * as Messengerservice from "../services/messenger.service.js";
 import { verifyJwt } from "../helpers/utils/jwt.utils.js";
-import verifyRole from "../helpers/middleware/verifyRole.js";
 
 const router = express.Router();
 
-router.use(verifyRole)
 
 router
     .post("/send", sendHi)

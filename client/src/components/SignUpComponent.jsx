@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ButtonSignIn } from './Buttons';
 import { Inputs } from './Inputs';
@@ -23,3 +24,4 @@ export const SignUpComponent = () => {
         </div>
     );
 };
+
