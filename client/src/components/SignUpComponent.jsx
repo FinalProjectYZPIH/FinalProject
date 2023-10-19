@@ -1,13 +1,14 @@
 
 import React from 'react';
-import { ButtonSignIn } from './Buttons';
+import { Button } from './Buttons'
 import { Inputs } from './Inputs';
-// import { url } from 'inspector';
-
+// import { bgLightMode } from '../../tailwind.config.js';
+import backgroundImages from '../../tailwind.config.js'
+// style={{ background: 'url("./src/assets/bg1.jpg")', backgroundPosition:'center' }}
 export const SignUpComponent = () => {
     return (
-        <div className='flex items-center justify-center' style={{ background: 'url("./src/assets/bg1.jpg")', backgroundPosition:'center' }} >
-            <div className="p-10 m-10 h-screen w-screen-sm bg-slate-800 border border-slate-400 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-30">
+        <div className='flex items-center justify-center bg-bgLightMode bg-cover'  >
+            <div className="p-10 m-10 h-screen w-screen-sm bg-slate-800 border border-slate-400 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-95">
                 <h1 className="text-4xl text-white-bold text-center mb-6">SIGN UP</h1>
                 <form action="">
                     <Inputs label="First Name" ph="Enter your first name" type="text" />
@@ -18,7 +19,7 @@ export const SignUpComponent = () => {
                     <Inputs label="Birthday" ph="Enter your birthday" type="date" />
                     <Inputs label="Password" ph="Choose a password" type="password" />
                     <Inputs label="Confirm Password" ph="Confirm your password" type="password" />
-                    <ButtonSignIn />
+                    <Button>Sign In </Button>
                 </form>
             </div>
         </div>
