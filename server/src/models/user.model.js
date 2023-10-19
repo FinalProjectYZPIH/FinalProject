@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema(
       unique:true,
       required: true
     },
+    googleId: {
+      type:String,
+      unique: true,
+    },
     email: {
       type: String,
       unique: true,

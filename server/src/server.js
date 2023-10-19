@@ -10,17 +10,22 @@ import cors from "cors";
 import compression from "compression";
 import morgan from "morgan";
 import mongoSanitize from "express-mongo-sanitize";
+import passport from "passport";
 
 
 // routes
 import userRoute from "./routes/user.route.js";
 import authRoute from "./routes/auth.route.js";
+import googleAuthRoute from "./routes/google.auth.js"
 import messengerTestRoute from "./routes/messengerTest.route.js";
 
 
 // config 
 import corsOptions from "./config/allowesOrigins.js";
 import dbConnection from "./config/dbConnection.js";
+
+// importieren passportConfig.js
+import passportConfig from "./config/passportConfig.js";
 
 
 // helper
@@ -42,12 +47,16 @@ dotenv.config();
 const port = process.env.PORT || 3500;
 const app = express();
 
+// Passport nutzen
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(cors(corsOptions));  
 const httpServer = createServer(app)
 const io = new Server(httpServer, {
   cors: {
     origin: "*", // Hier können Sie die gewünschten Ursprünge festlegen oder "*" verwenden, um alle Ursprünge zuzulassen
-    methods: ["GET", "POST", "PATCH"], // Erlaubte HTTP-Methoden
+    methods: ["GET", "POST", "PATCH","PUT","DELETE"], // Erlaubte HTTP-Methoden
   }})
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
@@ -92,6 +101,9 @@ io.on("connection", (socket) => {
   })
 })
 
+// google auth routes nutzen 
+//Hinweis : /api/auth kann oauth nicht akzeptieren so es soll nur /auth sein
+app.use("/auth", googleAuthRoute)
 
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
