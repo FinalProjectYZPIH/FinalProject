@@ -10,7 +10,7 @@ import cors from "cors";
 import compression from "compression";
 import morgan from "morgan";
 import mongoSanitize from "express-mongo-sanitize";
-import passport from "passport";
+import session from "express-session"
 
 
 // routes
@@ -25,7 +25,7 @@ import corsOptions from "./config/allowesOrigins.js";
 import dbConnection from "./config/dbConnection.js";
 
 // importieren passportConfig.js
-import passportConfig from "./config/passportConfig.js";
+import passport from "./config/passportConfig.js";
 
 
 // helper
@@ -46,6 +46,14 @@ import deserializeUser from "./helpers/middleware/deserializeUser.js";
 dotenv.config();
 const port = process.env.PORT || 3500;
 const app = express();
+
+// nutze express-session
+app.use(session({
+    secret: "commet-chat-app",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 
 // Passport nutzen
 app.use(passport.initialize());

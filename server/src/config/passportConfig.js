@@ -18,16 +18,15 @@ passport.use(
           return done(null, existingUser);
         } else {
           const newUser = new UserModel({
-            firstname: profile.given_name,
-            lastname: profile.family_name,
+            firstname: profile.name.givenName,
+            lastname: profile.name.familyName,
             username: profile.username,
-            password: profile.password_hash,
             googleId: profile.id,
-            email: profile.email,
-            avatarImage: profile.picture,
+            avatarImage: profile.photos[0].value,
 
             // andere befehle hinzufügen
           });
+
           await newUser.save();
           return done(null, newUser);
         }

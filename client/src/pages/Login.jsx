@@ -16,10 +16,11 @@ import Signup from './Signup.jsx';
 
 const Login = () => {
     const google = () => {
-        window.open("http://localhost:3000/auth/google","_blank")
+        window.open("http://localhost:3000/auth/google/","_blank")
     }
     return (  
         <div>
+            <a ></a>
             <div className="bg-slate-800 border border-slate-400 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-30 relative">
                 <h1 className="text-4xl text-white-bold text-center mb-6">LOGIN</h1>
                 <form action="">
