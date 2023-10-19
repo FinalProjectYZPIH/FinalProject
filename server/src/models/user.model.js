@@ -40,7 +40,9 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
+
       // required: true,
+
       // match: [/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/m, "Password >> Mindestens 8 Zeichen lang. Mindestens ein Kleinbuchstabe. Mindestens ein Großbuchstabe. Mindestens eine Ziffer"]
     },
     avatarImage: String,

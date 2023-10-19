@@ -43,6 +43,7 @@ import deserializeUser from "./helpers/middleware/deserializeUser.js";
 // };
 // console.log(generateRandomKey(32));
 
+
 dotenv.config();
 const port = process.env.PORT || 3500;
 const app = express();
@@ -98,7 +99,6 @@ app.disable("x-powered-by");
 
 // app.use(express.static("public"))
 
-// app.use(deserializeUser)
 
 io.on("connection", (socket) => {
   console.log("a user connected"),
@@ -109,9 +109,13 @@ io.on("connection", (socket) => {
   })
 })
 
+
 // google auth routes nutzen 
 //Hinweis : /api/auth kann oauth nicht akzeptieren so es soll nur /auth sein
 app.use("/auth", googleAuthRoute)
+
+//app.use(deserializeUser)
+
 
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);

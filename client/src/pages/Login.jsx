@@ -1,20 +1,8 @@
 
-// export default function Login() {
-//   return (
-//     <div>Login
-//       <form action="" method="post">
-//       <input type="text" placeholder="email/username"  />
-//       <input type="password" placeholder="password." />
-//       <button type="button">submit</button>
-//       </form>
-
-//     </div>
-//   )
-// }
-import { Link } from 'react-router-dom';
-import Signup from './Signup.jsx';
+import {LoginComponent} from '../components/LoginComponent.jsx';
 
 const Login = () => {
+
     const google = () => {
         window.open("http://localhost:3000/auth/google/","_blank")
     }
@@ -49,6 +37,13 @@ const Login = () => {
             </div >
         </div >
     ) 
+
+ // return (
+   // <>
+    //  <LoginComponent />
+   // </>
+ // )
+
 }
 
 export default Login;
