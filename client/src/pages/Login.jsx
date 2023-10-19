@@ -15,6 +15,9 @@ import { Link } from 'react-router-dom';
 import Signup from './Signup.jsx';
 
 const Login = () => {
+    const google = () => {
+        window.open("http://localhost:3000/auth/google","_blank")
+    }
     return (  
         <div>
             <div className="bg-slate-800 border border-slate-400 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-30 relative">
@@ -40,6 +43,7 @@ const Login = () => {
                     <div>
                         <span>New here? <Link to='/Signup'>Create new Account</Link> </span>
                     </div>
+                    <button onClick={google}> continue with google account</button>
                 </form>
             </div >
         </div >
