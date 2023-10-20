@@ -5,13 +5,13 @@ import {
   Route,
 } from "react-router-dom";
 import AuthLayout from "./pages/layout/AuthLayout";
-import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import RootLayout from "./pages/layout/RootLayout";
 import Home from "./pages/Home";
 import Navigation from "./components/Navigation";
 import { AppWrapper } from "./context/data/AppWrapper";
 import ChatDashboard from "./pages/ChatDashboard";
+import { Login } from "./pages/Login";
 
 // function App() {
 

@@ -6,6 +6,10 @@ export default {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        'bgLightMode': "url('src/assets/bgLightMode.jpg')",
+        'bgDarkMode': "url('src/assets/bgDarkMode.jpg')",
+      }
     },
   },
   plugins: [],
