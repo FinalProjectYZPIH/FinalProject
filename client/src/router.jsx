@@ -11,7 +11,7 @@ import RootLayout from "./pages/layout/RootLayout";
 import Home from "./pages/Home";
 import Navigation from "./components/Navigation";
 import { AppWrapper } from "./context/data/AppWrapper";
-import ChatDashboard from "./components/Chat/ChatDashboard";
+import ChatDashboard from "./pages/ChatDashboard";
 
 // function App() {
 
@@ -40,7 +40,4 @@ export const router = createBrowserRouter(
       </Route>
     </Route>
   )
-  //   ,
-  //   createRoutesFromElements(
-  //   )
 );

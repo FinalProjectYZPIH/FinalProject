@@ -1,4 +1,7 @@
 import axios from "../../libs/axiosProtected";
+import {useQuery, useMutation, useQueryClient} from "@tanstack/react-query"
+import { useState } from "react";
+
 
 export async function registerRequest(data) {
   const {
@@ -25,16 +28,24 @@ export async function registerRequest(data) {
   return registerHandler.data;
 }
 
-export async function loginRequest({ user, password }) {
-    let requestData = {};
+export function useLoginRequest() {
+  const [loginData, setLoginData] = useState({ username: '', password: '' });
 
-    if (user.email) {
-      requestData = { email: user.email, password };
-    } else if (user.username) {
-      requestData = { username: user.username, password };
-    }
-  const loginHandler = await axios.post("/api/auth/login",requestData)
-  return loginHandler.data;
+
+    const loginMutation = useMutation({
+      mutationFn: async () => {
+        await axios.post("/api/auth/login",loginData)
+      },
+      // onError: () => {
+
+      // },
+      // onSuccess: () => {
+
+      // },
+
+  })
+
+  return [loginData, setLoginData, loginMutation]
 }
 
 export async function refreshRequest() {
