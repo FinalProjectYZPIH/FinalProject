@@ -10,14 +10,15 @@ import backgroundImages from '../../tailwind.config.js';
 
 export const LoginComponent = () => {
     return (
-        <div className='flex items-center justify-center bg-bgLightMode bg-cover h-screen-ms w-screen-sm bg-cover' >
-            <div className="p-10 m-10 h-screen-sm w-screen-sm bg-slate-800 border border-slate-400 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-95">
+        <div className='flex items-center justify-center bg-bgLightMode bg-cover h-screen w-screen-sm bg-cover' >
+            <div className="p-10 m-10 h-screen-sm w-screen-sm bg-slate-800 border border-slate-400 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-25">
                 <h1 className="text-4xl text-white-bold text-center mb-6">LOGIN</h1>
                 <MediaButtons> <GoogleIcons />sign in with google</MediaButtons>
                 <MediaButtons><FacebookIcons />sign in with facebook</MediaButtons>
                 <form action="" method="post">
-                    <Inputs ph="Your Email">your email</Inputs>
-                    <Inputs ph="Your Password">your password</Inputs>
+
+                    <Inputs label="enter email" ph="Your Email" type="email">your email</Inputs>
+                    <Inputs label="enter password" ph="Your Password" type="password">your password</Inputs>
                     <div>
                         <div>
                             <input type="checkbox" name="checkbox" id="checkbox" />

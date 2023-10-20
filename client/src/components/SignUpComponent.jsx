@@ -7,8 +7,8 @@ import backgroundImages from '../../tailwind.config.js'
 export const SignUpComponent = () => {
  
     return (
-        <div className='flex items-center justify-center bg-bgLightMode bg-cover bg-opacity-80 h-screen'  >
-            <div className="p-10 m-10 h-screen-sm w-screen-sm bg-slate-800 border border-slate-400 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm ">
+        <div className='flex items-center justify-center bg-bgLightMode bg-cover  h-screen'  >
+            <div className="p-10 m-10 h-screen-sm w-screen-sm bg-slate-800 border border-slate-400 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-25">
                 <h1 className="text-4xl text-blue-600 text-center mb-6">SIGN UP</h1>
                 <form action="">
                     <Inputs label="First Name" ph="Enter your first name" type="text" />
