@@ -31,19 +31,20 @@ export async function registerRequest(data) {
 export function useLoginRequest() {
   const [loginData, setLoginData] = useState({ username: '', password: '' });
 
-
-    const loginMutation = useMutation({
-      mutationFn: async () => {
-        await axios.post("/api/auth/login",loginData)
-      },
-      // onError: () => {
-
+  const loginMutation = useMutation({
+    mutationFn: async () => {
+      await axios.post("/api/auth/login",loginData)
+    },
+    // onError: () => {
+      
       // },
       // onSuccess: () => {
-
-      // },
-
-  })
+        
+        // },
+        
+      })
+      
+      console.log(loginMutation)
 
   return [loginData, setLoginData, loginMutation]
 }
