@@ -3,7 +3,7 @@ import passport from "passport"
 
 const router = express.Router();
 
-router.get("/google", passport.authenticate("google", {scope:["profile"]}));
+router.get("/google", passport.authenticate("google", {scope:["profile","email"]}));
 
 router.get("/login/failed", (req, res) => {
     const errorMessage = req.flash("error")[0] || "Something went wrong!";
