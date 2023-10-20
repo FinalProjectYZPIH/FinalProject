@@ -10,17 +10,22 @@ import cors from "cors";
 import compression from "compression";
 import morgan from "morgan";
 import mongoSanitize from "express-mongo-sanitize";
+import session from "express-session"
 
 
 // routes
 import userRoute from "./routes/user.route.js";
 import authRoute from "./routes/auth.route.js";
+import googleAuthRoute from "./routes/google.auth.js"
 import messengerTestRoute from "./routes/messengerTest.route.js";
 
 
 // config 
 import corsOptions from "./config/allowesOrigins.js";
 import dbConnection from "./config/dbConnection.js";
+
+// importieren passportConfig.js
+import passport from "./config/passportConfig.js";
 
 
 // helper
@@ -31,6 +36,7 @@ import deserializeUser from "./helpers/middleware/deserializeUser.js";
 
 
 // generate random Token
+
 // import crypto from "crypto"
 // const generateRandomKey = (length) => {
 //   return crypto.randomBytes(length).toString('base64');
@@ -42,12 +48,24 @@ dotenv.config();
 const port = process.env.PORT || 3500;
 const app = express();
 
+// nutze express-session
+app.use(session({
+    secret: "commet-chat-app",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+
+// Passport nutzen
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(cors(corsOptions));  
 const httpServer = createServer(app)
 const io = new Server(httpServer, {
   cors: {
     origin: "*", // Hier können Sie die gewünschten Ursprünge festlegen oder "*" verwenden, um alle Ursprünge zuzulassen
-    methods: ["GET", "POST", "PATCH"], // Erlaubte HTTP-Methoden
+    methods: ["GET", "POST", "PATCH","PUT","DELETE"], // Erlaubte HTTP-Methoden
   }})
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
@@ -91,7 +109,13 @@ io.on("connection", (socket) => {
   })
 })
 
-app.use(deserializeUser)
+
+// google auth routes nutzen 
+//Hinweis : /api/auth kann oauth nicht akzeptieren so es soll nur /auth sein
+app.use("/auth", googleAuthRoute)
+
+//app.use(deserializeUser)
+
 
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
