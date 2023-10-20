@@ -50,13 +50,13 @@ export const useDarkLightMode = create(
 );
 
 
-export const useAuthStore = create(
-    persist(
-        (set,get)=> ({
-            role: null,
-            profile:null,
-            isAuth:false,
-            errors:null,
+// export const useAuthStore = create(
+//     persist(
+//         (set,get)=> ({
+//             role: null,
+//             profile:null,
+//             isAuth:false,
+//             errors:null,
 
-    }))
-)
+//     }))
+// )
