@@ -1,14 +1,39 @@
 
+import { FacebookIcons, GoogleIcons } from "../assets/Icons.jsx";
+import { MediaButtons } from "../components/Buttons.jsx";
+import { LoginComponent } from "../components/LoginComponent.jsx";
+
+const Login = () => {
+  return (
+    <>
+      <h1 className="text-4xl text-white-bold text-center mb-6">LOGIN</h1>
+
+      <MediaButtons>
+        {" "}
+        <GoogleIcons /> sign in with google
+      </MediaButtons>
+      <MediaButtons>
+        <FacebookIcons /> sign in with facebook
+      </MediaButtons>
+
+      <LoginComponent />
+    </>
+  );
+};
+
+export default Login;
+
+
+// beispiele 
 // import { useState } from "react";
 // import { useProfileStore } from "../context/data/dataStore.jsx";
-// import { profileRequest, refreshRequest, useLoginRequest } from "../context/api/auth.jsx";
+// import { profileRequest, refreshRequest, loginRequest } from "../context/api/auth.jsx";
 // export const Login = () => {
 //   const { defaultProfile, setLogin, setLogout } = useProfileStore();
 
-//   const mutation = useLoginRequest();
+//   const mutation = loginRequest();
 //   const refreshData = refreshRequest("refresh",{test: "hi"})
 //   const userProfile = profileRequest("profile")
-
 
 //   const {
 //     data: userdata,
@@ -17,7 +42,6 @@
 //     error,
 //     isError,
 //   } = userProfile;
-
 
 //   // const {isOnline } = defaultProfile;
 //   const [formData, setFormData] = useState({
@@ -98,23 +122,9 @@
 //         ? `3${userdata.data}`
 //         : "Unknown Mistake........."}
 
-
-
-//       {/* <LoginComponent /> */}
+{
+  /* <LoginComponent /> */
+}
 //     </>
 //   );
 // };
-
-import {LoginComponent} from '../components/LoginComponent.jsx';
-
-export const Login = () => {
-    return (
-      <>
-        <LoginComponent />
-      </>
-    )
-   
-}
-
-
-export default Login;

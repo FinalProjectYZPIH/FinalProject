@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 //   queryKey: [],  //bestimme welchen der queries sollen nicht gespeichert werden 
 // })
 
-export async function registerRequest() {
+export function registerRequest() {
   // const registerHandler = await axios.post("/api/auth/createUser", { alternative eingabe
   //   firstname,
   //   lastname,
@@ -33,15 +33,15 @@ export async function registerRequest() {
   return registerMutation;
 }
 
-export function useLoginRequest() {
+export function loginRequest() {
   //tested
   const loginMutation = useMutation({
     mutationFn: async (loginData) =>
       await axios.post("/api/auth/login", loginData),
-    onSuccess: () => {}, // hier kann man success error und finally fälle einstellen
-    onError: () => {},
+    onSuccess: () => {toast.success("Willkommen zurück!");}, // hier kann man success error und finally fälle einstellen
+    onError: () => {toast.error("Fail to  sign in...")},
     onSettled: () => {
-      toast.success("Erfolgreich... Failed!");
+      
     },
   });
 
@@ -66,7 +66,7 @@ export function refreshRequest(...key) {
 
 }
 
-export async function logoutRequest() {
+export function logoutRequest() {
   const logoutQuery = useMutation({
     mutationFn: async () => await axios.post("/api/auth/logout"),
     onSuccess: () => {}, // hier kann man success error und finally fälle einstellen
@@ -78,12 +78,12 @@ export async function logoutRequest() {
   return logoutQuery;
 }
 
-export async function profileRequest(...key) {
+export function profileRequest(...key) {
   return useQuery({
     queryKey:key, 
     queryFn: async () => await axios.get("/api/user/getProfile"),
     onSuccess: () => {
-      
+       
     }, // hier kann man success error und finally fälle einstellen
     onError: () => {},
     onSettled: () => {

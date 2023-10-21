@@ -2,7 +2,7 @@ import axios from "../../libs/axiosProtected.js";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
-export async function findAllUserRequest(...key) {
+export function findAllUserRequest(...key) {
   return useQuery({
     queryKey: key,
     queryFn: async () => await axios.get("/api/user"),
@@ -15,7 +15,7 @@ export async function findAllUserRequest(...key) {
 
 }
 
-export async function updateUserRequest() {
+export function updateUserRequest() {
   // {  logoinData schema
   //   username,
   //   oldPassword,
@@ -36,7 +36,7 @@ export async function updateUserRequest() {
 
 }
 
-export async function findOneRequest(username,...key) {
+export function findOneRequest(username,...key) {
   return useQuery({
     queryKey: key,
     queryFn: async () => await axios.get(`/api/user/${username}`),
@@ -49,7 +49,7 @@ export async function findOneRequest(username,...key) {
 
 }
 
-export async function deleteAccountRequest() {
+export function deleteAccountRequest() {
   const findQuery = useMutation({
     mutationFn: async () => await axios.delete(`/api/user/deleteAccount`),
     onSuccess: () => {}, // hier kann man success error und finally fälle einstellen
