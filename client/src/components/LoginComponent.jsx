@@ -8,10 +8,6 @@ import { FacebookIcons } from '../assets/Icons.jsx';
 import { Inputs } from './Inputs.jsx';
 // import backgroundImages from '../../tailwind.config.js';
 
-
-
-// style={{ background: 'url("./src/assets/bg1.jpg")', backgroundPosition: 'center' }}
-
 export const LoginComponent = () => {
 
 
@@ -19,14 +15,17 @@ export const LoginComponent = () => {
         window.open("http://localhost:3000/auth/google","_blank");
     }
     return (
-        <div className='flex items-center justify-center bg-bgLightMode bg-cover' >
-            <div className="bg-slate-800 bg-opacity-75 md:bg-opacity-25 m-10 h-screen w-screen  border border-slate-400 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm ">
+        <div className='flex items-center justify-center bg-bgLightMode h-screen w-screen-sm bg-cover' >
+            <div className="m-10 h-screen-sm w-screen-sm bg-slate-800 border border-slate-400 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-25">
                 <h1 className="text-4xl text-white-bold text-center mb-6">LOGIN</h1>
-                <MediaButtons window={google}> <GoogleIcons />sign in with google</MediaButtons>
-                <MediaButtons><FacebookIcons /> sign in with facebook</MediaButtons>
+
+                <MediaButtons> <GoogleIcons />sign in with google</MediaButtons>
+                <MediaButtons><FacebookIcons />sign in with facebook</MediaButtons>
+
                 <form action="" method="post">
-                    <Inputs ph="Your Email">your email</Inputs>
-                    <Inputs ph="Your Password">your password</Inputs>
+
+                    <Inputs label="enter email" ph="Your Email" type="email">your email</Inputs>
+                    <Inputs label="enter password" ph="Your Password" type="password">your password</Inputs>
                     <div>
                         <div>
                             <input type="checkbox" name="checkbox" id="checkbox" />
