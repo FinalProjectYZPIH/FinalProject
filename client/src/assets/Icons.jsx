@@ -5,7 +5,7 @@ export const GoogleIcons = () => {
     <svg
       className="h-6 w-6"
       xmlns="http://www.w3.org/2000/svg"
-      xmlns: xlink="http://www.w3.org/1999/xlink"
+      xmlnsXlink="http://www.w3.org/1999/xlink"
       width="800px"
       height="800px"
       viewBox="-0.5 0 48 48"
@@ -17,9 +17,9 @@ export const GoogleIcons = () => {
       <g
         id="Icons"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         {" "}
         <g id="Color-" transform="translate(-401.000000, -860.000000)">

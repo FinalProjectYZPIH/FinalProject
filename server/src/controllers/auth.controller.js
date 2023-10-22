@@ -24,13 +24,15 @@ import {
 
 
 export const login = async (req, res, next) => {
-  
+    console.log(req.body)
   const { password } = req?.body;
+
   let loginSchema;
   
   if (req?.body.email) {
     loginSchema = emailLoginSchema;
     const foundEmail = await UserModel.findOne({ email: req.body.email })
+
     if(!foundEmail ) return next("User Notfound pls Sign up")
   } else {
     loginSchema = nameLoginSchema;

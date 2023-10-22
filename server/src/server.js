@@ -114,7 +114,7 @@ io.on("connection", (socket) => {
 //Hinweis : /api/auth kann oauth nicht akzeptieren so es soll nur /auth sein
 app.use("/auth", googleAuthRoute)
 
-//app.use(deserializeUser)
+app.use(deserializeUser)
 
 
 app.use("/api/auth", authRoute);
