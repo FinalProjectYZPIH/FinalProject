@@ -5,7 +5,7 @@ import { signJwt, verifyJwt } from "../helpers/utils/jwt.utils.js";
 
 //external Modul
 import jwt from "jsonwebtoken";
-import { cookieSessionSchema } from "../models/schema/session.schema.js";
+import { cookieSessionSchema } from "../models/validierungsSchema/session.schema.js";
 
 export async function createSession(userId, userAgent, next) {
   try {
