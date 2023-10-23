@@ -6,32 +6,32 @@ const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyz0123456789", 10);
 
 
 const MessageSchema = new mongoose.Schema({
-    sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, //für einzeln Nachricht
+    sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, 
     content: {type: String, trim: true},
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     emojis: [{ type: String }], 
-    chat: {type: mongoose.Schema.Types.ObjectId, ref: "Chat"},
-    images: [{type: mongoose.Schema.Types.ObjectId, ref: "Image"}], // URL oder Dateipfad zum Bild
-  },{
-    timestamps:{
-      createdAt: true
-    }
-  });
+    time: [{ type: String }], 
+    images: [{type:String}], // URL oder Dateipfad zum Bild
+    voices: [{type:String}],
+    videos: [{type:String}],
+  }
+  );
   
 
 
-const ChatSchema = new mongoose.Schema(
+const GroupChatSchema = new mongoose.Schema(
   {
-    // chatId: { type: String, unique: true, default: () => `note_${nanoid()}` },
     chatName: {type: String, default: false},
     isGroupChat: {type: Boolean, default: false},
-    chatMessages: {type: mongoose.Schema.Types.ObjectId, ref: "Message"}, //speichert nur die letzte Nachricht, sonst vorerst im localstorage
+    chatMessages: [MessageSchema], 
     participants: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // für gruppen nachricht
     chatAdmin: {type: mongoose.Schema.Types.ObjectId, ref: "User"}
     
   },
   {
-    timestamps: true,
+    timestamps:{
+      createdAt: true
+    }
     // toJSON: { virtuals: true }, // So `res.json()` and other `JSON.stringify()` functions include virtuals
     // toObject: { virtuals: true }, // So `console.log()` and other functions that use `toObject()` include virtuals
   }
@@ -43,7 +43,7 @@ const ChatSchema = new mongoose.Schema(
 //   foreignField: "content", // related opposite key
 // });
 
-const ChatModel = mongoose.model("Chat", ChatSchema, "Chats");
+const ChatModel = mongoose.model("ChatRoom", GroupChatSchema, "ChatRooms");
 
 const MessageModel = mongoose.model("Message", MessageSchema, "Messages")
 

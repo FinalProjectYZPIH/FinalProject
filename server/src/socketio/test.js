@@ -1,7 +1,7 @@
 
 
 
-export const test = (io, socket) => {
+export const test = ( socket, io) => {
     console.log("a user connected"),
     console.log(socket.id)
     socket.on("message", (message) => {
@@ -11,6 +11,5 @@ export const test = (io, socket) => {
     
     socket.on("disconnect", () => {
         console.log(`User ${socket.id} disconnected`);
-        socket.off("message"); // Entfernt den "message" Event-Listener
     });
 }

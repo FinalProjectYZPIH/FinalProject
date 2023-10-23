@@ -51,7 +51,8 @@ const userSchema = new mongoose.Schema(
       // match: [/^\d{2}-\d{2}-\d{4}$/, "TT-MM-JJJJ Format"]
     },
 
-    chats: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Chat' }],
+    chats: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ChatRoom' }],
+    friends: [{type: mongoose.Schema.Types.ObjectId, ref: "User"}]
   },
   { timestamps: true }
 );

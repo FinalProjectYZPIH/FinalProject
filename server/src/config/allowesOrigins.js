@@ -10,7 +10,7 @@ const googleauth = "http://localhost:3000/auth/google"
 const allowedOrigins = [localPort, dbPort,googleauth];
 console.log(allowedOrigins.includes(dbPort))
 // Cors Einstellungsobjekt
-export const corsOptions = {
+const corsOptions = {
   origin: (origin, callback) => {
     if (allowedOrigins.includes(origin ) || !origin) {
       callback(null, true);
@@ -21,4 +21,4 @@ export const corsOptions = {
   credentials: true,
 };
 
-export default corsOptions;
+export {corsOptions, allowedOrigins};
