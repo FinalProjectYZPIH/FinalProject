@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import UserModel from "../models/user.model.js";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import logger from "../helpers/middleware/logger.js";
 import passport from "passport";
 dotenv.config();
 
@@ -34,9 +35,10 @@ passport.use(
           });
 
           await newUser.save();
-          return done(null, newUser);
+          return done("User isn't created", newUser);
         }
       } catch (err) {
+        logger.error(err);
         return done(err);
       }
     }
@@ -44,11 +46,11 @@ passport.use(
 );
 
 passport.serializeUser((user, done) => {
-  done(null, user);
+  done("SerializeUser not working", user);
 });
 
 passport.deserializeUser((user, done) => {
-  done(null, user);
+  done("DeserializeUser not working", user);
 });
 
 export default passport;
