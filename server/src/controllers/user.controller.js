@@ -78,7 +78,7 @@ export const findOneUser = async (req, res, next) => {
       // const user = await UserService.dbFindOneUserById( id);
       const user = await UserService.dbFindUserByUsername(username, next);
       if (!user) return next("User not found");
-      res.status(200).json({ message: user });
+      res.status(200).json(user);
     }
     res.status(400);
     return next("findOneUser Invalid Token ID");
@@ -112,7 +112,7 @@ export const getProfile = async (req, res, next) => {
     console.log("userid", userId);
     const user = await UserService.dbFindOneUserById(userId, next);
     if (!user) return res.status(400).next("User not found");
-    res.status(200).json({ message: user + " found" });
+    res.status(200).json(user);
   } catch (error) {
     console.log(error);
     next("geProfile" + error);

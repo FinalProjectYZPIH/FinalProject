@@ -1,7 +1,7 @@
 import axios from "../../libs/axiosProtected";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-
+import { useProfileStore } from "../data/dataStore";
 
 // const queryClient = useQueryClient();
 
@@ -22,12 +22,13 @@ export function registerRequest() {
   // });
   const registerMutation = useMutation({
     mutationFn: async (loginData) =>
-      await axios.post("/api/auth/login", loginData),
-    onSuccess: () => {}, // hier kann man success error und finally fälle einstellen
+      await axios.post("/api/auth/", loginData),
+    onSuccess: () => { toast.success("Erfolgreich... Failed!");}, // hier kann man success error und finally fälle einstellen
     onError: () => {},
     onSettled: () => {
       toast.success("Erfolgreich... Failed!");
     },
+    
   });
 
   return registerMutation;
@@ -79,11 +80,15 @@ export function logoutRequest() {
 }
 
 export function profileRequest(...key) {
+  const {isOnline} = useProfileStore(state => state.defaultProfile)
+
+  // key ist gleich ["test",test1,"test2"] >> test/test1/test2    es kann auch object etc übergeben werden
   return useQuery({
     queryKey:key, 
     queryFn: async () => await axios.get("/api/user/getProfile"),
+    enabled: !!isOnline, // kann nur gefetched werden, wenn isOnline sich auf true verändert
     onSuccess: () => {
-       
+
     }, // hier kann man success error und finally fälle einstellen
     onError: () => {},
     onSettled: () => {
