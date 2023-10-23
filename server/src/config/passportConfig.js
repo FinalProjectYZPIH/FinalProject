@@ -11,13 +11,12 @@ passport.use(
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: "http://localhost:3000/auth/google/callback",
-      userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo",
+      userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo" 
     },
-    async function (accessToken, refreshToken, profile,email, done) {
+    async function (accessToken, refreshToken, profile, done) {
       // console.log(profile)
       // console.log(profile.displayName.split(" ").join(""))
-      // console.log(email);
-      console
+      // console.log(email)
       try {
         const existingUser = await UserModel.findOne({ googleId: profile.id });
         if (existingUser) {
@@ -26,8 +25,8 @@ passport.use(
           const newUser = new UserModel({
             firstname: profile.name.givenName,
             lastname: profile.name.familyName,
-            username: profile.displayName.split(" ").join(""),
-            email:profile.email[0].value,
+            email: profile.emails[0].value,
+            username: profile.displayName.split(" ").join("").toLowerCase(),
             googleId: profile.id,
             avatarImage: profile.photos[0].value,
 
