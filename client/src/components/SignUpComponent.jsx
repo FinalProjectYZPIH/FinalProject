@@ -10,8 +10,8 @@ export const SignUpComponent = () => {
     return (
         <div className='flex items-center justify-center bg-bgLightMode h-screen w-screen-sm bg-cover'  >
             {/* <div className='bg-violet-950 bg-opacity-25 mt-8'> */}
-            <div className="p-10 m-8 mt-16 h-100 bg-slate-800 border border-slate-400 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-25">
-                <h1 className="text-4xl font-orbitron text-cyan-500 text-center mb-7 border-b-4  border-cyan-400 p-4 mt-2">SIGN UP</h1>
+            <div className="p-10 m-8 mt-20 h-screen bg-slate-800 border border-slate-400 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-25">
+                <h1 className="text-4xl font-orbitron text-cyan-500 text-center mb-7 border-b-4  border-cyan-400 p-4 mt-4">SIGN UP</h1>
                 <form action="">
                     <Inputs label="First Name" ph="Enter your first name" type="text" />
                     <Inputs label="Last Name" ph="Enter your last name" type="text" />
