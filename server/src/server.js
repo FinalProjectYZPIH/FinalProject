@@ -1,7 +1,5 @@
 // external module
 import express from "express";
-import {Server} from "socket.io";
-import { createServer } from "http";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
@@ -34,8 +32,11 @@ import { logError } from "./helpers/utils/writeFile.js";
 import deserializeUser from "./helpers/middleware/deserializeUser.js";
 import logger from "./helpers/middleware/logger.js";
 
+//socketio
+import {createSocket, socketInitiation} from "./socketio/app.js";
 
-// generate random Token
+
+// generate random Token 32bit for bcrypt
 
 // import crypto from "crypto"
 // const generateRandomKey = (length) => {
@@ -61,12 +62,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(cors(corsOptions));  
-const httpServer = createServer(app)
-const io = new Server(httpServer, {
-  cors: {
-    origin: allowedOrigins, // Hier können Sie die gewünschten Ursprünge festlegen oder "*" verwenden, um alle Ursprünge zuzulassen
-    methods: ["GET", "POST", "PATCH","PUT","DELETE"], // Erlaubte HTTP-Methoden
-  }})
+
+export const {httpServer, io} = createSocket(app)
+
+
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
@@ -80,8 +79,6 @@ dbConnection();
 app.use(mongoSanitize()) // Schützt vor absichtigen query Befehleangriffe bei mongodb
 app.use(helmet());
 
-
-
 app.use(helmet.contentSecurityPolicy());  //Aktiviert eine Content-Security-Policy, um XSS-Angriffe zu verhindern. (die Verwendung von nicht vertrauenswürdigem JavaScript und anderen Ressourcen auf Ihren Seiten einschränkt)
 app.use(helmet.frameguard({ action: "deny" })); //Verhindert Klickjacking-Angriffe, indem es die Verwendung von iframes und Frames auf Ihren Seiten steuert
 app.use(helmet.hsts()); //Aktiviert HTTP Strict Transport Security (HSTS) für sichere Verbindungen. (Man-in-the-Middle-Angriffen)
@@ -92,6 +89,7 @@ app.use(helmet.referrerPolicy()); //Setzt den Referrer-Policy-Header.
 app.use(helmet.xssFilter()); //Aktiviert den X-XSS-Protection-Header. (XSS-Angriffe in einigen Webbrowsern zu verhindern)
 
 
+
 app.use(compression()) // verringert die datenverkehrsgröße und erhöht die geschwindigkeit der datenverkehr paket>> https://www.npmjs.com/package/compression
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -100,14 +98,10 @@ app.disable("x-powered-by");
 
 // app.use(express.static("public"))
 
-io.on("connection", (socket) => {
-  logger.info("a user connected"),
-  logger.info(socket.id)
-  socket.on("message", (message) => {
-    logger.info(message)
-    io.emit('socket', `${socket.id.substring(0,2)} said ${message}`)
-  })
-})
+
+// socketio
+socketInitiation();
+
 
 
 // google auth routes nutzen 
@@ -115,7 +109,6 @@ io.on("connection", (socket) => {
 app.use("/auth", googleAuthRoute)
 
 app.use(deserializeUser)
-
 
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
