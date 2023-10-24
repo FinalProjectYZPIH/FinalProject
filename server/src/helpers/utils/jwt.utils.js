@@ -3,7 +3,7 @@ export function signJwt(
   object,
   keyName,
   options ={
-    expiresIn: 10,
+    expiresIn: 60*2,  
     algorithm: "HS256",
     allowInsecureKeySizes: true,
   }

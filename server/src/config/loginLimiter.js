@@ -1,4 +1,5 @@
 import rateLimit from "express-rate-limit";
+import logger from "../helpers/middleware/logger.js";
 
 
 // Einstellungen für Requestanfrage pro Zeitabschnitt als middleware bei zugehörigen Route zu implenmentieren
@@ -10,9 +11,8 @@ export const loginLimiter = rateLimit({
       "Too many login attempts from this IP, please try again after a 60 second pause",
   },
   handler: (req, res, next, options) => {
-    console.log(
-      `Too Many Requests: ${options.message.message}\t${req.method}\t${req.url}\t${req.headers.origin}`,
-      "errLog.log"
+    logger.error(
+      `Too Many Requests: ${options.message.message}\t${req.method}\t${req.url}\t${req.headers.origin}`
     );
     res.status(options.statusCode).send(options.message);
   },
