@@ -17,7 +17,7 @@ export function createSocket (app) {
 export function socketInitiation () {
 
     const onConnection = (socket,io) => {
-        test(io,socket)
+        test(socket,io)
     }
 
 

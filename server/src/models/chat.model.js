@@ -1,16 +1,39 @@
 import mongoose from "mongoose";
-import { customAlphabet } from "nanoid";
+// import { customAlphabet } from "nanoid";
 
-const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyz0123456789", 10);
+// const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyz0123456789", 10);
 
+const AttachMessageSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: String,
+      required: true,
+    },
+    desc: {
+      type: String,
+      max: 500,
+    },
+    img: {
+      type: String,
+    },
+    likes: {
+      type: Array,
+      default: [],
+    },
+    emojis: [{ type: String }], 
 
+  },
+  { timestamps: true }
+);
+
+const AttachModel = mongoose.model("Attach", AttachSchema);
 
 const MessageSchema = new mongoose.Schema({
     sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, //für einzeln Nachricht
+    chat: {type: mongoose.Schema.Types.ObjectId, ref: "Chat"},
     content: {type: String, trim: true},
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     emojis: [{ type: String }], 
-    chat: {type: mongoose.Schema.Types.ObjectId, ref: "Chat"},
     images: [{type: mongoose.Schema.Types.ObjectId, ref: "Image"}], // URL oder Dateipfad zum Bild
   },{
     timestamps:{
@@ -20,7 +43,7 @@ const MessageSchema = new mongoose.Schema({
   
 
 
-const ChatSchema = new mongoose.Schema(
+const ChatRoomSchema = new mongoose.Schema(
   {
     // chatId: { type: String, unique: true, default: () => `note_${nanoid()}` },
     chatName: {type: String, default: false},
@@ -43,7 +66,7 @@ const ChatSchema = new mongoose.Schema(
 //   foreignField: "content", // related opposite key
 // });
 
-const ChatModel = mongoose.model("Chat", ChatSchema, "Chats");
+const ChatModel = mongoose.model("Chat", ChatRoomSchema, "Chats");
 
 const MessageModel = mongoose.model("Message", MessageSchema, "Messages")
 
@@ -56,6 +79,3 @@ export {ChatModel, MessageModel};
 // const newMessage = new MessageModel({ sender: senderId, content: "Hallo!", timestamp: new Date() });
 // await newMessage.save();
 
-// // Verknüpfen Sie die Nachricht mit dem Chat
-// newChat.chatbox.push(newMessage);
-// await newChat.save();
