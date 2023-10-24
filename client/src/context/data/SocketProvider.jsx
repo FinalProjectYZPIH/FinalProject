@@ -9,11 +9,16 @@ export function useSocketProvider(){
 
 
 export default function SocketProvider({children}) {
-  
-const socket = io.connect("http://localhost:3000");
+    const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    setSocket(io("http://localhost:5000"));
+  }, []);
+
+// const socket = io.connect("http://localhost:3000");
   return (
     
-    <SocketTheme.Provider value={socket}>
+    <SocketTheme.Provider value={{socket,setSocket}}>
         {children}
     </SocketTheme.Provider>
   )
