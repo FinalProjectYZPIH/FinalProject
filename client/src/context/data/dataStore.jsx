@@ -43,7 +43,7 @@ export const useDarkLightMode = create(
       setDarkMode: () => set((state) => ({ lightMode: !state.lightMode })),
     }),
     {
-      name: "DarkLighMode",
+      name: "DarkLightMode",
       storage: createJSONStorage(),
     }
   )
@@ -98,11 +98,11 @@ export const useUserStore = create(
         settings: {
         },
       }),
-      {
-        name: "UserState",
-        partialize: (state) => ({ color: state.color, colors: state.colors }),
-        storage: createJSONStorage(),
-      }
-    
+    {
+      name: "UserState",
+      partialize: (state) => ({ color: state.color, colors: state.colors }),
+      storage: createJSONStorage(),
+    }
+
   )
 );

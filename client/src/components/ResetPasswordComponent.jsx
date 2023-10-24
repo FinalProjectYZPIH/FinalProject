@@ -1,5 +1,8 @@
 // ResetPasswordComponent.js
 import React, { useState } from 'react';
+import { Inputs } from './Inputs';
+import { Button } from './Buttons.jsx';
+
 
 export const ResetPasswordComponent = () => {
     const [email, setEmail] = useState('');
@@ -20,13 +23,10 @@ export const ResetPasswordComponent = () => {
             <h1>Forgot Password</h1>
             <p>Bitte geben Sie Ihre E-Mail-Adresse ein, um Ihr Passwort zurückzusetzen.</p>
 
-            <input
-                type="email"
-                placeholder="Ihre E-Mail-Adresse"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-            />
-            <button onClick={sendResetLink}>Passwort zurücksetzen</button>
+            <Inputs label="email" ph="enter your email" type="email">enter your email to reset your pw</Inputs>
+
+
+            <Button onClick={sendResetLink}>Passwort zurücksetzen</Button>
 
             <p>{message}</p>
         </div>
