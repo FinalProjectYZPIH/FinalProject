@@ -1,13 +1,16 @@
-import { Link } from 'react-router-dom';
-import { Button } from './Buttons';
-
+import Switch from "@mui/material/Switch";
+import {StyledEngineProvider} from '@mui/material/styles';
+import { useDarkLightMode } from "../context/data/dataStore";
 
 export default function Navigation() {
+  const { lightMode, setDarkMode } = useDarkLightMode();
   return (
-    <>
-      <div className='bg-green-400'>navigation</div>
-      <div className="bg-red-400"><Link to="Login"><button>Login</button></Link></div>
-      <div><Link to="Signup"><button>Sign Up</button></Link></div>
-    </>
-  )
+    <StyledEngineProvider>
+      <Switch
+        className="flex items-center bg-transparent text-blue-700 font-semibold "
+        onClick={setDarkMode}
+      >
+      </Switch>
+    </StyledEngineProvider>
+  );
 }
