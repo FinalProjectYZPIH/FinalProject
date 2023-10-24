@@ -8,7 +8,9 @@ export default {
     extend: {
       backgroundImage: {
         'bgLightMode': "url('src/assets/bgLightMode.jpg')",
+        'bgLightMode2': "url('src/assets/bg2LightMode.jpg')",
         'bgDarkMode': "url('src/assets/bgDarkMode.jpg')",
+        'bgDarkMode2': "url('src/assets/bgDarkMode2.jpg')"
       }
     },
   },
