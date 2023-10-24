@@ -2,11 +2,11 @@ import { Outlet } from "react-router-dom";
 import io from "socket.io-client";
 import { useColorStore, useDarkLightMode } from "../context/data/dataStore";
 import toast from "react-hot-toast";
-import axios from "axios"
+import axios from "axios";
+import { HomeComponent } from "../components/HomeComponent";
 
 const socket = io.connect("http://localhost:3000");
 export default function Home() {
-
   function sendMessage(event) {
     event.preventDefault();
     socket.emit("message", { message: "hello" });
@@ -14,7 +14,7 @@ export default function Home() {
   return (
     <div className="">
       <Outlet />
-      Home
+      <HomeComponent />
       <form action="">
         <input type="text" placeholder="Write messages" />
         <button type="submit" onClick={sendMessage}>
@@ -24,8 +24,6 @@ export default function Home() {
     </div>
   );
 }
-
-
 
 // import { Outlet } from "react-router-dom";
 // import io from "socket.io-client";
@@ -45,7 +43,7 @@ export default function Home() {
 //   const { colorPosition, setColorPosition, setSpecificColor, color } =
 //     useColorStore();
 
-//   const {lightMode, setDarkMode } = useDarkLightMode() 
+//   const {lightMode, setDarkMode } = useDarkLightMode()
 //   return (
 //     <div className="">
 //       <Outlet />
@@ -122,7 +120,7 @@ export default function Home() {
 //         TOAST CONDITION
 //       </button>
 //       {lightMode ? "Light  " : "Dark  "}
-//         <button onClick={setDarkMode} className="border border-1 p-2 rounded">SwitchLight</button> 
+//         <button onClick={setDarkMode} className="border border-1 p-2 rounded">SwitchLight</button>
 //       {/* <p className="bg-black text-white w-full h-4">{color} </p> */}
 //       {/* Socket Io Testing */}
 //       <form action="">
