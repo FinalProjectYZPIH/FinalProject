@@ -3,9 +3,9 @@ import React from "react";
 export const GoogleIcons = () => {
   return (
     <svg
-      class="h-6 w-6"
+      className="h-6 w-6"
       xmlns="http://www.w3.org/2000/svg"
-      xmlns: xlink="http://www.w3.org/1999/xlink"
+      xmlnsXlink="http://www.w3.org/1999/xlink"
       width="800px"
       height="800px"
       viewBox="-0.5 0 48 48"
@@ -17,9 +17,9 @@ export const GoogleIcons = () => {
       <g
         id="Icons"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         {" "}
         <g id="Color-" transform="translate(-401.000000, -860.000000)">
@@ -65,7 +65,7 @@ export const GoogleIcons = () => {
 export const FacebookIcons = () => {
   return (
     <svg
-      class="w-6 h-6 fill-current"
+      className="w-6 h-6 fill-current"
       role="img"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"

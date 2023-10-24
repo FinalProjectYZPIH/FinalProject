@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import {immer} from "zustand/middleware/immer"
 import { ThemeColors } from "./data";
-import { Navigate } from "react-router-dom";
+import { Navigate, redirect, useNavigate } from "react-router-dom";
 
 const themeLength = ThemeColors.length;
 
@@ -31,7 +32,7 @@ export const useColorStore = create(
     {
       name: "ThemeColor", //name (unique) in der Speicherung
       partialize: (state) => ({ color: state.color, colors: state.colors }), // nur die werden gespeichert
-      storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
+      storage: createJSONStorage(() => localStorage), // (optional) by default, 'localStorage' is used
     }
   )
 );
@@ -44,65 +45,125 @@ export const useDarkLightMode = create(
     }),
     {
       name: "DarkLighMode",
-      storage: createJSONStorage(),
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );
 
-export const useAuthStore = create(
-  persist(
-    (set, get) => ({
-      role: null,
-      profile: null,
-      isOnline: false,
-      setLogin: () => (state) => {
-        Navigate({ to: "/" });
-        set({ isOnline: (state.isOnline = true) });
-      },
-      setLogout: () => (state) => {
-        Navigate({ to: "/login" });
-        set({ isOnline: (state.isOnline = false) });
-      },
-    }),
-    {
-      name: "Auth",
-      storage: createJSONStorage(),
-    }
-  )
-);
+// export const useAuthStore = create(
+//   persist(
+//     (set, get) => ({
+//       role: null,
+//       isOnline: false,
+//       setLogin: () => set((state) => ({ isOnline: (state.isOnline = true) })),
+//       setLogout: () => set((state) => ({ isOnline: (state.isOnline = false) })),
+//     }),
+//     {
+//       name: "Auth",
+//       partialize: (state) => ({ role: state.role, isOnline: state.isOnline }),
+//       storage: createJSONStorage(() => localStorage),
+//     }
+//   )
+// );
 
-export const useUserStore = create(
+export const useProfileStore = create(
   persist(
-    (set, get) => (
-      {
-        userId: "test",
+    immer((set, get) => ({
+      defaultProfile: {
+        userId: null,
+        role: null,
+        isOnline: false,
         username: null,
         email: null,
         avatar: null,
         contacts: [
-          {
-            username: null,
-            avatar: null,
-          },
-          // Weitere Freunde...
+          // {
+          //   username: null,
+          //   avatar: null,
+          // },
         ],
         notifications: {
-          number: 0,
-          notificationSound: "on",
+          // number: 0,
+          // notificationSound: "on",
         },
         messages: [
-          { sender: "friend1_id", message: "Hi there!" },
+          // { sender: "friend1_id", message: "Hi there!" },
           // Weitere Nachrichten...
         ],
-        isOnline: true,
-        settings: {
-        },
+        settings: {},
+      },
+      setLogin: () =>
+        set((state) => {
+          state.defaultProfile.isOnline = true;
+        }),
+      setLogout: () =>
+        set((state) => {
+          state.defaultProfile.isOnline = false;
+        }),
+      setProfile: ({
+        userId,
+        role,
+        username,
+        email,
+        avatar = "",
+        contacts = [],
+        messages = [],
+        notifications = [],
+      }) =>
+        set((state) => {
+          // ...state.defaultProfile,
+          (state.defaultProfile.userId = userId),
+            (state.defaultProfile.role = role),
+            (state.defaultProfile.username = username),
+            (state.defaultProfile.email = email),
+            (state.defaultProfile.avatar = avatar),
+            (state.defaultProfile.contacts = [...contacts]),
+            (state.defaultProfile.messages = [...messages]),
+            (state.defaultProfile.notifications = [...notifications]);
+        }),
+      resetProfile: () =>
+        set((state) => ({
+          defaultProfile: {
+            userId: null,
+            role: null,
+            isOnline: false,
+            username: null,
+            email: null,
+            avatar: "",
+            contacts: [],
+            notifications: {
+              number: 0,
+              notificationSound: "on",
+            },
+            messages: [],
+            settings: {},
+          },
+        })),
+    })),
+    immer({
+      name: "savedState",
+      partialize: (state) => ({
+        userId: state.defaultProfile.userId,
+        isOnline: state.defaultProfile.isOnline,
+        notifications: state.defaultProfile.notifications,
+        role: state.defaultProfile.role,
+        username: state.defaultProfile.username,
+        email: state.defaultProfile.email,
+        avatar: state.defaultProfile.avatar,
       }),
-      {
-        name: "UserState",
-        partialize: (state) => ({ color: state.color, colors: state.colors }),
-        storage: createJSONStorage(),
-      }
-    
+      onRehydrateStorage: (state) => {
+        console.log("hydration starts");
+
+        // optional
+        return (state, error) => {
+          if (error) {
+            console.log("an error happened during hydration", error);
+          } else {
+            console.log("hydration finished");
+          }
+        };
+      },
+      storage: createJSONStorage(() => sessionStorage),
+    })
   )
 );

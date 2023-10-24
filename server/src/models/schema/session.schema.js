@@ -1,6 +1,5 @@
 import z from "zod";
 
-
 export const cookieSessionSchema = z.object({
   UserInfo: z.object({
     id: z.string(),
