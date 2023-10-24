@@ -30,3 +30,24 @@ export default function ChatDashboard() {
     </div>
   );
 }
+
+
+
+// const groupChatData = {
+//   chatName: "My Group Chat",
+//   isGroupChat: true,
+//   chatMessages: [], // Hier werden Nachrichten hinzugefügt
+//   participants: [userId1, userId2], // Teilnehmer des Gruppenchats
+//   chatAdmin: chatAdminUserId,
+// };
+
+
+// const messageData = {
+//   sender: userId,
+//   content: "Hello, this is a message!",
+//   likes: [], // Array von User-IDs, die den Beitrag mögen
+//   emojis: [], // Hier können Emojis hinzugefügt werden
+//   images: [], // Hier können Bild-URLs hinzugefügt werden
+//   voices: [], // Hier können Audio-URLs hinzugefügt werden
+//   videos: [], // Hier können Video-URLs hinzugefügt werden
+// };

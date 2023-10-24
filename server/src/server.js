@@ -8,7 +8,7 @@ import cors from "cors";
 import compression from "compression";
 import morgan from "morgan";
 import mongoSanitize from "express-mongo-sanitize";
-import session from "express-session"
+import session from "express-session";
 
 
 // routes
@@ -27,10 +27,10 @@ import passport from "./config/passportConfig.js";
 
 
 // helper
-import logger from "./helpers/middleware/logger.js";
 import { errorHandler } from "./helpers/middleware/errorHandler.js";
 import { logError } from "./helpers/utils/writeFile.js";
 import deserializeUser from "./helpers/middleware/deserializeUser.js";
+import logger from "./helpers/middleware/logger.js";
 
 //socketio
 import {createSocket, socketInitiation} from "./socketio/app.js";
@@ -62,12 +62,17 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(cors(corsOptions));  
+
 export const {httpServer, io} = createSocket(app)
+
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
-app.use(morgan("short"))  // console Übersicht logs   anpassbar short tiny combined dev >>https://github.com/expressjs/morgan#readme
+// console Übersicht logs   anpassbar short tiny combined dev >>https://github.com/expressjs/morgan#readme
+// app.use(morgan("short"))
+
+
 dbConnection();
 
 
@@ -84,7 +89,7 @@ app.use(helmet.referrerPolicy()); //Setzt den Referrer-Policy-Header.
 app.use(helmet.xssFilter()); //Aktiviert den X-XSS-Protection-Header. (XSS-Angriffe in einigen Webbrowsern zu verhindern)
 
 
-app.use(logger); // zum aufzeichnen der befehle etc,  kann jederzeit modifiziert werden oder wenn es nicht nötig ist, nicht benutzen.
+
 app.use(compression()) // verringert die datenverkehrsgröße und erhöht die geschwindigkeit der datenverkehr paket>> https://www.npmjs.com/package/compression
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -93,8 +98,10 @@ app.disable("x-powered-by");
 
 // app.use(express.static("public"))
 
+
 // socketio
 socketInitiation();
+
 
 
 // google auth routes nutzen 
@@ -112,11 +119,11 @@ app.use(errorHandler)
 
 // Bei der einmalige connection mit Datenbank wird app.listen erst aufgerufen
 mongoose.connection.once("open", () => {
-  console.log("DB connected");
+  logger.info("DB connected");
   httpServer.listen(port, () => console.log(`server started at port http://localhost:${port}`));
 });
 
 mongoose.connection.on("error", (err) => {
-    logError(err, "MONGODB FEHLER >>")
+    logger.error(err, "MONGODB FEHLER >>")
     // console.log(err, `${err.no}:${err.code}\t${err.syscall}\t${err.hostname}`);
   });

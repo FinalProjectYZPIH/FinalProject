@@ -2,10 +2,12 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
+
 // ui
 import { Link } from "react-router-dom";
 import { Button } from "./Buttons.jsx";
 import { Inputs } from "./Inputs.jsx";
+
 
 //api
 import { loginRequest, profileRequest } from "../context/api/auth.jsx";
@@ -17,6 +19,7 @@ import { useEffect } from "react";
 export const LoginComponent = () => {
   const [input, setInput] = useSearchParams({ i: "" });
   const inputParam = input.get("i");
+
 
   const { setLogin, setLogout } = useProfileStore(); //benutze die globale variable um login und userobjekte einzusetzen und um zuverteilen
   const { isOnline } = useProfileStore(state => state.defaultProfile);

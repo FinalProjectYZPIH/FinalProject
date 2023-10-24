@@ -1,14 +1,15 @@
 // helper
 import { signJwt, verifyJwt } from "../helpers/utils/jwt.utils.js";
+import logger from "../helpers/middleware/logger.js";
 // import { getCurrentTime } from "../helpers/utils/currentTime.js";
 
 // models schema
 import {
   emailLoginSchema,
   nameLoginSchema,
-} from "../models/schema/user.schema.js";
+} from "../models/validierungsSchema/user.schema.js";
 import SessionModel from "../models/session.model.js";
-import { cookieSessionSchema } from "../models/schema/session.schema.js";
+import { cookieSessionSchema } from "../models/validierungsSchema/session.schema.js";
 import UserModel from "../models/user.model.js";
 
 // services
@@ -24,7 +25,7 @@ import {
 
 
 export const login = async (req, res, next) => {
-    console.log(req.body)
+    logger.info(req.body)
   const { password } = req?.body;
 
   let loginSchema;

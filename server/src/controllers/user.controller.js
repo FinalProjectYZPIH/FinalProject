@@ -1,5 +1,5 @@
 //Controller für user festlegen import { User } from "../models/user.model";
-import { registerFormSchema } from "../models/schema/user.schema.js";
+import { registerFormSchema } from "../models/validierungsSchema/user.schema.js";
 import UserModel from "../models/user.model.js";
 
 //services
