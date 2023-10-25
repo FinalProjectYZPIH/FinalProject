@@ -26,13 +26,13 @@ export const ResetPasswordComponent = () => {
         >
 
             <div className='flex justify-center items-center flex-col bg-cover h-screen '  >
-                <h1>Forgot Something?</h1>
+                <h1 className='text-cyan-700'>Forgot Something?</h1>
                 <p>Bitte geben Sie Ihre E-Mail-Adresse ein, um Ihr Passwort zurückzusetzen.</p>
 
                 <Inputs label="email" ph="enter your email" type="email" >enter your email to reset your pw</Inputs>
 
 
-                <Button onClick={sendResetLink}>Passwort zurücksetzen</Button>
+                <Button onClick={sendResetLink}>Submit</Button>
 
                 <p>{message}</p>
             </div>
