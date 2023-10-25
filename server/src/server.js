@@ -1,7 +1,5 @@
 // external module
 import express from "express";
-import {Server} from "socket.io";
-import { createServer } from "http";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
@@ -10,27 +8,36 @@ import cors from "cors";
 import compression from "compression";
 import morgan from "morgan";
 import mongoSanitize from "express-mongo-sanitize";
+import session from "express-session";
 
 
 // routes
 import userRoute from "./routes/user.route.js";
 import authRoute from "./routes/auth.route.js";
+import googleAuthRoute from "./routes/google.auth.js"
 import messengerTestRoute from "./routes/messengerTest.route.js";
 
 
 // config 
-import corsOptions from "./config/allowesOrigins.js";
+import {corsOptions,allowedOrigins }from "./config/allowesOrigins.js";
 import dbConnection from "./config/dbConnection.js";
+
+// importieren passportConfig.js
+import passport from "./config/passportConfig.js";
 
 
 // helper
-import logger from "./helpers/middleware/logger.js";
 import { errorHandler } from "./helpers/middleware/errorHandler.js";
 import { logError } from "./helpers/utils/writeFile.js";
 import deserializeUser from "./helpers/middleware/deserializeUser.js";
+import logger from "./helpers/middleware/logger.js";
+
+//socketio
+import {createSocket, socketInitiation} from "./socketio/app.js";
 
 
-// generate random Token
+// generate random Token 32bit for bcrypt
+
 // import crypto from "crypto"
 // const generateRandomKey = (length) => {
 //   return crypto.randomBytes(length).toString('base64');
@@ -42,24 +49,35 @@ dotenv.config();
 const port = process.env.PORT || 3500;
 const app = express();
 
+// nutze express-session
+app.use(session({
+    secret: "commet-chat-app",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+
+// Passport nutzen
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(cors(corsOptions));  
-const httpServer = createServer(app)
-const io = new Server(httpServer, {
-  cors: {
-    origin: "*", // Hier können Sie die gewünschten Ursprünge festlegen oder "*" verwenden, um alle Ursprünge zuzulassen
-    methods: ["GET", "POST", "PATCH"], // Erlaubte HTTP-Methoden
-  }})
+
+export const {httpServer, io} = createSocket(app)
+
+
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
-app.use(morgan("short"))  // console Übersicht logs   anpassbar short tiny combined dev >>https://github.com/expressjs/morgan#readme
+// console Übersicht logs   anpassbar short tiny combined dev >>https://github.com/expressjs/morgan#readme
+// app.use(morgan("short"))
+
+
 dbConnection();
 
 
 app.use(mongoSanitize()) // Schützt vor absichtigen query Befehleangriffe bei mongodb
 app.use(helmet());
-
-
 
 app.use(helmet.contentSecurityPolicy());  //Aktiviert eine Content-Security-Policy, um XSS-Angriffe zu verhindern. (die Verwendung von nicht vertrauenswürdigem JavaScript und anderen Ressourcen auf Ihren Seiten einschränkt)
 app.use(helmet.frameguard({ action: "deny" })); //Verhindert Klickjacking-Angriffe, indem es die Verwendung von iframes und Frames auf Ihren Seiten steuert
@@ -72,7 +90,6 @@ app.use(helmet.xssFilter()); //Aktiviert den X-XSS-Protection-Header. (XSS-Angri
 
 
 
-app.use(logger); // zum aufzeichnen der befehle etc,  kann jederzeit modifiziert werden oder wenn es nicht nötig ist, nicht benutzen.
 app.use(compression()) // verringert die datenverkehrsgröße und erhöht die geschwindigkeit der datenverkehr paket>> https://www.npmjs.com/package/compression
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -82,14 +99,14 @@ app.disable("x-powered-by");
 // app.use(express.static("public"))
 
 
-io.on("connection", (socket) => {
-  console.log("a user connected"),
-  console.log(socket.id)
-  socket.on("message", (message) => {
-    console.log(message)
-    io.emit('socket', `${socket.id.substring(0,2)} said ${message}`)
-  })
-})
+// socketio
+socketInitiation();
+
+
+
+// google auth routes nutzen 
+//Hinweis : /api/auth kann oauth nicht akzeptieren so es soll nur /auth sein
+app.use("/auth", googleAuthRoute)
 
 app.use(deserializeUser)
 
@@ -102,11 +119,11 @@ app.use(errorHandler)
 
 // Bei der einmalige connection mit Datenbank wird app.listen erst aufgerufen
 mongoose.connection.once("open", () => {
-  console.log("DB connected");
+  logger.info("DB connected");
   httpServer.listen(port, () => console.log(`server started at port http://localhost:${port}`));
 });
 
 mongoose.connection.on("error", (err) => {
-    logError(err, "MONGODB FEHLER >>")
+    logger.error(err, "MONGODB FEHLER >>")
     // console.log(err, `${err.no}:${err.code}\t${err.syscall}\t${err.hostname}`);
   });

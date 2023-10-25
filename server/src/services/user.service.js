@@ -1,4 +1,4 @@
-import { updatePasswordSchema } from "../models/schema/user.schema.js";
+import { updatePasswordSchema } from "../models/validierungsSchema/user.schema.js";
 import UserModel from "../models/user.model.js";
 
 // external module

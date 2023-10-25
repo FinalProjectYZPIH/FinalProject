@@ -1,51 +1,100 @@
 import axios from "../../libs/axiosProtected";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import { useProfileStore } from "../data/dataStore";
 
-export async function registerRequest(data) {
-  const {
-    firstname,
-    lastname,
-    username,
-    birthday,
-    email,
-    emailConfirmation,
-    password,
-    passwordConfirmation,
-  } = data;
-  const registerHandler = await axios.post("/api/auth/createUser", {
-    firstname,
-    lastname,
-    username,
-    birthday,
-    email,
-    emailConfirmation,
-    password,
-    passwordConfirmation,
+// const queryClient = useQueryClient();
+
+// queryClient.invalidateQueries({
+//   queryKey: [],  //bestimme welchen der queries sollen nicht gespeichert werden 
+// })
+
+export function registerRequest() {
+  // const registerHandler = await axios.post("/api/auth/createUser", { alternative eingabe
+  //   firstname,
+  //   lastname,
+  //   username,
+  //   birthday,
+  //   email,
+  //   emailConfirmation,
+  //   password,
+  //   passwordConfirmation,
+  // });
+  const registerMutation = useMutation({
+    mutationFn: async (loginData) =>
+      await axios.post("/api/auth/", loginData),
+    onSuccess: () => { toast.success("Erfolgreich... Failed!");}, // hier kann man success error und finally fälle einstellen
+    onError: () => {},
+    onSettled: () => {
+      toast.success("Erfolgreich... Failed!");
+    },
+    
   });
 
-  return registerHandler.data;
+  return registerMutation;
 }
 
-export async function loginRequest({ user, password }) {
-    let requestData = {};
+export function loginRequest() {
+  //tested
+  const loginMutation = useMutation({
+    mutationFn: async (loginData) =>
+      await axios.post("/api/auth/login", loginData),
+    onSuccess: () => {toast.success("Willkommen zurück!");}, // hier kann man success error und finally fälle einstellen
+    onError: () => {toast.error("Fail to  sign in...")},
+    onSettled: () => {
+      
+    },
+  });
 
-    if (user.email) {
-      requestData = { email: user.email, password };
-    } else if (user.username) {
-      requestData = { username: user.username, password };
+  return loginMutation;
+}
+
+export function refreshRequest(...key) {
+   return useQuery(
+    key,
+    async () => {
+      const response = await axios.get("/api/auth/tokenRefresh");
+      return response
+    },
+    {
+      onSuccess: () => {}, // hier kann man success error und finally fälle einstellen
+      onError: () => {},
+      onSettled: () => {
+        toast.success("Erfolgreich... Failed!");
+      },
     }
-  const loginHandler = await axios.post("/api/auth/login",requestData)
-  return loginHandler.data;
+  );
+
 }
 
-export async function refreshRequest() {
-  await axios.get("/api/auth/tokenRefresh");
+export function logoutRequest() {
+  const logoutQuery = useMutation({
+    mutationFn: async () => await axios.post("/api/auth/logout"),
+    onSuccess: () => {}, // hier kann man success error und finally fälle einstellen
+    onError: () => {},
+    onSettled: () => {
+      toast.success("Erfolgreich... Failed!");
+    },
+  });
+  return logoutQuery;
 }
 
-export async function logoutRequest() {
-  await axios.post("/api/auth/logout");
-}
+export function profileRequest(...key) {
+  const {isOnline} = useProfileStore(state => state.defaultProfile)
 
-export async function profileRequest() {
-  const profileHandler = await axios.get("/api/user/getProfile");
-  return profileHandler.data;
+  // key ist gleich ["test",test1,"test2"] >> test/test1/test2    es kann auch object etc übergeben werden
+  return useQuery({
+    queryKey:key, 
+    queryFn: async () => await axios.get("/api/user/getProfile"),
+    enabled: !!isOnline, // kann nur gefetched werden, wenn isOnline sich auf true verändert
+    onSuccess: () => {
+
+    }, // hier kann man success error und finally fälle einstellen
+    onError: () => {},
+    onSettled: () => {
+      toast.success("Erfolgreich... Failed!");
+    },
+  });
+
+  
 }

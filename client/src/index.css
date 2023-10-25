@@ -7,7 +7,12 @@
         @apply bg-black text-white bg-bgDarkMode;
     }
 
-    .light {
-        @apply bg-white text-black bg-bgLightMode;
+@layer components {
+    .dark {
+      @apply bg-black text-white bg-bgDarkMode;
     }
+    .light {
+      @apply bg-white text-black bg-bgLightMode;
+    }
+  }
 }
