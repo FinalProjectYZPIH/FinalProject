@@ -1,6 +1,6 @@
 
 import React from 'react';
-import '../index.css'
+import '../index.css';
 // import { useNavigate } from 'react-router-dom';
 import { Button } from './Buttons'
 import { Inputs } from './Inputs';

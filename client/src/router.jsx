@@ -12,7 +12,7 @@ import Navigation from "./components/Navigation";
 import { AppWrapper } from "./context/data/AppWrapper";
 import ChatDashboard from "./pages/ChatDashboard";
 import { ResetPassword } from "./pages/ResetPassword";
-
+import { Logout } from "./pages/Logout";
 import Login from "./pages/Login";
 
 // function App() {
@@ -38,8 +38,9 @@ export const router = createBrowserRouter(
       </Route>
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />
-        <Route path="/ResetPassword" element={<ResetPassword />} />
+        <Route path="/resetPassword" element={<ResetPassword />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/logout" element={<Logout/>}/>
       </Route>
     </Route>
   )
