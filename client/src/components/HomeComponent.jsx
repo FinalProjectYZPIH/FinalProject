@@ -12,7 +12,7 @@ export const HomeComponent = () => {
       }`}
     >
       <div className="flex flex-col justify-evenly items-center w-2/3 lg:w-auto h-screen">
-        <h1 className="text-9xl">Comet</h1>
+        <h1 className="text-9xl pl-44">Comet</h1>
 
         <p className="text-lg w-3/4">
           "Die innovative Chat-App revolutioniert die Art und Weise, wie wir
