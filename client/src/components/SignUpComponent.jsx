@@ -5,8 +5,9 @@ import '../index.css'
 import { Button } from './Buttons'
 import { Inputs } from './Inputs';
 import backgroundImages from '../../tailwind.config.js'
+import { useColorStore, useDarkLightMode } from "../context/data/dataStore";
 export const SignUpComponent = () => {
-
+    const { lightMode, setDarkMode } = useDarkLightMode();
     return (
         <div className='flex items-center justify-center bg-bgLightMode bg-cover  h-screen'  >
             <div className=" m-10 h-screen-sm w-screen-sm bg-slate-800 border border-slate-400 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-25">
@@ -24,11 +25,9 @@ export const SignUpComponent = () => {
                         <input type="checkbox" name="checkbox" id="checkbox" />
                         <label htmlFor="checkbox" className='text-cyan-400 p-5'>agree2theTermsOfUse</label>
                     </div>
-                    <Button>Sign In </Button>
-                </form>
+                </div>
             </div>
         </div>
-        // </div>
     );
 };
 

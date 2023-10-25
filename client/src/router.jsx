@@ -11,7 +11,9 @@ import Home from "./pages/Home";
 import Navigation from "./components/Navigation";
 import { AppWrapper } from "./context/data/AppWrapper";
 import ChatDashboard from "./pages/ChatDashboard";
-import  Login  from "./pages/Login";
+import { ResetPassword } from "./pages/ResetPassword";
+
+import Login from "./pages/Login";
 
 // function App() {
 
@@ -37,6 +39,7 @@ export const router = createBrowserRouter(
       </Route>
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />
+        <Route path="/ResetPassword" element={<ResetPassword />} />
         <Route path="/signup" element={<Signup />} />
       </Route>
     </Route>
