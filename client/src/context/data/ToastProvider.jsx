@@ -1,9 +1,8 @@
 import { createContext, useContext } from "react"
 import {Toaster} from "react-hot-toast" 
-
 const ToastTheme = createContext(null)
 
-export function useToastProvider(){
+export function useContextProvider(){
   return useContext(ToastTheme)
 }
 
@@ -11,13 +10,10 @@ export function useToastProvider(){
 
 export default function ToastProvider({children}) {
   
-
   return (
     
     <ToastTheme.Provider value={null}>
-
         <Toaster />
-        
         {children}
     </ToastTheme.Provider>
   )

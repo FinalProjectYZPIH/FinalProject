@@ -1,12 +1,21 @@
 import { Outlet } from "react-router-dom";
+<<<<<<< HEAD
 import io from "socket.io-client";
 import { useColorStore, useDarkLightMode } from "../context/data/dataStore";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { HomeComponent } from "../components/HomeComponent";
+=======
+import { useSocketProvider } from "../context/data/SocketProvider";
+>>>>>>> origin/yan
 
-const socket = io.connect("http://localhost:3000");
 export default function Home() {
+<<<<<<< HEAD
+=======
+
+  const socket = useSocketProvider()
+  console.log(socket)
+>>>>>>> origin/yan
   function sendMessage(event) {
     event.preventDefault();
     socket.emit("message", { message: "hello" });

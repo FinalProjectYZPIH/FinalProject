@@ -3,7 +3,10 @@ import { FacebookIcons, GoogleIcons } from "../assets/Icons.jsx";
 import { MediaButtons } from "../components/Buttons.jsx";
 import { LoginComponent } from "../components/LoginComponent.jsx";
 
+
+
 const Login = () => {
+
   return (
     <>
       <h1 className="text-4xl text-white-bold text-center mb-6">LOGIN</h1>
@@ -20,6 +23,7 @@ const Login = () => {
     </>
   );
 };
+
 
 export default Login;
 
