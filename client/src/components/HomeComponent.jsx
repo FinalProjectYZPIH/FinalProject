@@ -28,7 +28,6 @@ export const HomeComponent = () => {
           <Link to="Login">
             <Button>GO!</Button>
           </Link>
-          <Button onClick={() => setDarkMode()}>Dark/Light</Button>
         </div>
       </div>
     </div>
