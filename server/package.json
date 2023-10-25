@@ -29,6 +29,7 @@
     "nanoid": "^5.0.1",
     "nodemailer": "^6.9.5",
     "passport": "^0.6.0",
+    "passport-facebook": "^3.0.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-google-oidc": "^0.1.0",
     "socket.io": "^4.7.2",
