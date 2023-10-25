@@ -34,7 +34,7 @@ passport.use(
           });
 
           await newUser.save();
-          return done("User isn't created", newUser);
+          return done(null, newUser);
         }
       } catch (err) {
         logger.error(err);
@@ -45,11 +45,11 @@ passport.use(
 );
 
 passport.serializeUser((user, done) => {
-  done("SerializeUser not working", user);
+  done(null, user);
 });
 
 passport.deserializeUser((user, done) => {
-  done("DeserializeUser not working", user);
+  done(null, user);
 });
 
 export default passport;
