@@ -1,13 +1,17 @@
-import { Link } from 'react-router-dom';
-import { Button } from './Buttons';
-
+import { useDarkLightMode } from "../context/data/dataStore";
+import { CloudMoon, Sun } from "lucide-react";
+import ReactSwitch from "react-switch";
 
 export default function Navigation() {
+  const { lightMode, setDarkMode } = useDarkLightMode();
   return (
-    <>
-      <div className='bg-green-400'>navigation</div>
-      <div className="bg-red-400"><Link to="Login"><button>Login</button></Link></div>
-      <div><Link to="Signup"><button>Sign Up</button></Link></div>
-    </>
-  )
+    <ReactSwitch
+      onChange={setDarkMode}
+      checked={!lightMode}
+      offColor={"#3b82f6"}
+      onColor={"#D0D0D0"}
+      checkedIcon={<CloudMoon />}
+      uncheckedIcon={<Sun />}
+    />
+  );
 }
