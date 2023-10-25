@@ -3,6 +3,8 @@ import ToastProvider from "./ToastProvider"; //für notificaiton toast
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import SocketProvider from "./SocketProvider";
+import Navigation from "../../components/Navigation";
+
 //für fetchVerwaltung
 //Hier finden Sie alle Wrapper für die gesamte App.
 export function AppWrapper() {
@@ -18,6 +20,7 @@ export function AppWrapper() {
     <ToastProvider>
       <SocketProvider>
         <QueryClientProvider client={queryClient}>
+            <Navigation />
           <Outlet />
           <ReactQueryDevtools initialIsOpen />
         </QueryClientProvider>
