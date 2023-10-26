@@ -9,7 +9,7 @@
 
 @layer components {
     .dark {
-      @apply bg-black text-white bg-bgDarkMode;
+      @apply bg-neutral-900 text-white bg-bgDarkMode;
     }
     .light {
       @apply bg-white text-black bg-bgLightMode;
