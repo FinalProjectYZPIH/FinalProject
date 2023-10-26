@@ -17,7 +17,7 @@ const Login = () => {
       </MediaButtons>
       <MediaButtons window={facebook}>
         <FacebookIcons /> sign in with facebook
-      </MediaButtons> */}
+      </MediaButtons>  */}
       <LoginComponent />
     </>
   );
