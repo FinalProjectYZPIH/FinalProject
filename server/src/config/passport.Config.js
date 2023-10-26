@@ -15,7 +15,7 @@ passport.use(
       userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo" 
     },
     async function (accessToken, refreshToken, profile, done) {
-      console.log(profile)
+      // console.log(profile)
       // console.log(profile.displayName.split(" ").join(""))
       // console.log(email)
       try {
@@ -50,7 +50,8 @@ passport.use(
     {
       clientID: process.env.FACEBOOK_APP_ID,
       clientSecret: process.env.FACEBOOK_APP_SECRET,
-      callbackURL: "http://localhost:3000/auth/facebook/callback"
+      callbackURL: "http://localhost:3000/auth/facebook/callback",
+      profileFields:["emails","displayName","name","picture"]
     // userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo" 
     },
     async function (accessToken, refreshToken, profile, done) {
