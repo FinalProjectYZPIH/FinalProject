@@ -12,7 +12,7 @@ import Navigation from "./components/Navigation";
 import { AppWrapper } from "./context/data/AppWrapper";
 import ChatDashboard from "./pages/ChatDashboard";
 import { ResetPassword } from "./pages/ResetPassword";
-import { Logout } from "./pages/Logout";
+import { Impressum } from "./pages/Impressum";
 import Login from "./pages/Login";
 
 // function App() {
@@ -40,7 +40,7 @@ export const router = createBrowserRouter(
         <Route path="/login" element={<Login />} />
         <Route path="/resetPassword" element={<ResetPassword />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/logout" element={<Logout/>}/>
+        <Route path="/impressum" element={<Impressum />} />
       </Route>
     </Route>
   )
