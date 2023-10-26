@@ -2,7 +2,7 @@
 import { verifyJwt } from "../helpers/utils/jwt.utils.js";
 
 //models
-import { ChatModel, MessageModel } from "../models/chat.model.js";
+import { ChatRoomModel, MessageModel } from "../models/chat.model.js";
 import ImageModel from "../models/image.model.js";
 
 //services

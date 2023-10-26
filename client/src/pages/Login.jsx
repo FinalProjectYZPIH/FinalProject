@@ -6,19 +6,20 @@ import { LoginComponent } from "../components/LoginComponent.jsx";
 
 
 const Login = () => {
-
+  const google = () => {
+    window.open("http://localhost:3000/auth/google", "_blank");
+  };
   return (
     <>
       <h1 className="text-4xl text-white-bold text-center mb-6">LOGIN</h1>
 
-      <MediaButtons>
+      <MediaButtons window={google}>
         {" "}
         <GoogleIcons /> sign in with google
       </MediaButtons>
       <MediaButtons>
         <FacebookIcons /> sign in with facebook
       </MediaButtons>
-
       <LoginComponent />
     </>
   );

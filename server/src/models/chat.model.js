@@ -3,29 +3,29 @@ import mongoose from "mongoose";
 
 // const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyz0123456789", 10);
 
-const AttachMessageSchema = new mongoose.Schema(
-  {
-    userId: {
-      type: String,
-      required: true,
-    },
-    desc: {
-      type: String,
-      max: 500,
-    },
-    img: {
-      type: String,
-    },
-    likes: {
-      type: Array,
-      default: [],
-    },
-    emojis: [{ type: String }],
-  },
-  { timestamps: true }
-);
+// const AttachMessageSchema = new mongoose.Schema(  nötig??
+//   {
+//     userId: {
+//       type: String,
+//       required: true,
+//     },
+//     desc: {
+//       type: String,
+//       max: 500,
+//     },
+//     img: {
+//       type: String,
+//     },
+//     likes: {
+//       type: Array,
+//       default: [],
+//     },
+//     emojis: [{ type: String }],
+//   },
+//   { timestamps: true }
+// );
 
-const AttachModel = mongoose.model("Attach", AttachSchema);
+// const AttachModel = mongoose.model("Attach", AttachMessageSchema,"AttachMessages");
 
 const MessageSchema = new mongoose.Schema({
   sender: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
@@ -65,7 +65,7 @@ const ChatRoomSchema = new mongoose.Schema(
 
 const ChatRoomModel = mongoose.model("Chat", ChatRoomSchema, "Chats");
 
-export { ChatModel, MessageModel };
+export { ChatRoomModel, MessageModel };
 
 // // Beispiel: Erstellen eines neuen Chats  (unfährer ablauf)
 // const newChat = await ChatModel.create({ participants: [user1Id, user2Id] });

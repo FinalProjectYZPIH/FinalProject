@@ -30,7 +30,6 @@ export function registerRequest() {
     },
     
   });
-
   return registerMutation;
 }
 
@@ -88,12 +87,12 @@ export function profileRequest(...key) {
     queryFn: async () => await axios.get("/api/user/getProfile"),
     enabled: !!isOnline, // kann nur gefetched werden, wenn isOnline sich auf true verändert
     onSuccess: () => {
-
+      toast.success("Erfolgreich... fetched User");
     }, // hier kann man success error und finally fälle einstellen
     onError: () => {},
     onSettled: () => {
-      toast.success("Erfolgreich... Failed!");
     },
+    refetchOnWindowFocus:false,
     refetchInterval: 60000*10, // 10minute
   });
 
