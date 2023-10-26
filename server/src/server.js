@@ -15,6 +15,7 @@ import session from "express-session";
 import userRoute from "./routes/user.route.js";
 import authRoute from "./routes/auth.route.js";
 import googleAuthRoute from "./routes/google.auth.js"
+import facebookAuthRoute from "./routes/facebook.auth.js"
 import messengerTestRoute from "./routes/messengerTest.route.js";
 
 
@@ -23,7 +24,7 @@ import {corsOptions} from "./config/allowesOrigins.js";
 import dbConnection from "./config/dbConnection.js";
 
 // importieren passportConfig.js
-import passport from "./config/passportConfig.js";
+import passport from "./config/passport.Config.js";
 
 
 // helper
@@ -106,7 +107,8 @@ socketInitiation();
 
 // google auth routes nutzen 
 //Hinweis : /api/auth kann oauth nicht akzeptieren so es soll nur /auth sein
-app.use("/auth", googleAuthRoute)
+app.use("/auth/google", googleAuthRoute);
+app.use("/auth/facebook", facebookAuthRoute)
 
 app.use(deserializeUser)
 

@@ -3,7 +3,7 @@ import passport from "passport"
 
 const router = express.Router();
 
-router.get("/", passport.authenticate("google", {scope:["profile","email"]}));
+router.get("/", passport.authenticate("facebook", {scope:["profile","email"]}));
 
 router.get("/login/failed", (req, res) => {
     const errorMessage = req.flash("error")[0] || "Something went wrong!";
@@ -13,7 +13,7 @@ router.get("/login/failed", (req, res) => {
     });
   });
 
-router.get("/callback",passport.authenticate("google",{
+router.get("/callback",passport.authenticate("facebook",{
     successRedirect:`http://localhost:5173/`,
     failureRedirect:"/login/failed",
     failureFlash:true

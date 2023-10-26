@@ -1,4 +1,3 @@
-
 import { FacebookIcons, GoogleIcons } from "../assets/Icons.jsx";
 import { MediaButtons } from "../components/Buttons.jsx";
 import { LoginComponent } from "../components/LoginComponent.jsx";
@@ -6,18 +5,24 @@ import { LoginComponent } from "../components/LoginComponent.jsx";
 
 
 const Login = () => {
+  const google = () => {
+    window.open("http://localhost:3000/auth/google", "_self");
+  };
+  const facebook = () => {
+    window.open("http://localhost:3000/auth/facebook", "_self");
+  };
 
   return (
     <>
-      <h1 className="text-4xl text-white-bold text-center mb-6 border-b-2 border-cyan-300">LOGIN</h1>
-      
-      {/* <MediaButtons>
+      <h1 className="text-4xl text-white-bold text-center mb-6">LOGIN</h1>
+
+      <MediaButtons>
         {" "}
         <GoogleIcons /> sign in with google
       </MediaButtons>
-      <MediaButtons>
+      <MediaButtons window={facebook}>
         <FacebookIcons /> sign in with facebook
-      </MediaButtons> */}
+      </MediaButtons> 
       <LoginComponent />
     
     </>
@@ -27,8 +32,7 @@ const Login = () => {
 
 export default Login;
 
-
-// beispiele 
+// beispiele
 // import { useState } from "react";
 // import { useProfileStore } from "../context/data/dataStore.jsx";
 // import { profileRequest, refreshRequest, loginRequest } from "../context/api/auth.jsx";
