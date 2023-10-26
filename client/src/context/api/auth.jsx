@@ -66,6 +66,25 @@ export function refreshRequest(...key) {
 
 }
 
+
+export function googleRequest(...key) {
+  return useQuery(
+   key,
+   async () => {
+     const response = await axios.get("/auth/google/callback");
+     return response
+   },
+   {
+     onSuccess: () => {toast.success("Erfolgreich... Failed!");}, // hier kann man success error und finally fälle einstellen
+     onError: () => {},
+     onSettled: () => {
+      toast.success("google fetching...");
+     },
+   }
+ );
+
+}
+
 export function logoutRequest() {
   const logoutQuery = useMutation({
     mutationFn: async () => await axios.post("/api/auth/logout"),

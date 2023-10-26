@@ -4,6 +4,7 @@ import { useState } from "react";
 import Chat from "../components/chat";
 import { useSocketProvider } from "../context/data/SocketProvider";
 
+
 export default function ChatDashboard() {
   const { defaultProfile, setLogout } = useProfileStore();
 

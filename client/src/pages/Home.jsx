@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <div className="">
       <Outlet />
-      <HomeComponent />
+      {/* <HomeComponent /> */}
       <form action="">
         <input type="text" placeholder="Write messages" />
         <button type="submit" onClick={sendMessage}>
