@@ -31,7 +31,6 @@ export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<AppWrapper />}>
       <Route path="/" element={<Home />}>
-        <Route index element={<Navigation />} />
       </Route>
       <Route path="/chat/" element={<RootLayout />}>
         <Route path="" element={<ChatDashboard />} />
