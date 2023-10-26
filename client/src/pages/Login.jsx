@@ -2,8 +2,6 @@ import { FacebookIcons, GoogleIcons } from "../assets/Icons.jsx";
 import { MediaButtons } from "../components/Buttons.jsx";
 import { LoginComponent } from "../components/LoginComponent.jsx";
 
-
-
 const Login = () => {
   const google = () => {
     window.open("http://localhost:3000/auth/google", "_self");
@@ -14,21 +12,16 @@ const Login = () => {
 
   return (
     <>
-      <h1 className="text-4xl text-white-bold text-center mb-6">LOGIN</h1>
-
-      <MediaButtons>
-        {" "}
+      {/* <MediaButtons window={google}>
         <GoogleIcons /> sign in with google
       </MediaButtons>
       <MediaButtons window={facebook}>
         <FacebookIcons /> sign in with facebook
-      </MediaButtons> 
+      </MediaButtons> */}
       <LoginComponent />
-    
     </>
   );
 };
-
 
 export default Login;
 

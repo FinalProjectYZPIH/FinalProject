@@ -16,6 +16,7 @@ import { loginRequest, profileRequest } from "../context/api/auth.jsx";
 //context
 import { useProfileStore } from "../context/data/dataStore.jsx";
 import { useEffect } from "react";
+import { Facebook } from "lucide-react";
 
 export const LoginComponent = () => {
   const [input, setInput] = useSearchParams({ i: "" });
@@ -99,7 +100,7 @@ export const LoginComponent = () => {
 
 
               <Button>Login</Button>
-              <MediaButtons>
+              <MediaButtons window={google}>
                 {" "}
                 <GoogleIcons /> sign in with google
               </MediaButtons>
