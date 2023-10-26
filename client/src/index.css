@@ -3,3 +3,11 @@
 @tailwind utilities;
 
 
+@layer components {
+    .dark {
+      @apply bg-black text-white bg-bgDarkMode;
+    }
+    .light {
+      @apply bg-white text-black bg-bgLightMode;
+    }
+  }
