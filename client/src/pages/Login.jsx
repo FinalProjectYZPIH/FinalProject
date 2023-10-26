@@ -2,6 +2,8 @@ import { FacebookIcons, GoogleIcons } from "../assets/Icons.jsx";
 import { MediaButtons } from "../components/Buttons.jsx";
 import { LoginComponent } from "../components/LoginComponent.jsx";
 
+
+
 const Login = () => {
   const google = () => {
     window.open("http://localhost:3000/auth/google", "_self");
@@ -25,6 +27,7 @@ const Login = () => {
     </>
   );
 };
+
 
 export default Login;
 

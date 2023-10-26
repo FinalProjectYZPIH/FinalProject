@@ -32,7 +32,8 @@ export const router = createBrowserRouter(
     <Route element={<AppWrapper />}>
       <Route path="/" element={<Home />}>
       </Route>
-      <Route path="/chat/" element={<RootLayout />}>
+      <Route path="/chat" element={<RootLayout />}>
+
         <Route path="" element={<ChatDashboard />} />
       </Route>
       <Route element={<AuthLayout />}>

@@ -9,11 +9,10 @@ export default function RootLayout() {
   console.log(isOnline)
   return (
     <div>
-      {/* <ProtectionProvider isAllowed={isOnline}>
-      </ProtectionProvider> */}
+      <ProtectionProvider isAllowed={isOnline}>
       RootLayout
-
-      {isOnline ?  <Outlet /> : <Navigate to={"/login"}/>}
+      <Outlet />
+      </ProtectionProvider>
        
     </div>
   );

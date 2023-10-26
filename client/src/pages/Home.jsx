@@ -5,7 +5,6 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { HomeComponent } from "../components/HomeComponent";
 
-const socket = io.connect("http://localhost:3000");
 export default function Home() {
   function sendMessage(event) {
     event.preventDefault();
