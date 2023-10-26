@@ -31,8 +31,6 @@ export default function ChatDashboard() {
   );
 }
 
-
-
 // const groupChatData = {
 //   chatName: "My Group Chat",
 //   isGroupChat: true,
@@ -40,7 +38,6 @@ export default function ChatDashboard() {
 //   participants: [userId1, userId2], // Teilnehmer des Gruppenchats
 //   chatAdmin: chatAdminUserId,
 // };
-
 
 // const messageData = {
 //   sender: userId,
