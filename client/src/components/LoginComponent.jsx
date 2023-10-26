@@ -1,39 +1,97 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { ButtonGoogle } from '../components/Buttons.jsx';
-import { ButtonLogin } from '../components/Buttons.jsx';
-import { ButtonSignIn } from '../components/Buttons.jsx';
+//module
+import { useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
+// ui
+import { Link } from "react-router-dom";
+import { Button } from "./Buttons.jsx";
+import { Inputs } from "./Inputs.jsx";
+
+//api
+import { loginRequest, profileRequest } from "../context/api/auth.jsx";
+
+//context
+import { useProfileStore } from "../context/data/dataStore.jsx";
+import { useEffect } from "react";
 
 export const LoginComponent = () => {
-    return (
-        <div className='flex items-center justify-center'>
-            <div className="bg-slate-800 border border-slate-400 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-30 relative">
-                <h1 className="text-4xl text-white-bold text-center mb-6">LOGIN</h1>
-                <ButtonGoogle />
-                <form action="" method="post">
-                    <div className="relative my-4">
-                        <input type="email" className="block w-72 py-2.3 px-0 text-sm text-white bg-transparent border-0 border-b-2 border-grey-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:text-white focus:border-blue-600" />
-                        <label htmlFor="email" className="absolute text-sm text-white bg-transparent duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75">Your Email</label>
-                    </div>
+  const [input, setInput] = useSearchParams({ i: "" });
+  const inputParam = input.get("i");
 
-                    <div className="relative my-4">
-                        <input type="password" className="block w-72 py-2.3 px-0 text-sm text-white bg-transparent border-0 border-b-2 border-grey-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:text-white focus:border-blue-600" />
-                        <label htmlFor="password" className="absolute text-sm text-white bg-transparent duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75">Your Password</label>
-                    </div>
-                    <div>
-                        <div>
-                            <input type="checkbox" name="checkbox" id="checkbox" />
-                            <label htmlFor="">Remember Me</label>
-                        </div>
-                        <ButtonLogin />
-                        <span>Forgot Password</span>
-                    </div>
-                    <div>
-                        <span>New here? <Link to='/Signup'><ButtonSignIn /></Link> </span>
-                    </div>
-                </form>
-            </div >
-        </div >
-    )
-}
+  const { setLogin, setLogout } = useProfileStore(); //benutze die globale variable um login und userobjekte einzusetzen und um zuverteilen
+  const { isOnline } = useProfileStore(state => state.defaultProfile);
+  const navigate = useNavigate();
+  const loginHandler = loginRequest(); //loginhandler ist einen object der fast alle bedingungensfälle enthält
+
+  const { isSuccess } = loginHandler;
+
+  if (isSuccess) {
+    //falls erfolgreich eingeloggt ist,  dann setze globale isOnline auf true, erstelle neue profilerequest  und ändere die userdaten
+    setLogin();
+    navigate("/chat", { replace: true });
+  }
+
+
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    loginHandler.mutate({
+        email: e.target[0].value,
+        password: e.target[1].value,
+    });
+    if (isOnline === false) {
+      setLogout();
+    }
+};
+
+  const google = () => {
+    window.open("http://localhost:3000/auth/google", "_blank");
+  };
+  const inputProps = {
+    ph: "Your Password",
+    type: "password",
+    label: "enter password",
+  };
+  return (
+    <form onSubmit={handleSubmit}>
+      <Inputs
+        label="enter email"
+        ph="Your Email"
+        type="email"
+        value={inputParam}
+        onChangeFn={(
+          e // hier werden alle inputs im url gespeichert
+        ) =>
+          setInput(
+            (prev) => {
+              prev.set("i", e.target.value);
+              return prev;
+            },
+            { replace: true }
+          )
+        }
+      >
+        your email
+      </Inputs>
+      <Inputs {...inputProps}>your password</Inputs>
+      <div>
+        <div>
+          <input type="checkbox" name="checkbox" id="checkbox" />
+          <label htmlFor="checkbox" className="text-white">
+            Remember Me
+          </label>
+        </div>
+
+        <Button>Login</Button>
+        <span className="text-white">Forgot Password</span>
+      </div>
+      <div>
+        <span>
+          New here?{" "}
+          <Link to="/Signup">
+            <Button className="text-white">Sign In</Button>
+          </Link>{" "}
+        </span>
+      </div>
+    </form>
+  );
+};

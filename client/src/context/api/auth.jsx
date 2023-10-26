@@ -1,42 +1,100 @@
-import axios from "../../libs/axiosProtected"
+import axios from "../../libs/axiosProtected";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import { useProfileStore } from "../data/dataStore";
 
+// const queryClient = useQueryClient();
 
-export async function registerRequest (data) {
-    const {firstname, lastname, username, birthday, email, emailConfirmation, password, passwordConfirmation} = data;
-    const registerHandler = await axios.post("/api/auth/createUser",{
-        firstname, lastname, username, birthday, email, emailConfirmation, password, passwordConfirmation
-    })
+// queryClient.invalidateQueries({
+//   queryKey: [],  //bestimme welchen der queries sollen nicht gespeichert werden 
+// })
 
-    if(!registerHandler.ok) {
-        const errorResponse = await signUpResponse.json();
-        const errorMessage = errorResponse.message || "Failed to create user.";
-        throw new Error(errorMessage);
-      }
+export function registerRequest() {
+  // const registerHandler = await axios.post("/api/auth/createUser", { alternative eingabe
+  //   firstname,
+  //   lastname,
+  //   username,
+  //   birthday,
+  //   email,
+  //   emailConfirmation,
+  //   password,
+  //   passwordConfirmation,
+  // });
+  const registerMutation = useMutation({
+    mutationFn: async (loginData) =>
+      await axios.post("/api/auth/", loginData),
+    onSuccess: () => { toast.success("Erfolgreich... Failed!");}, // hier kann man success error und finally fälle einstellen
+    onError: () => {},
+    onSettled: () => {
+      toast.success("Erfolgreich... Failed!");
+    },
+    
+  });
+
+  return registerMutation;
 }
 
-export async function loginRequest ({user, password}){
+export function loginRequest() {
+  //tested
+  const loginMutation = useMutation({
+    mutationFn: async (loginData) =>
+      await axios.post("/api/auth/login", loginData),
+    onSuccess: () => {toast.success("Willkommen zurück!");}, // hier kann man success error und finally fälle einstellen
+    onError: () => {toast.error("Fail to  sign in...")},
+    onSettled: () => {
+      
+    },
+  });
 
-    const loginHandler = axios.post("/api/auth/login", {
-        user,
-        password,
-    });
+  return loginMutation;
+}
 
-    if(!loginHandler.ok) {
-        const errorResponse = await loginHandler.json();
-        const errorMessage = errorResponse.message || "Failed to login.";
-        throw new Error(errorMessage);
+export function refreshRequest(...key) {
+   return useQuery(
+    key,
+    async () => {
+      const response = await axios.get("/api/auth/tokenRefresh");
+      return response
+    },
+    {
+      onSuccess: () => {}, // hier kann man success error und finally fälle einstellen
+      onError: () => {},
+      onSettled: () => {
+        toast.success("Erfolgreich... Failed!");
+      },
     }
+  );
+
 }
 
-
-export async function refreshRequest (){
-
-    const refreshHandler = axios.post("/api/auth/tokenRefresh");
-
-    if(!refreshHandler.ok) {
-        const errorResponse = await loginHandler.json();
-        const errorMessage = errorResponse.message || "Failed to login.";
-        throw new Error(errorMessage);
-    }
+export function logoutRequest() {
+  const logoutQuery = useMutation({
+    mutationFn: async () => await axios.post("/api/auth/logout"),
+    onSuccess: () => {}, // hier kann man success error und finally fälle einstellen
+    onError: () => {},
+    onSettled: () => {
+      toast.success("Erfolgreich... Failed!");
+    },
+  });
+  return logoutQuery;
 }
 
+export function profileRequest(...key) {
+  const {isOnline} = useProfileStore(state => state.defaultProfile)
+
+  // key ist gleich ["test",test1,"test2"] >> test/test1/test2    es kann auch object etc übergeben werden
+  return useQuery({
+    queryKey:key, 
+    queryFn: async () => await axios.get("/api/user/getProfile"),
+    enabled: !!isOnline, // kann nur gefetched werden, wenn isOnline sich auf true verändert
+    onSuccess: () => {
+
+    }, // hier kann man success error und finally fälle einstellen
+    onError: () => {},
+    onSettled: () => {
+      toast.success("Erfolgreich... Failed!");
+    },
+  });
+
+  
+}
