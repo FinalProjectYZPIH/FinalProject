@@ -10,6 +10,9 @@ export default {
         bgLightMode: "url('src/assets/bg2LightModeComp.jpeg')",
         bgDarkMode: "url('src/assets/bgDarkMode2Comp.jpg')",
       },
+      screens: {
+        'sm': {'min': '360px'},
+      },
     },
   },
   plugins: [],

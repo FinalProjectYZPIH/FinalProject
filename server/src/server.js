@@ -20,7 +20,7 @@ import messengerTestRoute from "./routes/messengerTest.route.js";
 
 
 // config 
-import {corsOptions,allowedOrigins }from "./config/allowesOrigins.js";
+import {corsOptions} from "./config/allowesOrigins.js";
 import dbConnection from "./config/dbConnection.js";
 
 // importieren passportConfig.js

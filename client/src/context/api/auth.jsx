@@ -94,6 +94,7 @@ export function profileRequest(...key) {
     onSettled: () => {
       toast.success("Erfolgreich... Failed!");
     },
+    refetchInterval: 60000*10, // 10minute
   });
 
   
