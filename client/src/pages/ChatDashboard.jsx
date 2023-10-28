@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-import React from 'react'
-
-export default function ChatDashboard() {
-  return (
-    <div>ChatDashboard</div>
-  )
-}
-=======
 import { useProfileStore } from "../context/data/dataStore";
 import { profileRequest } from "../context/api/auth";
 
@@ -60,4 +51,3 @@ export default function ChatDashboard() {
 //   voices: [], // Hier können Audio-URLs hinzugefügt werden
 //   videos: [], // Hier können Video-URLs hinzugefügt werden
 // };
->>>>>>> 7add30f5cc00ce47417c2c38952ae1ce982a2f4d
