@@ -68,8 +68,8 @@ export const useDarkLightMode = create(
 
 export const useProfileStore = create(
   persist(
-    (set, get) => ({
-       defaultProfile :{
+    immer((set, get) => ({
+      defaultProfile: {
         userId: null,
         role: null,
         isOnline: false,
@@ -92,40 +92,55 @@ export const useProfileStore = create(
         ],
         settings: {},
       },
-      setLogin: () => set((state) => ({ defaultProfile: {...state.defaultProfile, isOnline: true}  })),
-      setLogout: () => set((state) => ({ defaultProfile: {...state.defaultProfile, isOnline:false} })),
-      setProfile: ({userId, role, username, email, avatar = "", contacts = [], messages = [], notifications =[]}) => set((state) => ({
-        defaultProfil: {...state.defaultProfile, 
+      setLogin: () =>
+        set((state) => {
+          state.defaultProfile.isOnline = true;
+        }),
+      setLogout: () =>
+        set((state) => {
+          state.defaultProfile.isOnline = false;
+        }),
+      setProfile: ({
         userId,
         role,
         username,
         email,
-        avatar,
-        contacts: [...contacts ],
-        messages: [...messages],
-        notifications: [...notifications]
-        }
-      })),
-      resetProfile: () => set((state) => ({
-        defaultProfile: {
-          userId: null,
-          role: null,
-          isOnline: false,
-          username: null,
-          email: null,
-          avatar: "",
-          contacts: [],
-          notifications: {
-            number: 0,
-            notificationSound: "on",
+        avatar = "",
+        contacts = [],
+        messages = [],
+        notifications = [],
+      }) =>
+        set((state) => {
+          // ...state.defaultProfile,
+          (state.defaultProfile.userId = userId),
+            (state.defaultProfile.role = role),
+            (state.defaultProfile.username = username),
+            (state.defaultProfile.email = email),
+            (state.defaultProfile.avatar = avatar),
+            (state.defaultProfile.contacts = [...contacts]),
+            (state.defaultProfile.messages = [...messages]),
+            (state.defaultProfile.notifications = [...notifications]);
+        }),
+      resetProfile: () =>
+        set((state) => ({
+          defaultProfile: {
+            userId: null,
+            role: null,
+            isOnline: false,
+            username: null,
+            email: null,
+            avatar: "",
+            contacts: [],
+            notifications: {
+              number: 0,
+              notificationSound: "on",
+            },
+            messages: [],
+            settings: {},
           },
-          messages: [],
-          settings: {},
-        },
-      }))
-      
-    }),
-    {
+        })),
+    })),
+    immer({
       name: "savedState",
       partialize: (state) => ({
         userId: state.defaultProfile.userId,
@@ -136,8 +151,19 @@ export const useProfileStore = create(
         email: state.defaultProfile.email,
         avatar: state.defaultProfile.avatar,
       }),
+      onRehydrateStorage: (state) => {
+        console.log("hydration starts");
 
+        // optional
+        return (state, error) => {
+          if (error) {
+            console.log("an error happened during hydration", error);
+          } else {
+            console.log("hydration finished");
+          }
+        };
+      },
       storage: createJSONStorage(() => sessionStorage),
-    }
+    })
   )
 );

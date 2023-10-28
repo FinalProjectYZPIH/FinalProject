@@ -1,12 +1,14 @@
-import React from 'react'
-
-export const ButtonSignIn = () => {
-    return (
-        <div className='flex items-center justify-center'>
-        <button className="flex items-center bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-            Sign In
-        </button>
+export const Button = ({ children, ...props }) => {
+  return (
+    <div className="flex items-center justify-center">
+      <button
+        {...props}
+        className="flex items-center justify-center bg-transparent hover:border-y-teal-400 hover:bg-cyan-400 text-sky-400 hover:text-white hover:bg-opacity-1 border border-cyan-400 hover:border-transparent rounded w-2/5 h-10 p-2 m-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-300"
+      >
+        {children}
+      </button>
     </div>
+<<<<<<< HEAD
     )
 }
 
@@ -30,4 +32,20 @@ export const ButtonGoogle = () => {
         </div>
     )
 }
+=======
+  );
+};
+>>>>>>> 7add30f5cc00ce47417c2c38952ae1ce982a2f4d
 
+export const MediaButtons = ({ children, window }) => {
+  return (
+    <div className="flex items-center justify-center">
+      <button
+        onClick={window}
+        className="flex items-center border border-cyan-400  hover:bg-cyan-400 rounded-lg shadow-md w-4/6 h-10 p-2 m-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+      >
+        {children}
+      </button>
+    </div>
+  );
+};

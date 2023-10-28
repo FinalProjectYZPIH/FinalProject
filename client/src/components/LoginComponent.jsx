@@ -1,46 +1,128 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { ButtonGoogle } from '../components/Buttons.jsx';
-import { ButtonLogin } from '../components/Buttons.jsx';
-import { ButtonSignIn } from '../components/Buttons.jsx';
+//module
+import { useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
+// ui
+import { Link } from "react-router-dom";
+import { Button, MediaButtons } from "./Buttons.jsx";
+import { FacebookIcons, GoogleIcons } from "../assets/Icons.jsx";
+import { Inputs } from "./Inputs.jsx";
+import { useDarkLightMode } from "../context/data/dataStore.jsx";
+
+//api
+import { loginRequest, profileRequest } from "../context/api/auth.jsx";
+
+//context
+import { useProfileStore } from "../context/data/dataStore.jsx";
+import { useEffect } from "react";
+import { Facebook } from "lucide-react";
 
 export const LoginComponent = () => {
+  const [input, setInput] = useSearchParams({ i: "" });
+  const inputParam = input.get("i");
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        
+  const { setLogin, setLogout } = useProfileStore(); //benutze die globale variable um login und userobjekte einzusetzen und um zuverteilen
+  const { isOnline } = useProfileStore((state) => state.defaultProfile);
+  const navigate = useNavigate();
+  const loginHandler = loginRequest(); //loginhandler ist einen object der fast alle bedingungensfälle enthält
+
+  const { isSuccess } = loginHandler;
+
+  if (isSuccess) {
+    //falls erfolgreich eingeloggt ist,  dann setze globale isOnline auf true, erstelle neue profilerequest  und ändere die userdaten
+    setLogin();
+    navigate("/chat", { replace: true });
+  }
+
+  const { lightMode, setDarkMode } = useDarkLightMode();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    loginHandler.mutate({
+      email: e.target[0].value,
+      password: e.target[1].value,
+    });
+    if (isOnline === false) {
+      setLogout();
     }
-    
-    return (
-        <div className='flex items-center justify-center'>
-            <div className="bg-slate-800 border border-slate-400 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-30 relative">
-                <h1 className="text-4xl text-white-bold text-center mb-6">LOGIN</h1>
-                <ButtonGoogle />
-                <form action="" method="post" onSubmit={handleSubmit}>
-                    <div className="relative my-4">
-                        <input type="email" name='email' className="block w-72 py-2.3 px-0 text-sm text-white bg-transparent border-0 border-b-2 border-grey-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:text-white focus:border-blue-600" />
-                        <label htmlFor="email" className="absolute text-sm text-white bg-transparent duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75">Your Email</label>
-                    </div>
+  };
 
-                    <div className="relative my-4">
-                        <input type="password" name="password" className="block w-72 py-2.3 px-0 text-sm text-white bg-transparent border-0 border-b-2 border-grey-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:text-white focus:border-blue-600" />
-                        <label htmlFor="password" className="absolute text-sm text-white bg-transparent duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75">Your Password</label>
-                    </div>
-                    <div>
-                        <div>
-                            <input type="checkbox" name="checkbox" id="checkbox" />
-                            <label htmlFor="">Remember Me</label>
-                        </div>
-                        <button type='sumbit' className='border border-1 bg-red-100'>Login</button>
-                        <ButtonLogin>Login</ButtonLogin>
-                        <span>Forgot Password</span>
-                    </div>
-                    <div>
-                        {/* <span>New here? <Link to='/Signup'><ButtonSignIn /></Link> </span> */}
-                    </div>
-                </form>
-            </div >
-        </div >
-    )
-}
+  const google = () => {
+    window.open("http://localhost:3000/auth/google", "_blank");
+  };
+  const inputProps = {
+    ph: "Your Password",
+    type: "password",
+    label: "enter password",
+  };
+
+  const facebook = () => {
+    window.open("http://localhost:3000/auth/facebook", "_blank");
+  };
+
+  return (
+    <div
+      className={`font-orbitron grid grid-cols-1 lg:grid-cols-2  w-screen h-screen sm:bg-cover sm:bg-center bg-no-repeat lg:bg-contain lg:bg-right ${
+        lightMode ? "dark" : "light"
+      }`}
+    >
+      <div className="flex items-center justify-center  bg-cover  h-screen">
+        <div className=" flex flex-col justify-evenly items-center w-2/3 lg:w-auto h-screen">
+          <div className=" m-10 h-screen-sm w-screen-sm  border border-slate-400 rounded-md p-10 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-25">
+            <h1 className="text-4xl text-blue-600 text-center mb-6">LOGIN</h1>
+
+            <MediaButtons window={google}>
+              <GoogleIcons /> sign in with google
+            </MediaButtons>
+            <MediaButtons window={facebook}>
+              <FacebookIcons /> sign in with facebook
+            </MediaButtons>
+            <form onSubmit={handleSubmit}>
+              <Inputs
+                label="enter email"
+                ph="Your Email"
+                type="email"
+                value={inputParam}
+                onChangeFn={(
+                  e // hier werden alle inputs im url gespeichert
+                ) =>
+                  setInput(
+                    (prev) => {
+                      prev.set("i", e.target.value);
+                      return prev;
+                    },
+                    { replace: true }
+                  )
+                }
+              >
+                your email
+              </Inputs>
+              <Inputs {...inputProps}>your password</Inputs>
+              <div>
+                <div>
+                  <input type="checkbox" name="checkbox" id="checkbox" />
+                  <label htmlFor="checkbox" className=" text-center">
+                    Remember Me
+                  </label>
+                  <Link to="/ResetPassword">
+                    <p className="text-cyan-400 hover:text-cyan-200">
+                      Forgot Password
+                    </p>
+                  </Link>
+                </div>
+              </div>
+              <div>
+                <Link to="/">
+                  <Button>Login</Button>
+                </Link>
+                <Link to="/Signup">
+                  <Button className="text-white">Sign In</Button>
+                </Link>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

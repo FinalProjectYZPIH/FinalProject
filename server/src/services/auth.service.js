@@ -5,7 +5,7 @@ import { signJwt, verifyJwt } from "../helpers/utils/jwt.utils.js";
 
 //external Modul
 import jwt from "jsonwebtoken";
-import { cookieSessionSchema } from "../models/schema/session.schema.js";
+import { cookieSessionSchema } from "../models/validierungsSchema/session.schema.js";
 
 export async function createSession(userId, userAgent, next) {
   try {
@@ -39,7 +39,7 @@ export function acceptCookie(memberInfo, res, ipAdress = "") {
   // },
 
   try {
-    const accessToken = signJwt(memberInfo, process.env.ACCESS_TOKEN || "");
+    const accessToken = signJwt(memberInfo, process.env.ACCESS_TOKEN || "");  //siehe signJwt um die gültigkeitsdauer von cookie einzustellen
 
     const refreshToken = signJwt(memberInfo, process.env.REFRESH_TOKEN || "");
 
@@ -92,7 +92,7 @@ export async function reSignToken(refreshToken, refreshkey, next) {
     const newAccessToken = jwt.sign(
       cookieInfo.data,
       process.env.ACCESS_TOKEN || "",
-      { expiresIn: 60 }
+      { expiresIn: 60*5 }
     );
     if (!newAccessToken) return next("new Accesstoken generate failed");
 
