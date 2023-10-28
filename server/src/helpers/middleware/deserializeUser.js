@@ -16,17 +16,19 @@ const deserializeUser = async (req, res, next) => {
   // jwt decoden 
   const { decoded, expired, valid } = verifyJwt(accessJwt, process.env.ACCESS_TOKEN);
    
-
+// hier
     console.log("Status:",decoded,"expired",expired, "valid", valid)
   try {
     //falls jwt nicht abläuft
     if (!expired) {
       res.locals.role = decoded?.UserInfo.role
-
       return next();
     }
+    if(!decoded) ;// hier kann man dem user rauskicken aus dem login
       // falls refreshtoken vorhaden ist und accetoken abläuft und nicht valid ist udn decoded vorhanden ist
     if (expired && refreshJwt && !valid && decoded) {
+      
+      
       const newAccessToken = await reSignToken(refreshJwt, process.env.REFRESH_TOKEN || "", next);
 
           // console.log("new",newAccessToken)

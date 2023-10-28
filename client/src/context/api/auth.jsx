@@ -30,7 +30,6 @@ export function registerRequest() {
     },
     
   });
-
   return registerMutation;
 }
 
@@ -67,6 +66,25 @@ export function refreshRequest(...key) {
 
 }
 
+
+export function googleRequest(...key) {
+  return useQuery(
+   key,
+   async () => {
+     const response = await axios.get("/auth/google/callback");
+     return response
+   },
+   {
+     onSuccess: () => {toast.success("Erfolgreich... Failed!");}, // hier kann man success error und finally fälle einstellen
+     onError: () => {},
+     onSettled: () => {
+      toast.success("google fetching...");
+     },
+   }
+ );
+
+}
+
 export function logoutRequest() {
   const logoutQuery = useMutation({
     mutationFn: async () => await axios.post("/api/auth/logout"),
@@ -88,12 +106,12 @@ export function profileRequest(...key) {
     queryFn: async () => await axios.get("/api/user/getProfile"),
     enabled: !!isOnline, // kann nur gefetched werden, wenn isOnline sich auf true verändert
     onSuccess: () => {
-
+      toast.success("Erfolgreich... fetched User");
     }, // hier kann man success error und finally fälle einstellen
     onError: () => {},
     onSettled: () => {
-      toast.success("Erfolgreich... Failed!");
     },
+    refetchOnWindowFocus:false,
     refetchInterval: 60000*10, // 10minute
   });
 

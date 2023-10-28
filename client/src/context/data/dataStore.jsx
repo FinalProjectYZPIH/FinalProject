@@ -77,18 +77,11 @@ export const useProfileStore = create(
         email: null,
         avatar: null,
         contacts: [
-          // {
-          //   username: null,
-          //   avatar: null,
-          // },
+          //friends
         ],
-        notifications: {
-          // number: 0,
-          // notificationSound: "on",
-        },
+        notifications:0,  //[chatroom].reduce((startvalue,f) => startvalue + f.length   ,0)
         messages: [
-          // { sender: "friend1_id", message: "Hi there!" },
-          // Weitere Nachrichten...
+         //[chatroom,...].filter(a => a[0] === friendsUserid)
         ],
         settings: {},
       },

@@ -114,8 +114,8 @@ export const getProfile = async (req, res, next) => {
     if (!user) return res.status(400).next("User not found");
     res.status(200).json(user);
   } catch (error) {
-    console.log(error);
-    next("geProfile" + error);
+    console.log("getProfile fehler",error);
+    next(error);
   }
 };
 

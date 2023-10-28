@@ -47,9 +47,7 @@ export const LoginComponent = () => {
     }
   };
 
-  const google = () => {
-    window.open("http://localhost:3000/auth/google", "_blank");
-  };
+
   const inputProps = {
     ph: "Your Password",
     type: "password",
