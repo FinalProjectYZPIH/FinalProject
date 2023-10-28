@@ -4,6 +4,7 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { Strategy as FacebookStrategy} from "passport-facebook";
 import logger from "../helpers/middleware/logger.js";
 import passport from "passport";
+import SessionModel from "../models/session.model.js";
 dotenv.config();
 
 passport.use(
@@ -86,11 +87,14 @@ passport.use(
 // );
 
 passport.serializeUser((user, done) => {
-  done(null, user);
+  done(null, uder?.id);
 });
 
-passport.deserializeUser((user, done) => {
-  done(null, user);
+passport.deserializeUser((id, done) => {
+  SessionModel.findOne({user: id}, (err, user) => {
+    done(err, user);
+
+  } )
 });
 
 export default passport;
