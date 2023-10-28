@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { useSocketProvider } from "../context/data/SocketProvider";
+import {HomeComponent} from "../components/HomeComponent"
 
 export default function Home() {
 
@@ -12,13 +13,13 @@ export default function Home() {
   return (
     <div className="">
       <Outlet />
-      {/* <HomeComponent /> */}
-      <form action="">
+      <HomeComponent />
+      {/* <form action="">
         <input type="text" placeholder="Write messages" />
         <button type="submit" onClick={sendMessage}>
           Send Message
         </button>
-      </form>
+      </form> */}
     </div>
   );
 }

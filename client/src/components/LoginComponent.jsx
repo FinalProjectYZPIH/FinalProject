@@ -53,7 +53,10 @@ export const LoginComponent = () => {
     type: "password",
     label: "enter password",
   };
+  const google = () => {
+    window.open("http://localhost:3000/auth/google", "_self");
 
+  };
   const facebook = () => {
     window.open("http://localhost:3000/auth/facebook", "_blank");
   };
