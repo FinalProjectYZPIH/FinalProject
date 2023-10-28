@@ -1,5 +1,8 @@
 import { createContext, useContext,useState,useEffect } from "react"
 import io from "socket.io-client";
+import {messageData, roomChatData} from "../data/data.js"
+
+
 
 const SocketTheme = createContext(null)
 
@@ -8,7 +11,10 @@ export function useSocketProvider(){
 }
 
 
+
 export default function SocketProvider({children}) {
+    // benutze useSocketIo in libs ordner
+    
   //   const [socket, setSocket] = useState(null);
 
   // useEffect(() => {

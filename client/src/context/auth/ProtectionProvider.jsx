@@ -10,7 +10,6 @@ export default function ProtectionProvider({
   const { data: userData, isSuccess } = profileRequest("google-user");
 
 
-     console.log(userData.data.username)
 
     if(isSuccess) return children;
   

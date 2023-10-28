@@ -6,7 +6,7 @@ import { useSocketProvider } from "../context/data/SocketProvider";
 import { useNavigate } from "react-router-dom";
 
 export default function ChatDashboard() {
-  const { defaultProfile, setLogout } = useProfileStore();
+  const { defaultProfile, setLogout,resetProfile } = useProfileStore();
 
   const { isOnline } = defaultProfile;
 
@@ -28,6 +28,7 @@ export default function ChatDashboard() {
   const handleLogout = async (e) => {
     e.preventDefault();
     setLogout();
+    resetProfile();
     if (isOnline === false) {
       navigate("/", { replace: true });
     }
@@ -43,7 +44,7 @@ export default function ChatDashboard() {
             </div>
 
             {isOnline && isSuccess ? (
-              <div>{`${userData.data.firstname}`}</div>
+              <div>{`${userData.data.username}`}</div>
             ) : (
               "failed to fetching userdata"
             )}
