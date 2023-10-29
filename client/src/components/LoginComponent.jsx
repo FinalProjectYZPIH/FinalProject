@@ -24,13 +24,16 @@ export const LoginComponent = () => {
   const { setLogin, setLogout } = useProfileStore(); //benutze die globale variable um login und userobjekte einzusetzen und um zuverteilen
   const { isOnline } = useProfileStore((state) => state.defaultProfile);
   const navigate = useNavigate();
+
   const loginHandler = loginRequest(); //loginhandler ist einen object der fast alle bedingungensfälle enthält
-
-  const { isSuccess } = loginHandler;
-
+  const { isSuccess, isError, isIdle} = loginHandler;
+  console.log(isIdle);
+  console.log(isSuccess);
+  console.log(isError);
   if (isSuccess) {
     //falls erfolgreich eingeloggt ist,  dann setze globale isOnline auf true, erstelle neue profilerequest  und ändere die userdaten
     setLogin();
+    console.log(isOnline);
     navigate("/chat", { replace: true });
   }
 
@@ -43,21 +46,22 @@ export const LoginComponent = () => {
       password: e.target[1].value,
     });
 
-    console.log(e.target[0].value)
+    console.log(e.target[0].value, e.target[1].value);
     if (isOnline === false) {
       setLogout();
     }
+    // setLogin();
+    // console.log(isOnline);
+    // navigate("/chat", { replace: true });
   };
-
 
   const google = () => {
     window.open("http://localhost:3000/auth/google", "_self");
-    
   };
   const facebook = () => {
     window.open("http://localhost:3000/auth/facebook", "_blank");
   };
-  
+
   const inputProps = {
     ph: "Your Password",
     type: "password",
@@ -115,7 +119,7 @@ export const LoginComponent = () => {
                 </div>
               </div>
               <div>
-                  <Button>Login</Button>
+                <Button>Login</Button>
                 <Link to="/Signup">
                   <Button className="text-white">Sign In</Button>
                 </Link>

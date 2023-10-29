@@ -23,7 +23,7 @@ const useSocketIo = (
     timestampParam: "zeitstempl",
     // transports: ["websocket", "polling"], //verbindungsart nach partial
   },
-  roomObject = { chatMessages: [], participants: [] }
+  roomObject = { chatMessages: [], participants: [], comments: [], }
 ) => {
   const [socket, setSocket] = useState(null);
 
@@ -77,19 +77,18 @@ const useSocketIo = (
     images,
     voices,
     videos,
-    comments
+
   ) => {
     if (socket) {
       if (typeof messageText !== 'undefined') {
         const messageData = {
           sender: userId,
-          content: messageText,
+          content: content,
           likes: typeof likes !== 'undefined' ? likes : 0,
           emojis: typeof emojis !== 'undefined' ? emojis : [],
           images: typeof images !== 'undefined' ? images : [],
           voices: typeof voices !== 'undefined' ? voices : [],
-          videos: typeof videos !== 'undefined' ? videos : [],
-          comments: typeof comments !== 'undefined' ? comments : [],
+          videos: typeof videos !== 'undefined' ? videos : [],  
         };
 
         socket.emit("sendMessage", messageData);

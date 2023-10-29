@@ -41,7 +41,6 @@ export function loginRequest() {
     onSuccess: () => {toast.success("Willkommen zurück!");}, // hier kann man success error und finally fälle einstellen
     onError: () => {toast.error("Fail to  sign in...")},
     onSettled: () => {
-      
     },
   });
 

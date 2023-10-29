@@ -1,7 +1,7 @@
 import { useProfileStore } from "../context/data/dataStore";
 import { profileRequest } from "../context/api/auth";
 import { useState } from "react";
-import Chat from "../components/chat";
+import Chat from "../components/Chat";
 import { useSocketProvider } from "../context/data/SocketProvider";
 import { useNavigate } from "react-router-dom";
 
@@ -79,25 +79,4 @@ export default function ChatDashboard() {
       )}
     </div>
   );
-  // const handleLogout = async (e) => {
-  //   e.preventDefault();
-  //   setLogout();
-  // };
-
-  // return (
-  //   <div className="flex items-center flex-col ">
-  //     <div className="w-1/2 h-1/2 bg-slate-200 flex justify-center ">
-  //       Anzeigebildschirm
-  //     </div>
-
-  //     {isOnline && isSuccess ? (
-  //       <div>{`${userData.data.firstname}`}</div>
-  //     ) : (
-  //       "failed to fetching userdata"
-  //     )}
-  //     <button className="border border-1 p-1" onClick={handleLogout}>
-  //       logout
-  //     </button>
-  //   </div>
-  // );
 }
