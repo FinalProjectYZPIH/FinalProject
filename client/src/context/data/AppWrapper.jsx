@@ -20,9 +20,9 @@ export function AppWrapper() {
     <ToastProvider>
       <SocketProvider>
         <QueryClientProvider client={queryClient}>
-            <Navigation />
+          <Navigation />
           <Outlet />
-          <ReactQueryDevtools initialIsOpen />
+          <ReactQueryDevtools initialIsOpen={true} />
         </QueryClientProvider>
       </SocketProvider>
     </ToastProvider>

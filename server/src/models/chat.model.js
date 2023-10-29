@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 // const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyz0123456789", 10);
 
-// const AttachMessageSchema = new mongoose.Schema(
+// const AttachMessageSchema = new mongoose.Schema(  nötig??
 //   {
 //     userId: {
 //       type: String,
@@ -25,12 +25,12 @@ import mongoose from "mongoose";
 //   { timestamps: true }
 // );
 
-// const AttachModel = mongoose.model("Attach", AttachSchema);
+// const AttachModel = mongoose.model("Attach", AttachMessageSchema,"AttachMessages");
 
 const MessageSchema = new mongoose.Schema({
   sender: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   content: { type: String, trim: true },
-  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  likes:  {type: Number},//[{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], um speicher zu sparen
   emojis: [{ type: String }],
   time: [{ type: String }],
   images: [{ type: String }], // URL oder Dateipfad zum Bild

@@ -42,24 +42,27 @@ export const LoginComponent = () => {
       email: e.target[0].value,
       password: e.target[1].value,
     });
+
+    console.log(e.target[0].value)
     if (isOnline === false) {
       setLogout();
     }
   };
 
+
   const google = () => {
-    window.open("http://localhost:3000/auth/google", "_blank");
+    window.open("http://localhost:3000/auth/google", "_self");
+    
   };
+  const facebook = () => {
+    window.open("http://localhost:3000/auth/facebook", "_blank");
+  };
+  
   const inputProps = {
     ph: "Your Password",
     type: "password",
     label: "enter password",
   };
-
-  const facebook = () => {
-    window.open("http://localhost:3000/auth/facebook", "_blank");
-  };
-
   return (
     <div
       className={`font-orbitron grid grid-cols-1 lg:grid-cols-2  w-screen h-screen sm:bg-cover sm:bg-center bg-no-repeat lg:bg-contain lg:bg-right ${
@@ -112,9 +115,7 @@ export const LoginComponent = () => {
                 </div>
               </div>
               <div>
-                <Link to="/">
                   <Button>Login</Button>
-                </Link>
                 <Link to="/Signup">
                   <Button className="text-white">Sign In</Button>
                 </Link>

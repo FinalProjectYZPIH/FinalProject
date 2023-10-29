@@ -1,25 +1,25 @@
 import { Outlet } from "react-router-dom";
-import io from "socket.io-client";
-import { useColorStore, useDarkLightMode } from "../context/data/dataStore";
-import toast from "react-hot-toast";
-import axios from "axios";
-import { HomeComponent } from "../components/HomeComponent";
+import { useSocketProvider } from "../context/data/SocketProvider";
+import {HomeComponent} from "../components/HomeComponent"
 
 export default function Home() {
+
+  const socket = useSocketProvider()
+  console.log(socket)
   function sendMessage(event) {
     event.preventDefault();
     socket.emit("message", { message: "hello" });
   }
   return (
     <div className="">
-      <HomeComponent />
       <Outlet />
-      <form action="">
+      <HomeComponent />
+      {/* <form action="">
         <input type="text" placeholder="Write messages" />
         <button type="submit" onClick={sendMessage}>
           Send Message
         </button>
-      </form>
+      </form> */}
     </div>
   );
 }

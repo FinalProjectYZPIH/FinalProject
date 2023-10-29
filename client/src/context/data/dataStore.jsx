@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import {immer} from "zustand/middleware/immer"
+import { immer } from "zustand/middleware/immer";
 import { ThemeColors } from "./data";
 import { Navigate, redirect, useNavigate } from "react-router-dom";
 
@@ -50,22 +50,6 @@ export const useDarkLightMode = create(
   )
 );
 
-// export const useAuthStore = create(
-//   persist(
-//     (set, get) => ({
-//       role: null,
-//       isOnline: false,
-//       setLogin: () => set((state) => ({ isOnline: (state.isOnline = true) })),
-//       setLogout: () => set((state) => ({ isOnline: (state.isOnline = false) })),
-//     }),
-//     {
-//       name: "Auth",
-//       partialize: (state) => ({ role: state.role, isOnline: state.isOnline }),
-//       storage: createJSONStorage(() => localStorage),
-//     }
-//   )
-// );
-
 export const useProfileStore = create(
   persist(
     immer((set, get) => ({
@@ -77,18 +61,11 @@ export const useProfileStore = create(
         email: null,
         avatar: null,
         contacts: [
-          // {
-          //   username: null,
-          //   avatar: null,
-          // },
+          //friends
         ],
-        notifications: {
-          // number: 0,
-          // notificationSound: "on",
-        },
-        messages: [
-          // { sender: "friend1_id", message: "Hi there!" },
-          // Weitere Nachrichten...
+        notifications: 0, //[chatroom].reduce((startvalue,f) => startvalue + f.length   ,0)
+        chatRooms: [
+          //[chatroom,...].filter(a => a[0] === friendsUserid)
         ],
         settings: {},
       },
@@ -98,7 +75,9 @@ export const useProfileStore = create(
         }),
       setLogout: () =>
         set((state) => {
+
           state.defaultProfile.isOnline = false;
+          window.location.reload();
         }),
       setProfile: ({
         userId,
@@ -107,7 +86,7 @@ export const useProfileStore = create(
         email,
         avatar = "",
         contacts = [],
-        messages = [],
+        chatRooms = [],
         notifications = [],
       }) =>
         set((state) => {
@@ -118,7 +97,7 @@ export const useProfileStore = create(
             (state.defaultProfile.email = email),
             (state.defaultProfile.avatar = avatar),
             (state.defaultProfile.contacts = [...contacts]),
-            (state.defaultProfile.messages = [...messages]),
+            (state.defaultProfile.chatRooms = [...chatRooms]),
             (state.defaultProfile.notifications = [...notifications]);
         }),
       resetProfile: () =>
@@ -126,16 +105,16 @@ export const useProfileStore = create(
           defaultProfile: {
             userId: null,
             role: null,
-            isOnline: false,
             username: null,
             email: null,
             avatar: "",
             contacts: [],
-            notifications: {
-              number: 0,
-              notificationSound: "on",
-            },
-            messages: [],
+            notifications: 0,
+            // {
+            //   number: 0,
+            //   notificationSound: "on",
+            // },
+            chatRooms: [], //ChatRooms
             settings: {},
           },
         })),
@@ -150,6 +129,8 @@ export const useProfileStore = create(
         username: state.defaultProfile.username,
         email: state.defaultProfile.email,
         avatar: state.defaultProfile.avatar,
+        chatRooms: state.defaultProfile.chatRooms,
+        contacts: state.defaultProfile.chats
       }),
       onRehydrateStorage: (state) => {
         console.log("hydration starts");
@@ -167,3 +148,43 @@ export const useProfileStore = create(
     })
   )
 );
+
+// Chatliste werden in Localstorage gepeichert messageLIste: [{ participants: [userId1, userId2]}, ...]  2 teilnehmer= direkter chat  >2 teinehmer = groupchat
+
+// hier sind chatdaten für die speicherung im localstorage damit der chat effizienter läuft 
+export const useChatStore = create(
+  persist(
+    immer((set, get) => ({
+      messageListe: [], //messageLIste: [{ participants: [userId1, userId2]}, ...]
+      messageData: [], // ["string",....]
+
+      
+
+
+    })),
+    immer({
+      name: "ChatStory",
+      storage: createJSONStorage(() => sessionStorage),
+    })
+  )
+);
+
+// daten vorstellungen
+// const roomChatData = {
+//   chatName: "",
+//   isGroupChat: false,
+//   chatMessages: [messageData,...], // Jedes mal wenn einen nachricht gesendet wird, wird einen chatMessages erstellt, und messagData wird reingepushed. paricipants sind required. Die anderen Optionenen sind für raumerstellungen wichtig ansonstens sind alle optional.
+//   participants: [userId1, userId2], // Teilnehmer des Gruppenchats (bei 3 oder mehr leute admin required)
+//   chatAdmin: userid,
+// };
+
+// messageData kann bei allen stelle angehängt werden also auch als attachdocument
+// const messageData = {
+//   sender: userId,
+//   content: "Hello, this is a message!",
+//   likes: [], // Array von User-IDs, die den Beitrag mögen
+//   emojis: [], // Hier können Emojis hinzugefügt werden
+//   images: [], // Hier können Bild-URLs hinzugefügt werden
+//   voices: [], // Hier können Audio-URLs hinzugefügt werden
+//   videos: [], // Hier können Video-URLs hinzugefügt werden
+// };

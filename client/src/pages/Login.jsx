@@ -1,23 +1,24 @@
+import { redirect } from "react-router-dom";
 import { FacebookIcons, GoogleIcons } from "../assets/Icons.jsx";
 import { MediaButtons } from "../components/Buttons.jsx";
 import { LoginComponent } from "../components/LoginComponent.jsx";
 
 const Login = () => {
-  const google = () => {
-    window.open("http://localhost:3000/auth/google", "_self");
-  };
-  const facebook = () => {
-    window.open("http://localhost:3000/auth/facebook", "_self");
-  };
+  // const google = () => {
+  //   window.open("http://localhost:3000/auth/google", "_self");
 
+  // };
+  // const facebook = () => {
+  //   window.open("http://localhost:3000/auth/facebook", "_self");
+  // };
   return (
     <>
-      {/* <MediaButtons window={google}>
+       {/* <MediaButtons window={google}>
         <GoogleIcons /> sign in with google
       </MediaButtons>
       <MediaButtons window={facebook}>
         <FacebookIcons /> sign in with facebook
-      </MediaButtons>  */}
+      </MediaButtons> */}
       <LoginComponent />
     </>
   );
@@ -107,7 +108,7 @@ export default Login;
 //             />
 //           </div>
 //           {/* <button className='border border-1 mx-2 p-1' type="submit" onClick={handleLogout}>logout</button>
-//         <button className='border border-1 mx-2 p-1' type="submit" onClick={handleLogin}>login</button> */}
+//         <button className='border border-1 mx-2 p-1' type="submit" onClick={handleLogin}>login</button> */
 //         <button className='border border-1 mx-2 p-1' type="submit" onClick={(e) =>  handleRefresh(e)}>refreshTest</button>
 //           <button className="border border-1 mx-2 p-1" type="submit">
 //             submit
