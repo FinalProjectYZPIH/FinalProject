@@ -11,10 +11,10 @@ function Chat({ socket, username, room }) {
         room: room,
         author: username,
         message: currentMessage,
-        // time:
-        //   new Date(Date.now()).getHours() +
-        //   ":" +
-        //   new Date(Date.now()).getMinutes(),
+        time:
+          new Date(Date.now()).getHours() +
+          ":" +
+          new Date(Date.now()).getMinutes(),
       };
       await socket.emit("send_message", messageData);
       setMessageList((list) => [...list, messageData]);

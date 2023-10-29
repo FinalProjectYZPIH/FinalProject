@@ -64,7 +64,7 @@ export const useProfileStore = create(
           //friends
         ],
         notifications: 0, //[chatroom].reduce((startvalue,f) => startvalue + f.length   ,0)
-        messages: [
+        chatRooms: [
           //[chatroom,...].filter(a => a[0] === friendsUserid)
         ],
         settings: {},
@@ -75,7 +75,9 @@ export const useProfileStore = create(
         }),
       setLogout: () =>
         set((state) => {
+
           state.defaultProfile.isOnline = false;
+          window.location.reload();
         }),
       setProfile: ({
         userId,
@@ -84,7 +86,7 @@ export const useProfileStore = create(
         email,
         avatar = "",
         contacts = [],
-        messages = [],
+        chatRooms = [],
         notifications = [],
       }) =>
         set((state) => {
@@ -95,7 +97,7 @@ export const useProfileStore = create(
             (state.defaultProfile.email = email),
             (state.defaultProfile.avatar = avatar),
             (state.defaultProfile.contacts = [...contacts]),
-            (state.defaultProfile.messages = [...messages]),
+            (state.defaultProfile.chatRooms = [...chatRooms]),
             (state.defaultProfile.notifications = [...notifications]);
         }),
       resetProfile: () =>
@@ -107,11 +109,12 @@ export const useProfileStore = create(
             email: null,
             avatar: "",
             contacts: [],
-            notifications: {
-              number: 0,
-              notificationSound: "on",
-            },
-            chats: [], //ChatRooms
+            notifications: 0,
+            // {
+            //   number: 0,
+            //   notificationSound: "on",
+            // },
+            chatRooms: [], //ChatRooms
             settings: {},
           },
         })),
@@ -126,7 +129,8 @@ export const useProfileStore = create(
         username: state.defaultProfile.username,
         email: state.defaultProfile.email,
         avatar: state.defaultProfile.avatar,
-        chats: state.defaultProfile.chats
+        chatRooms: state.defaultProfile.chatRooms,
+        contacts: state.defaultProfile.chats
       }),
       onRehydrateStorage: (state) => {
         console.log("hydration starts");
@@ -147,12 +151,16 @@ export const useProfileStore = create(
 
 // Chatliste werden in Localstorage gepeichert messageLIste: [{ participants: [userId1, userId2]}, ...]  2 teilnehmer= direkter chat  >2 teinehmer = groupchat
 
-// hier sind chatdaten für die speicherung im localstorage damit der chat effizienter läuft
+// hier sind chatdaten für die speicherung im localstorage damit der chat effizienter läuft 
 export const useChatStore = create(
   persist(
     immer((set, get) => ({
       messageListe: [], //messageLIste: [{ participants: [userId1, userId2]}, ...]
       messageData: [], // ["string",....]
+
+      
+
+
     })),
     immer({
       name: "ChatStory",
