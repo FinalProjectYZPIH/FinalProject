@@ -56,7 +56,7 @@ export const useProfileStore = create(
       defaultProfile: {
         userId: null,
         role: null,
-        isOnline: false,
+        isOnline: true,
         username: null,
         email: null,
         avatar: null,

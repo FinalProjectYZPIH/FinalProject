@@ -12,9 +12,8 @@ export default function ProtectionProvider({
 
 
     // if(isSuccess) return children;
-  
-    
 
+    
   if (!isAllowed) {
     return <Navigate to={redirectTo} />;
   }

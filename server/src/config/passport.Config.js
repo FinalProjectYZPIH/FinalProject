@@ -78,29 +78,16 @@ passport.use(
             // andere befehle hinzufügen
           });
 
-<<<<<<< HEAD
-=======
-            // andere befehle hinzufügen
-          });
-
->>>>>>> origin/dienstag
           await newUser.save();
           return done(null, newUser);
         }
       } catch (err) {
         logger.error(err);
         return done(err);
-<<<<<<< HEAD
       }
     }
   )
 );
-=======
-       }
-     }
-)
-)
->>>>>>> origin/dienstag
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
