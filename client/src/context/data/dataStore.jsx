@@ -57,7 +57,7 @@ export const useProfileStore = create(
       defaultProfile: {
         userId: null,
         role: null,
-        isOnline: false,
+        isOnline: true,
         username: null,
         email: null,
         avatar: null,
@@ -67,7 +67,9 @@ export const useProfileStore = create(
         ],
         notifications: 0, //[chatroom].reduce((startvalue,f) => startvalue + f.length   ,0)
         chatRooms: [
+
           { id: "user", test: [{ likes: "etc", messages: "test" }] },
+
           //[chatroom,...].filter(a => a[0] === friendsUserid)
         ],
         settings: {},
@@ -78,6 +80,7 @@ export const useProfileStore = create(
         }),
       setLogout: () =>
         set((state) => {
+
           state.defaultProfile.isOnline = false;
           window.location.reload();
         }),
@@ -93,6 +96,7 @@ export const useProfileStore = create(
       }) =>
         set((state) => {
           // ...state.defaultProfile,
+
           (get().defaultProfile.userId = userId),
             (get().defaultProfile.role = role),
             (get().defaultProfile.username = username),
@@ -109,6 +113,7 @@ export const useProfileStore = create(
             role: null,
             username: null,
             email: null,
+
             avatar: null,
             contacts: [
               //friends
@@ -121,6 +126,7 @@ export const useProfileStore = create(
           },
         })),
     })),
+
     {
       name: "Profile",
       // partialize: ({defaultProfile, ...rest}) => rest,
@@ -150,6 +156,7 @@ export const useProfileStore = create(
           console.log("No valid data found in sessionStorage");
         }
       },
+
       storage: createJSONStorage(() => sessionStorage),
     }
   )
@@ -157,19 +164,25 @@ export const useProfileStore = create(
 
 // Chatliste werden in Localstorage gepeichert messageLIste: [{ participants: [userId1, userId2]}, ...]  2 teilnehmer= direkter chat  >2 teinehmer = groupchat
 
-// hier sind chatdaten für die speicherung im localstorage damit der chat effizienter läuft
-// export const useChatStore = create(
-//   persist(
-//     immer((set, get) => ({
-//       messageListe: [], //messageLIste: [{ participants: [userId1, userId2]}, ...]
-//       messageData: [], // ["string",....]
-//     })),
-//     immer({
-//       name: "ChatStory",
-//       storage: createJSONStorage(() => sessionStorage),
-//     })
-//   )
-// );
+
+// hier sind chatdaten für die speicherung im localstorage damit der chat effizienter läuft 
+export const useChatStore = create(
+  persist(
+    immer((set, get) => ({
+      messageListe: [], //messageLIste: [{ participants: [userId1, userId2]}, ...]
+      messageData: [], // ["string",....]
+
+      
+
+
+    })),
+    immer({
+      name: "ChatStory",
+      storage: createJSONStorage(() => sessionStorage),
+    })
+  )
+);
+
 
 // daten vorstellungen
 // const roomChatData = {
