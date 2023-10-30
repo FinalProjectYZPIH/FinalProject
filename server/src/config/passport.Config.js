@@ -74,22 +74,22 @@ passport.use(
             avatarImage: profile.photos[0].value,
 
 
-//             // andere befehle hinzufügen
-//           });
+            // andere befehle hinzufügen
+          });
 
-//           await newUser.save();
-//           return done(null, newUser);
-//         }
-//       } catch (err) {
-//         logger.error(err);
-//         return done(err);
-//       }
-//     }
-//   )
-// );
+          await newUser.save();
+          return done(null, newUser);
+        }
+      } catch (err) {
+        logger.error(err);
+        return done(err);
+       }
+     }
+)
+)
 
 passport.serializeUser((user, done) => {
-  done(null, uder?.id);
+  done(null, user.id);
 });
 
 passport.deserializeUser((id, done) => {
