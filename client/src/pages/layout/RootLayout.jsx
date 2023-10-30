@@ -7,13 +7,13 @@ export default function RootLayout() {
 
   const {isOnline} = useProfileStore(state => state.defaultProfile)
   console.log(isOnline)
+  
   return (
     <div>
-      {/* <ProtectionProvider isAllowed={isOnline}>
-      </ProtectionProvider> */}
+      <ProtectionProvider isAllowed={isOnline}>
       RootLayout
-
-      {isOnline ?  <Outlet /> : <Navigate to={"/login"}/>}
+      <Outlet />
+      </ProtectionProvider>
        
     </div>
   );

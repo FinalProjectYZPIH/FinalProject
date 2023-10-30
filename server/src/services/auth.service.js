@@ -7,7 +7,7 @@ import { signJwt, verifyJwt } from "../helpers/utils/jwt.utils.js";
 import jwt from "jsonwebtoken";
 import { cookieSessionSchema } from "../models/validierungsSchema/session.schema.js";
 
-export async function createSession(userId, userAgent, next) {
+export async function createSession(userId, userAgent, next ) {
   try {
     const duplicate = await SessionModel.findOne({ user: userId });
 

@@ -1,12 +1,23 @@
-import { useEffect, useState } from "react";
-import { Outlet, Navigate, useNavigate,redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import { profileRequest } from "../api/auth";
+
 
 export default function ProtectionProvider({
   isAllowed,
   children,
   redirectTo = "/login",
 }) {
-  const navigate = useNavigate();
+  const { data: userData, isSuccess } = profileRequest("google-user");
 
-  return isAllowed ? <>{children}</> : <Navigate to={redirectTo}/>;
+
+
+    if(isSuccess) return children;
+  
+    
+
+  if (!isAllowed) {
+    return <Navigate to={redirectTo} />;
+  }
+
+  return children;
 }

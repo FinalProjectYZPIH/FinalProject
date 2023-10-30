@@ -20,7 +20,7 @@ import messengerTestRoute from "./routes/messengerTest.route.js";
 
 
 // config 
-import {corsOptions,allowedOrigins }from "./config/allowesOrigins.js";
+import {corsOptions} from "./config/allowesOrigins.js";
 import dbConnection from "./config/dbConnection.js";
 
 // importieren passportConfig.js
@@ -55,12 +55,10 @@ app.use(session({
     secret: "commet-chat-app",
     resave: false,
     saveUninitialized: true,
+    cookie: {secure: true}
   })
 );
 
-// Passport nutzen
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.use(cors(corsOptions));  
 
@@ -99,6 +97,8 @@ app.disable("x-powered-by");
 
 // app.use(express.static("public"))
 
+// Passport nutzen
+app.use(passport.initialize());
 
 // socketio
 socketInitiation();
@@ -110,7 +110,8 @@ socketInitiation();
 app.use("/auth/google", googleAuthRoute);
 app.use("/auth/facebook", facebookAuthRoute)
 
-app.use(deserializeUser)
+
+app.use(deserializeUser) ||  app.use(passport.session());
 
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);

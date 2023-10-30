@@ -1,16 +1,18 @@
 
 
 
-export const test = (io, socket) => {
-    console.log("a user connected"),
-    console.log(socket.id)
-    socket.on("message", (message) => {
-        console.log(message)
-        io.emit('socket', `${socket.id.substring(0,2)} said ${message}`)
-    })
+export const test = ( socket, io) => {
+    socket.on("join_room", (data) => {
+        socket.join(data);
+        console.log(`User with ID: ${socket.id} joined room: ${data}`);
+      });
     
-    socket.on("disconnect", () => {
-        console.log(`User ${socket.id} disconnected`);
-         // Entfernt den "message" Event-Listener
-    });
+      socket.on("send_message", (data) => {
+        socket.to(data.room).emit("receive_message", data);
+      });
+    
+      socket.on("disconnect", () => {
+        console.log("User Disconnected", socket.id);
+      });
 }
+
