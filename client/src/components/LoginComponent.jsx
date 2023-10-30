@@ -52,12 +52,12 @@ export const LoginComponent = () => {
 
   const google = () => {
     window.open("http://localhost:3000/auth/google", "_self");
-    
+
   };
   const facebook = () => {
     window.open("http://localhost:3000/auth/facebook", "_blank");
   };
-  
+
   const inputProps = {
     ph: "Your Password",
     type: "password",
@@ -65,9 +65,8 @@ export const LoginComponent = () => {
   };
   return (
     <div
-      className={`font-orbitron grid grid-cols-1 lg:grid-cols-2  w-screen h-screen sm:bg-cover sm:bg-center bg-no-repeat lg:bg-contain lg:bg-right ${
-        lightMode ? "dark" : "light"
-      }`}
+      className={`font-orbitron grid grid-cols-1 lg:grid-cols-2  w-screen h-screen sm:bg-cover sm:bg-center bg-no-repeat lg:bg-contain lg:bg-right ${lightMode ? "dark" : "light"
+        }`}
     >
       <div className="flex items-center justify-center  bg-cover  h-screen">
         <div className=" flex flex-col justify-evenly items-center w-2/3 lg:w-auto h-screen">
@@ -75,10 +74,10 @@ export const LoginComponent = () => {
             <h1 className="text-4xl text-blue-600 text-center mb-6">LOGIN</h1>
 
             <MediaButtons window={google}>
-              <GoogleIcons />  with google
+              <GoogleIcons />sign in with google
             </MediaButtons>
             <MediaButtons window={facebook}>
-              <FacebookIcons /> with facebook
+              <FacebookIcons />sign in with facebook
             </MediaButtons>
             <form onSubmit={handleSubmit}>
               <Inputs
@@ -115,7 +114,7 @@ export const LoginComponent = () => {
                 </div>
               </div>
               <div>
-                  <Button>Login</Button>
+                <Button>Login</Button>
                 <Link to="/Signup">
                   <Button className="text-white">Sign In</Button>
                 </Link>
