@@ -75,10 +75,10 @@ export const LoginComponent = () => {
             <h1 className="text-4xl text-blue-600 text-center mb-6">LOGIN</h1>
 
             <MediaButtons window={google}>
-              <GoogleIcons /> sign in with google
+              <GoogleIcons />  with google
             </MediaButtons>
             <MediaButtons window={facebook}>
-              <FacebookIcons /> sign in with facebook
+              <FacebookIcons /> with facebook
             </MediaButtons>
             <form onSubmit={handleSubmit}>
               <Inputs
