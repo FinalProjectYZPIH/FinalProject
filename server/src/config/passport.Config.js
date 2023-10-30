@@ -97,7 +97,7 @@ passport.deserializeUser((id, done) => {
   SessionModel.findOne({user: id}, (err, user) => {
     done(err, user);
 
-  } )
+  });
 });
 
 export default passport;
