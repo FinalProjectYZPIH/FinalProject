@@ -56,7 +56,7 @@ export const useProfileStore = create(
       defaultProfile: {
         userId: null,
         role: null,
-        isOnline: false,
+        isOnline: true,
         username: null,
         email: null,
         avatar: null,
@@ -121,29 +121,29 @@ export const useProfileStore = create(
     })),
     immer({
       name: "savedState",
-      partialize: (state) => ({
-        userId: state.defaultProfile.userId,
-        isOnline: state.defaultProfile.isOnline,
-        notifications: state.defaultProfile.notifications,
-        role: state.defaultProfile.role,
-        username: state.defaultProfile.username,
-        email: state.defaultProfile.email,
-        avatar: state.defaultProfile.avatar,
-        chatRooms: state.defaultProfile.chatRooms,
-        contacts: state.defaultProfile.chats
-      }),
-      onRehydrateStorage: (state) => {
-        console.log("hydration starts");
+      // partialize: (state) => ({
+      //   userId: state.defaultProfile.userId,
+      //   isOnline: state.defaultProfile.isOnline,
+      //   notifications: state.defaultProfile.notifications,
+      //   role: state.defaultProfile.role,
+      //   username: state.defaultProfile.username,
+      //   email: state.defaultProfile.email,
+      //   avatar: state.defaultProfile.avatar,
+      //   chatRooms: state.defaultProfile.chatRooms,
+      //   contacts: state.defaultProfile.chats
+      // }),
+      // onRehydrateStorage: (state) => {
+      //   console.log("hydration starts");
 
-        // optional
-        return (state, error) => {
-          if (error) {
-            console.log("an error happened during hydration", error);
-          } else {
-            console.log("hydration finished");
-          }
-        };
-      },
+      //   // optional
+      //   return (state, error) => {
+      //     if (error) {
+      //       console.log("an error happened during hydration", error);
+      //     } else {
+      //       console.log("hydration finished");
+      //     }
+      //   };
+      // },
       storage: createJSONStorage(() => sessionStorage),
     })
   )

@@ -17,6 +17,7 @@ import authRoute from "./routes/auth.route.js";
 import googleAuthRoute from "./routes/google.auth.js"
 import facebookAuthRoute from "./routes/facebook.auth.js"
 import messengerTestRoute from "./routes/messengerTest.route.js";
+import friendRequestRoute from "./routes/friendReqest.route.js"
 
 
 // config 
@@ -103,6 +104,8 @@ app.use(passport.initialize());
 // socketio
 socketInitiation();
 
+// Friendrequest route
+app.use("/friendRequest",facebookAuthRoute);
 
 
 // google auth routes nutzen 

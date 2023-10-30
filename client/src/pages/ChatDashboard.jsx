@@ -4,6 +4,7 @@ import { useState } from "react";
 import Chat from "../components/Chat";
 import { useSocketProvider } from "../context/data/SocketProvider";
 import { useNavigate } from "react-router-dom";
+import { Button } from "../components/Buttons";
 
 export default function ChatDashboard() {
   const { defaultProfile, setLogout,resetProfile } = useProfileStore();
@@ -48,9 +49,9 @@ export default function ChatDashboard() {
             ) : (
               "failed to fetching userdata"
             )}
-            <button className="border border-1 p-1" onClick={handleLogout}>
+            <Button className="border border-1 p-1" onClick={handleLogout}>
               logout
-            </button>
+            </Button>
           </div>
           <h3>Join A Chat</h3>
           <input
