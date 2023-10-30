@@ -8,7 +8,6 @@ export const ThemeColors = [
     //etc....
 ]
 
-
 //auskommentierten sind optional
 
 export const roomChatData = {
