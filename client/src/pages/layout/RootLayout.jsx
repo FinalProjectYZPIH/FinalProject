@@ -10,7 +10,7 @@ export default function RootLayout() {
   
   return (
     <div>
-      <ProtectionProvider isAllowed={true}>
+      <ProtectionProvider isAllowed={isOnline}>
       RootLayout
       <Outlet />
       </ProtectionProvider>
