@@ -5,6 +5,7 @@ import Chat from "../components/Chat";
 import { useSocketProvider } from "../context/data/SocketProvider";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/Buttons";
+import { useDarkLightMode } from "../context/data/dataStore";
 
 export default function ChatDashboard() {
   const { defaultProfile, setLogout,resetProfile } = useProfileStore();
@@ -35,8 +36,14 @@ export default function ChatDashboard() {
     }
   };
 
+  const { lightMode, setDarkMode } = useDarkLightMode();
+
   return (
-    <div className="App">
+    <div
+    className={`font-orbitron grid grid-cols-1 lg:grid-cols-2  w-screen h-screen sm:bg-cover sm:bg-center bg-no-repeat lg:bg-contain lg:bg-right ${
+      lightMode ? "dark" : "light"
+    }`}
+  >
       {!showChat ? (
         <div className="joinChatContainer">
           <div className="flex items-center flex-col ">
