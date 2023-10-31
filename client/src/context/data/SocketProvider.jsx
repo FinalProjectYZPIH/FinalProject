@@ -21,10 +21,10 @@ export default function SocketProvider({children}) {
   //   setSocket(io("http://localhost:5000"));
   // }, []);
 
-const socket = io.connect("http://localhost:3000");
+// const socket = io.connect("http://localhost:3000");
   return (
     
-    <SocketTheme.Provider value={{socket}}>
+    <SocketTheme.Provider value={{}}>
         {children}
     </SocketTheme.Provider>
   )

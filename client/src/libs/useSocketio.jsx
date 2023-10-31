@@ -6,8 +6,8 @@ const useSocketIo = (
   namespace = "",
   socketConfig = {
     // withCredentials: true, // cookie
-    reconnection: true, // erlaubt erneute verbindung
-    reconnectionAttempts: 3, // max. verbindungsversuch
+    // reconnection: true, // erlaubt erneute verbindung
+    // reconnectionAttempts: 3, // max. verbindungsversuch
     // query: {
     //   token: "token",
     //   userId: "kann zur sicherheitsRaum benutzt werden",
@@ -20,88 +20,92 @@ const useSocketIo = (
     });*/
     // timeout: 15000, // verbindungsabruch nach 15sek
     timestampRequests: true, // zeitstempel bei jeden request hinzufügen
-    timestampParam: "zeitstempl",
+    timestampParam: "zeitstempel",
     // transports: ["websocket", "polling"], //verbindungsart nach partial
   },
-  roomObject = { chatMessages: [], participants: [], comments: [], }
+
 ) => {
   const [socket, setSocket] = useState(null);
 
   //hier wird nachrichten verschickt
   useEffect(() => {
-    const newSocket = io(`${process.env.SERVER}${namespace}`, socketConfig);
+    const newSocket = io(
+      `${import.meta.env.VITE_SERVER}${namespace}`,
+      socketConfig
+    );
 
     newSocket.on("connect", () => {
       console.log("Socketio Verbunden");
+      setSocket(newSocket);
     });
 
     newSocket.on("connect_error", (error) => {
       console.error("Socketio Verbindungsfehler:", error);
       // Füge hier die Fehlerbehandlung hinzu, z.B. Anzeigen einer Fehlermeldung im UI.
     });
-    setSocket(newSocket);
 
     return () => {
       newSocket.disconnect();
     };
   }, []);
 
-  const createRoom = (roomName = "", groupchat = false) => {
-
+  const createRoom = (
+    attachMessage,
+    attachParticipantas,
+    attachComments,
+    roomName = "",
+    groupchat = false,
+    //roomObject = { chatMessages: [], participants: [], comments: [] }
+  ) => {
     if (socket && roomName && groupchat && userId) {
       const roomData = {
-        ...roomObject,
+        chatMessages: attachMessage,
+        participants: attachParticipantas,
+        comments: attachComments,
         chatName: roomName,
-        groupchat: groupchat , 
-        chatAdmin: userId , 
+        groupchat: groupchat,
+        chatAdmin: userId,
       };
 
       return socket.emit("groupRoom", {
         roomChatData: roomData,
       });
     }
+
     if (socket && !roomName && !groupchat) {
       return socket.emit("singleRoom", {
-        roomChatData: { ...roomObject },
+        roomChatData: {
+          chatMessages: [attachMessage] ,
+          participants: [userId, attachParticipantas],
+          comments: [attachComments],
+        },
       });
-    } 
-      console.log("useSocketio >createRoom >> something is wrong");
     }
+    console.log("useSocketio >createRoom >> something is wrong");
   };
 
   const sendMessage = (
     // überspringe default parameter mit undefined
-    content,
-    likes = 0,
-    emojis,
-    images,
-    voices,
-    videos,
-
+    { content, likes = 0, emojis = [], images = [], voices = [], videos = [] },
+    option = undefined
   ) => {
     if (socket) {
-      if (typeof messageText !== 'undefined') {
+      if (typeof content !== "undefined") {
         const messageData = {
           sender: userId,
           content: content,
-          likes: typeof likes !== 'undefined' ? likes : 0,
-          emojis: typeof emojis !== 'undefined' ? emojis : [],
-          images: typeof images !== 'undefined' ? images : [],
-          voices: typeof voices !== 'undefined' ? voices : [],
-          videos: typeof videos !== 'undefined' ? videos : [],  
+          likes,
+          emojis,
+          images,
+          voices,
+          videos,
         };
 
-        socket.emit("sendMessage", messageData);
+        return socket.emit("sendMessage", messageData, option);
+      }
     }
   };
-
   return { socket, createRoom, sendMessage };
 };
 
 export default useSocketIo;
-
-//   likes: [], // Array von User-IDs, die den Beitrag mögen
-//   emojis: [], // Hier können Emojis hinzugefügt werden
-//   images: [], // Hier können Bild-URLs hinzugefügt werden
-//   voices: [], // Hier können Audio-URLs hinzugefügt werden
-//   videos: [], // Hier können Video-URLs hinzugefügt werden
