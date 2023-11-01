@@ -3,7 +3,6 @@ import { devtools, persist, createJSONStorage } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { shallow } from "zustand/shallow";
 import { ThemeColors } from "./data";
-import { Navigate, redirect, useNavigate } from "react-router-dom";
 
 const themeLength = ThemeColors.length;
 
@@ -62,13 +61,28 @@ export const useProfileStore = create(
         email: null,
         avatar: null,
         contacts: [
-          "test",
+          "userids",
           //friends
         ],
         notifications: 0, //[chatroom].reduce((startvalue,f) => startvalue + f.length   ,0)
         chatRooms: [
-          { id: "user", test: [{ likes: "etc", messages: "test" }] },
-          //[chatroom,...].filter(a => a[0] === friendsUserid)
+          //   {
+          //   singleroom: {
+          //     chatMessages: [{ content: "", likes: 5, emojis: [Array] }],
+          //     participants: ["userid", "user2"],
+          //     comments: [{ content: "", likes: 5, emojis: [Array] }],
+          //   },
+          // },
+          //   {
+          //   grouproom: {
+          //     chatName: "roomName",
+          //     groupchat: true,
+          //     chatAdmin: userId,
+          //     chatMessages: [{ content: "", likes: 5, emojis: [Array] }],
+          //     participants: ["userid", "user2"],
+          //     comments: [{ content: "", likes: 5, emojis: [Array] }],
+          //   },
+          // }
         ],
         settings: {},
       },
@@ -141,11 +155,10 @@ export const useProfileStore = create(
         const storedData = JSON.parse(sessionStorage.getItem("Profile"));
         // optional
         if (storedData && typeof storedData === "object") {
-          
           // return deepRead(defaultProfile);
-        
+
           console.log("hydration finished");
-          return immer(() => (state)) 
+          return immer(() => state);
         } else {
           console.log("No valid data found in sessionStorage");
         }
@@ -158,18 +171,34 @@ export const useProfileStore = create(
 // Chatliste werden in Localstorage gepeichert messageLIste: [{ participants: [userId1, userId2]}, ...]  2 teilnehmer= direkter chat  >2 teinehmer = groupchat
 
 // hier sind chatdaten für die speicherung im localstorage damit der chat effizienter läuft
-export const useChatStore = create(
-  persist(
-    immer((set, get) => ({
-      messageListe: [], //messageLIste: [{ participants: [userId1, userId2]}, ...]
-      messageData: [], // ["string",....]
-    })),
-    immer({
-      name: "ChatStory",
-      storage: createJSONStorage(() => sessionStorage),
-    })
-  )
-);
+// export const useChatStore = create(
+//   persist(
+//     immer((set, get) => ({
+//       messageListe: [],
+//       messageData: [],
+//       setMessageList: (message) =>
+//         set({ messageListe: get().messageListe.push(message) }),
+//     }))
+//   ),
+//   {
+//     name: "ChatStory",
+//     onRehydrateStorage: (state) => {
+//       console.log('hydration starts')
+
+//       // optional
+//       return ( error) => {
+//         if (error) {
+//           console.log('an error happened during hydration', error)
+//         } else {
+//           return immer(() => state)
+//           console.log('hydration finished')
+//         }
+//       }
+//     },
+//     storage: createJSONStorage(() => localStorage),
+//   }
+// );
+
 
 // daten vorstellungen
 // const roomChatData = {

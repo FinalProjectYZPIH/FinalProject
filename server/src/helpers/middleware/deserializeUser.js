@@ -2,6 +2,7 @@
 import { verifyJwt } from "../utils/jwt.utils.js";
 //services
 import { reSignToken } from "../../services/auth.service.js";
+import logger from "./logger.js";
 
 //allgemeine id kontrolle und id aktualisierung
 const deserializeUser = async (req, res, next) => {
@@ -17,7 +18,7 @@ const deserializeUser = async (req, res, next) => {
   const { decoded, expired, valid } = verifyJwt(accessJwt, process.env.ACCESS_TOKEN);
    
 // hier
-    console.log("Status:",decoded,"expired",expired, "valid", valid)
+    logger.info("Status:",decoded,"expired",expired, "valid", valid)
   try {
     //falls jwt nicht abläuft
     if (!expired) {
@@ -44,7 +45,7 @@ const deserializeUser = async (req, res, next) => {
       
 
       const { decoded } = verifyJwt(newAccessToken, process.env.ACCESS_TOKEN || "");
-      console.log("5",decoded)
+      logger.info("new Token created")
 
       if(!decoded) next(("newAcesstoken decoded failed"))
 
@@ -54,7 +55,7 @@ const deserializeUser = async (req, res, next) => {
 
     return next();
   } catch (error) {
-    console.log("deserilize fehler", error);
+    logger.error("deserilize fehler", error);
     next(error)
   }
 };

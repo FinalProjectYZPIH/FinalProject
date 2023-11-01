@@ -22,8 +22,7 @@ const useSocketIo = (
     timestampRequests: true, // zeitstempel bei jeden request hinzufügen
     timestampParam: "zeitstempel",
     // transports: ["websocket", "polling"], //verbindungsart nach partial
-  },
-
+  }
 ) => {
   const [socket, setSocket] = useState(null);
 
@@ -50,42 +49,44 @@ const useSocketIo = (
   }, []);
 
   const createRoom = (
-    attachMessage,
-    attachParticipantas,
-    attachComments,
-    roomName = "",
-    groupchat = false,
+    {
+      attachMessage,
+      attachParticipants,
+      attachComments,
+      groupchat,
+    },
+    roomName = ""
+  ) =>
     //roomObject = { chatMessages: [], participants: [], comments: [] }
-  ) => {
-    if (socket && roomName && groupchat && userId) {
-      const roomData = {
-        chatMessages: attachMessage,
-        participants: attachParticipantas,
-        comments: attachComments,
-        chatName: roomName,
-        groupchat: groupchat,
-        chatAdmin: userId,
-      };
+    {
+      let roomData;
+      if (socket && roomName && groupchat && userId) {
+        roomData = {
+          chatMessages: [...attachMessage],
+          participants: [...attachParticipants],
+          comments: [...attachComments],
+          chatName: roomName,
+          groupchat: groupchat,
+          chatAdmin: userId,
+        };
 
-      return socket.emit("groupRoom", {
-        roomChatData: roomData,
-      });
-    }
+        socket.emit("groupRoom", { groupRoom: roomData });
+        return { groupRoom: roomData };
+      }
 
-    if (socket && !roomName && !groupchat) {
-      return socket.emit("singleRoom", {
-        roomChatData: {
-          chatMessages: [attachMessage] ,
-          participants: [userId, attachParticipantas],
-          comments: [attachComments],
-        },
-      });
-    }
-    console.log("useSocketio >createRoom >> something is wrong");
-  };
+      if (socket && !roomName && !groupchat) {
+        roomData = {
+          chatMessages: [...attachMessage],
+          participants: [userId, attachParticipants],
+          comments: [...attachComments],
+        };
+        socket.emit("singleRoom", { singleRoom: roomData });
+        return { singleRoom: roomData };
+      }
+      console.log("useSocketio >createRoom >> something is wrong");
+    };
 
   const sendMessage = (
-    // überspringe default parameter mit undefined
     { content, likes = 0, emojis = [], images = [], voices = [], videos = [] },
     option = undefined
   ) => {
@@ -99,9 +100,14 @@ const useSocketIo = (
           images,
           voices,
           videos,
+          time:
+          new Date(Date.now()).getHours() +
+          ":" +
+          new Date(Date.now()).getMinutes(),
         };
+        socket.emit("sendMessage", messageData, option);
 
-        return socket.emit("sendMessage", messageData, option);
+        return messageData;
       }
     }
   };

@@ -22,6 +22,8 @@ export default function SocketProvider({children}) {
   // }, []);
 
 // const socket = io.connect("http://localhost:3000");
+
+
   return (
     
     <SocketTheme.Provider value={{}}>
