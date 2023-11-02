@@ -39,7 +39,7 @@ function Chat({ socket, username, room }) {
           {messageList.map((messageContent) => {
             return (
               <div
-                className="message"
+                className="message flex justify-center hover:bg-white h-64"
                 id={username === messageContent.author ? "you" : "other"}
               >
                 <div>
@@ -56,7 +56,7 @@ function Chat({ socket, username, room }) {
           })}
         {/* </ScrollToBottom> */}
       </div>
-      <div className="chat-footer">
+      <div className="chat-footer flex justify-center ">
         <Inputs
           type="text"
           value={currentMessage}
