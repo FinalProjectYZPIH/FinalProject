@@ -1,6 +1,7 @@
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { devtools, persist, createJSONStorage } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
+import { shallow } from "zustand/shallow";
 import { ThemeColors } from "./data";
 import { Navigate, redirect, useNavigate } from "react-router-dom";
 
@@ -61,10 +62,14 @@ export const useProfileStore = create(
         email: null,
         avatar: null,
         contacts: [
+          "test",
           //friends
         ],
         notifications: 0, //[chatroom].reduce((startvalue,f) => startvalue + f.length   ,0)
         chatRooms: [
+
+          { id: "user", test: [{ likes: "etc", messages: "test" }] },
+
           //[chatroom,...].filter(a => a[0] === friendsUserid)
         ],
         settings: {},
@@ -91,14 +96,15 @@ export const useProfileStore = create(
       }) =>
         set((state) => {
           // ...state.defaultProfile,
-          (state.defaultProfile.userId = userId),
-            (state.defaultProfile.role = role),
-            (state.defaultProfile.username = username),
-            (state.defaultProfile.email = email),
-            (state.defaultProfile.avatar = avatar),
-            (state.defaultProfile.contacts = [...contacts]),
-            (state.defaultProfile.chatRooms = [...chatRooms]),
-            (state.defaultProfile.notifications = [...notifications]);
+
+          (get().defaultProfile.userId = userId),
+            (get().defaultProfile.role = role),
+            (get().defaultProfile.username = username),
+            (get().defaultProfile.email = email),
+            (get().defaultProfile.avatar = avatar),
+            (get().defaultProfile.contacts = [...contacts]),
+            (get().defaultProfile.chatRooms = [...chatRooms]),
+            (get().defaultProfile.notifications = [...notifications]);
         }),
       resetProfile: () =>
         set((state) => ({
@@ -107,49 +113,57 @@ export const useProfileStore = create(
             role: null,
             username: null,
             email: null,
-            avatar: "",
-            contacts: [],
-            notifications: 0,
-            // {
-            //   number: 0,
-            //   notificationSound: "on",
-            // },
-            chatRooms: [], //ChatRooms
+
+            avatar: null,
+            contacts: [
+              //friends
+            ],
+            notifications: 0, //[chatroom].reduce((startvalue,f) => startvalue + f.length   ,0)
+            chatRooms: [
+              //[chatroom,...].filter(a => a[0] === friendsUserid)
+            ],
             settings: {},
           },
         })),
     })),
-    immer({
-      name: "savedState",
-      // partialize: (state) => ({
-      //   userId: state.defaultProfile.userId,
-      //   isOnline: state.defaultProfile.isOnline,
-      //   notifications: state.defaultProfile.notifications,
-      //   role: state.defaultProfile.role,
-      //   username: state.defaultProfile.username,
-      //   email: state.defaultProfile.email,
-      //   avatar: state.defaultProfile.avatar,
-      //   chatRooms: state.defaultProfile.chatRooms,
-      //   contacts: state.defaultProfile.chats
-      // }),
-      // onRehydrateStorage: (state) => {
-      //   console.log("hydration starts");
 
-      //   // optional
-      //   return (state, error) => {
-      //     if (error) {
-      //       console.log("an error happened during hydration", error);
-      //     } else {
-      //       console.log("hydration finished");
-      //     }
-      //   };
-      // },
+    {
+      name: "Profile",
+      // partialize: ({defaultProfile, ...rest}) => rest,
+      //({
+      // userId: state.defaultProfile.userId,
+      // isOnline: state.defaultProfile.isOnline,
+      // username: state.defaultProfile.username,
+      // role: state.defaultProfile.role,
+      // email: state.defaultProfile.email,
+      // avatar: state.defaultProfile.avatar,
+      // notifications: state.defaultProfile.notifications,
+      // chatRooms: state.defaultProfile.chatRooms,
+      // contacts: state.defaultProfile.chats,
+      // settings: state.defaultProfile.settings
+      //}),
+      onRehydrateStorage: (state) => {
+        console.log("hydration starts");
+        const storedData = JSON.parse(sessionStorage.getItem("Profile"));
+        // optional
+        if (storedData && typeof storedData === "object") {
+          
+          // return deepRead(defaultProfile);
+        
+          console.log("hydration finished");
+          return immer(() => (state)) 
+        } else {
+          console.log("No valid data found in sessionStorage");
+        }
+      },
+
       storage: createJSONStorage(() => sessionStorage),
-    })
+    }
   )
 );
 
 // Chatliste werden in Localstorage gepeichert messageLIste: [{ participants: [userId1, userId2]}, ...]  2 teilnehmer= direkter chat  >2 teinehmer = groupchat
+
 
 // hier sind chatdaten für die speicherung im localstorage damit der chat effizienter läuft 
 export const useChatStore = create(
@@ -168,6 +182,7 @@ export const useChatStore = create(
     })
   )
 );
+
 
 // daten vorstellungen
 // const roomChatData = {

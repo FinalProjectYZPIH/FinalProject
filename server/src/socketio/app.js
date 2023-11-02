@@ -15,12 +15,8 @@ export function createSocket (app) {
 }
 
 export function socketInitiation () {
-
     const onConnection = (socket,io) => {
         test(socket, io)
     }
-
-
     io.on("connection", onConnection)
 }
-    
