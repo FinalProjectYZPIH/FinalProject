@@ -5,9 +5,11 @@ import Chat from "../components/Chat";
 import { useSocketProvider } from "../context/data/SocketProvider";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/Buttons";
+import { useDarkLightMode } from "../context/data/dataStore";
+import { Inputs } from "../components/Inputs";
 
 export default function ChatDashboard() {
-  const { defaultProfile, setLogout,resetProfile } = useProfileStore();
+  const { defaultProfile, setLogout, resetProfile } = useProfileStore();
 
   const { isOnline } = defaultProfile;
 
@@ -35,8 +37,13 @@ export default function ChatDashboard() {
     }
   };
 
+  const { lightMode, setDarkMode } = useDarkLightMode();
+
   return (
-    <div className="App">
+    <div
+      className={`font-orbitron grid grid-cols-1 lg:grid-cols-2  w-screen h-screen sm:bg-cover sm:bg-center bg-no-repeat lg:bg-contain lg:bg-right ${lightMode ? "dark" : "light"
+        }`}
+    >
       {!showChat ? (
         <div className="joinChatContainer">
           <div className="flex items-center flex-col ">
@@ -49,35 +56,45 @@ export default function ChatDashboard() {
             ) : (
               "failed to fetching userdata"
             )}
-            <Button className="border border-1 p-1" onClick={handleLogout}>
-              logout
-            </Button>
+
           </div>
-          <h3>Join A Chat</h3>
-          <input
-            type="text"
-            placeholder="John..."
-            onChange={(event) => {
-              setUsername(event.target.value);
-            }}
-          />
-          <input
-            type="text"
-            placeholder="Room ID..."
-            onChange={(event) => {
-              setRoom(event.target.value);
-            }}
-          />
-          <button onClick={joinRoom}>Join A Room</button>
+          <div className="flex items-center justify-center flex-col h-1/3 mt-28 lg:ml-28">
+            <h3>Join A Chat</h3>
+
+            <Inputs
+              type="text"
+              label="Name"
+              ph="who are you?"
+              onChangeFn={(event) => { setUsername(event.target.value) }}
+            />
+
+            <Inputs
+              type="text"
+              label="Room"
+              ph="choose a room"
+              onChangeFn={(event) => {
+                setRoom(event.target.value);
+              }}
+            />
+       
+          </div>
+          <div className="lg:ml-28">
+          <Button onClick={joinRoom}>Join A Room</Button> 
+          <Button onClick={handleLogout}>
+            logout
+          </Button>
+          </div>
         </div>
       ) : (
         <>
           <Chat socket={socket} username={username} room={room} />
-          <button className="border border-1 p-1" onClick={handleLogout}>
-            logout
-          </button>
+          <Button onClick={handleLogout}>
+            Logout
+          </Button>
+
         </>
       )}
+
     </div>
   );
 }

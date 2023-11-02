@@ -31,7 +31,6 @@ export const LoginComponent = () => {
   if (isSuccess) {
     //falls erfolgreich eingeloggt ist,  dann setze globale isOnline auf true, erstelle neue profilerequest  und ändere die userdaten
     setLogin();
-    
     navigate("/chat", { replace: true });
   }
 
@@ -75,10 +74,10 @@ export const LoginComponent = () => {
             <h1 className="text-4xl text-blue-600 text-center mb-6">LOGIN</h1>
 
             <MediaButtons window={google}>
-              <GoogleIcons /> sign in with google
+              <GoogleIcons />sign in with google
             </MediaButtons>
             <MediaButtons window={facebook}>
-              <FacebookIcons /> sign in with facebook
+              <FacebookIcons />sign in with facebook
             </MediaButtons>
             <form onSubmit={handleSubmit}>
               <Inputs
@@ -115,7 +114,7 @@ export const LoginComponent = () => {
                 </div>
               </div>
               <div>
-                <Button >Login</Button>
+                <Button>Login</Button>
                 <Link to="/Signup">
                   <Button className="text-white">Sign In</Button>
                 </Link>
@@ -125,6 +124,7 @@ export const LoginComponent = () => {
         </div>
       </div>
     </div>
+<<<<<<< HEAD
   );}
 // // };
 // import { useState } from "react";
@@ -252,3 +252,7 @@ export const LoginComponent = () => {
 //     </div>
 //   );
 // };
+=======
+  );
+};
+>>>>>>> origin/montag

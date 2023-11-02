@@ -14,7 +14,7 @@ router.get("/login/failed", (req, res) => {
   });
 
 router.get("/callback",passport.authenticate("facebook",{
-    successRedirect:`http://localhost:5173/`,
+    successRedirect:`http://localhost:5173/chat`,
     failureRedirect:"/login/failed",
     failureFlash:true
 }))
