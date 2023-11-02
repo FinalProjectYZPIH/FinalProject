@@ -60,7 +60,7 @@ export const LoginComponent = () => {
 
   };
   const facebook = () => {
-    window.open("http://localhost:3000/auth/facebook", "_blank");
+    window.open("http://localhost:3000/auth/facebook", "_self");
   };
 
   const inputProps = {
