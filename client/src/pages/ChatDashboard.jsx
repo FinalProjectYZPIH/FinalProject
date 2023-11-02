@@ -80,7 +80,7 @@ export default function ChatDashboard() {
           </div>
           <div className="lg:ml-28">
           <Button onClick={joinRoom}>Join A Room</Button> 
-          <Button className="border border-1 p-1" onClick={handleLogout}>
+          <Button onClick={handleLogout}>
             logout
           </Button>
           </div>
