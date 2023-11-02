@@ -27,9 +27,7 @@ export const LoginComponent = () => {
 
   const loginHandler = loginRequest(); //loginhandler ist einen object der fast alle bedingungensfälle enthält
   const { isSuccess, isError, isIdle} = loginHandler;
-  console.log(isIdle);
-  console.log(isSuccess);
-  console.log(isError);
+
   if (isSuccess) {
     //falls erfolgreich eingeloggt ist,  dann setze globale isOnline auf true, erstelle neue profilerequest  und ändere die userdaten
     setLogin();

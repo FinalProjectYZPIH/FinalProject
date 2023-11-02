@@ -50,7 +50,7 @@ const useSocketIo = (
 
   const createRoom = (
     {
-      attachMessage,
+      attachMessages,
       attachParticipants,
       attachComments,
       groupchat,
@@ -62,7 +62,7 @@ const useSocketIo = (
       let roomData;
       if (socket && roomName && groupchat && userId) {
         roomData = {
-          chatMessages: [...attachMessage],
+          chatMessages: [...attachMessages],
           participants: [...attachParticipants],
           comments: [...attachComments],
           chatName: roomName,
@@ -76,14 +76,15 @@ const useSocketIo = (
 
       if (socket && !roomName && !groupchat) {
         roomData = {
-          chatMessages: [...attachMessage],
-          participants: [userId, attachParticipants],
+          chatMessages: [...attachMessages],
+          participants: [userId, ...attachParticipants], // hier sollen nur 2 users sein
           comments: [...attachComments],
         };
         socket.emit("singleRoom", { singleRoom: roomData });
         return { singleRoom: roomData };
       }
-      console.log("useSocketio >createRoom >> something is wrong");
+      console.log( roomData,"useSocketio >createRoom >> something is wrong");
+      return roomData;
     };
 
   const sendMessage = (

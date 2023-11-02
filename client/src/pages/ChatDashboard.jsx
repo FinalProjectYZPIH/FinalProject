@@ -6,23 +6,45 @@ import { useNavigate } from "react-router-dom";
 import useSocketIo from "../libs/useSocketio";
 
 export default function ChatDashboard() {
-  const { defaultProfile, setLogout,resetProfile } = useProfileStore();
-  const { isOnline, username } = defaultProfile;
+  const { defaultProfile, setLogout, setProfile, resetProfile } =
+    useProfileStore();
 
+  const { isOnline, userId, role, username, email } = useProfileStore(
+    (state) => state.defaultProfile
+  );
+
+  let testname = "mainUser";
   const navigate = useNavigate();
-  const { data: userData, isSuccess } = profileRequest("mainUser");
+  const { data: userData, isSuccess } = profileRequest("Yan");
+  // console.log(userData.data);
+  setProfile({
+    userId: userData?.data?.userId,
+    role: userData?.data?.role,
+    username: userData?.data?.username,
+    email: userData?.data?.email,
+    avatar: "avatar",
+  });
 
-  const {socket, sendMessage, createRoom } = useSocketIo(username);
+  console.log(userId, role, username, email);
+  const { socket, sendMessage, createRoom } = useSocketIo(testname);
   const [room, setRoom] = useState("");
   const [showChat, setShowChat] = useState(false);
 
-
   const joinRoom = () => {
     if (username !== "" && room !== "") {
-        const firstMessage = `welcome to our ${room}`
-        console.log(room)
-        createRoom({attachMessage: [firstMessage], attachParticipantas: ["user1,user2"], attachComments:[], groupchat: true }, room)
-    //   socket.emit("join_room", room);
+      console.log(room);
+      // createRoom erstellt mit dem key "groupRoom oder singleRoom einen RoomObject der für Messages als einen Platzhalter gedacht ist "
+      const data = createRoom(
+        {
+          attachMessages: [`welcome to ${room}`],
+          attachParticipants: ["user1", "user2"],
+          attachComments: [{ like: 1 }],
+          groupchat: true,
+        },
+        room
+      );
+      console.log(data);
+      // socket.emit("join_room", room);
       setShowChat(true);
     }
   };
@@ -37,21 +59,20 @@ export default function ChatDashboard() {
 
   return (
     <div className="App">
-        <div className="joinChatContainer flex items-center flex-col">
-          
-            <div className="w-1/2 h-1/2 bg-slate-200 flex justify-center ">
-              Anzeigebildschirm
-            </div>
+      <div className="joinChatContainer flex items-center flex-col">
+        <div className="w-1/2 h-1/2 bg-slate-200 flex justify-center ">
+          Anzeigebildschirm
+        </div>
 
-            {isOnline && isSuccess ? (
-              <div>{`${userData.data.username}`}</div>
-            ) : (
-              "failed to fetching userdata"
-            )}
-            <button className="border border-1 p-1" onClick={handleLogout}>
-              logout
-            </button>
-            </div>
+        {isOnline && isSuccess ? (
+          <div>{`${userData.data.username}`}</div>
+        ) : (
+          "failed to fetching userdata"
+        )}
+        <button className="border border-1 p-1" onClick={handleLogout}>
+          logout
+        </button>
+      </div>
       {!showChat ? (
         <div>
           <h3>Join A Chat</h3>
@@ -67,7 +88,7 @@ export default function ChatDashboard() {
         </div>
       ) : (
         <>
-          <Chat socket={socket} username={username} room={room} />
+          <Chat socket={socket} username={testname} room={room} />
         </>
       )}
     </div>

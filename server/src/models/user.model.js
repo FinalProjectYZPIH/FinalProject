@@ -1,9 +1,19 @@
 // model fürs Datenbank >> MongdoDB
+import { customAlphabet } from "nanoid";
+
+const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyz0123456789", 10);
+
+
 
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
+    userId:{  // für die zuweisung der frontend user  da mongodb._id schreibgeschützt ist und damit nicht arbeiten soll
+      type: String,
+      unique: true,
+      default: nanoid()
+    },
     firstname: {
       type: String,
       min: [2, "Mindestens 2 Buchstaben"],
@@ -51,6 +61,13 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+
+// userSchema.pre('save', function (next) {
+//   if (!this.userId) {
+//     this.userId = nanoid();
+//   }
+//   next();
+// });
 
 const UserModel = mongoose.model("User", userSchema, "Users");
 

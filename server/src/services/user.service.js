@@ -1,6 +1,7 @@
 import { updatePasswordSchema } from "../models/validierungsSchema/user.schema.js";
 import UserModel from "../models/user.model.js";
 
+
 // external module
 import bcrypt from "bcrypt";
 
@@ -47,6 +48,7 @@ export const dbCreateUser = async (req, res, next) => {
     const user = await UserModel.create({
       ...req.body,
       password: hashedPassword,
+      // userId: `${nanoid()}`
     });
 
     if (!user) return false;

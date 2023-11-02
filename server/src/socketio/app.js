@@ -39,15 +39,17 @@ export function createSocket (app) {
       socket.join(data.groupRoom.chatName)
       console.log("grouproom",data)
       console.log(`User with ID: ${socket.id} joined room: ${data.groupRoom.chatName}`);
-      // socket.on("receive_groupRoom", )
+      socket.on("receive_groupRoom", data => {
+        return data.groupRoom.chatMessages
+      } )
     })
     socket.on("customEvent", data => {
       console.log("custom",data.message)
     })
-    // socket.on("sendMessage", (data, test) => {
-    //   console.log("send",data)
-    //   test(`${data.content} is received`)
-    // });
+    socket.on("sendMessage", (data, test) => {
+      console.log("send",data)
+      test(`${data.content} is received`)
+    });
     
     socket.on("disconnect", () => {
       console.log("User Disconnected", socket.id);

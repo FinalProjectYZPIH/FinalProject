@@ -95,26 +95,13 @@ export const useProfileStore = create(
           state.defaultProfile.isOnline = false;
           window.location.reload();
         }),
-      setProfile: ({
-        userId,
-        role,
-        username,
-        email,
-        avatar = "",
-        contacts = [],
-        chatRooms = [],
-        notifications = [],
-      }) =>
+      setProfile: ({ userId, role, username, email, avatar = "" }) =>
         set((state) => {
-          // ...state.defaultProfile,
-          (get().defaultProfile.userId = userId),
-            (get().defaultProfile.role = role),
-            (get().defaultProfile.username = username),
-            (get().defaultProfile.email = email),
-            (get().defaultProfile.avatar = avatar),
-            (get().defaultProfile.contacts = [...contacts]),
-            (get().defaultProfile.chatRooms = [...chatRooms]),
-            (get().defaultProfile.notifications = [...notifications]);
+          state.defaultProfile.userId = userId;
+          state.defaultProfile.role = role;
+          state.defaultProfile.username = username;
+          state.defaultProfile.email = email;
+          state.defaultProfile.avatar = avatar;
         }),
       resetProfile: () =>
         set((state) => ({
@@ -134,22 +121,30 @@ export const useProfileStore = create(
             settings: {},
           },
         })),
+
+      setChatRoom: ({ chatRooms }) =>
+        set((state) => {
+          state.defaultProfile.chatRooms = [...chatRooms];
+        }),
+      setContacts: ({ contacts }) =>
+        set((state) => {
+          state.defaultProfile.contacts = [...contacts];
+        }),
+      setConfigs: ({ configs }) =>
+        set((state) => {
+          state.defaultProfile.configs = [...configs];
+        }),
+      plusNotifications: () =>
+        set((state) => {
+          state.defaultProfile.notifications++;
+        }),
+      minusNotifications: () =>
+        set((state) => {
+          state.defaultProfile.notifications--;
+        }),
     })),
     {
       name: "Profile",
-      // partialize: ({defaultProfile, ...rest}) => rest,
-      //({
-      // userId: state.defaultProfile.userId,
-      // isOnline: state.defaultProfile.isOnline,
-      // username: state.defaultProfile.username,
-      // role: state.defaultProfile.role,
-      // email: state.defaultProfile.email,
-      // avatar: state.defaultProfile.avatar,
-      // notifications: state.defaultProfile.notifications,
-      // chatRooms: state.defaultProfile.chatRooms,
-      // contacts: state.defaultProfile.chats,
-      // settings: state.defaultProfile.settings
-      //}),
       onRehydrateStorage: (state) => {
         console.log("hydration starts");
         const storedData = JSON.parse(sessionStorage.getItem("Profile"));
@@ -198,7 +193,6 @@ export const useProfileStore = create(
 //     storage: createJSONStorage(() => localStorage),
 //   }
 // );
-
 
 // daten vorstellungen
 // const roomChatData = {

@@ -110,11 +110,11 @@ export function profileRequest(...key) {
     onError: () => {},
     onSettled: () => {
     },
-    refetchOnWindowFocus:false,
-    refetchInterval: 60000*10, // 10minute,
-    staleTime: 60000, //daten bleiben 60sek lang gültig,
-    retry: 3,
-    retryDelay: 30000
+
+    // refetchInterval: 60000*10, // 10minute,
+    staleTime: false,//60000, //daten bleiben 60sek lang gültig,
+    // retry: 3,
+    // retryDelay: 30000
   });
   
 }

@@ -12,15 +12,16 @@ function Chat({ socket, username, room }) {
         author: username,
         message: currentMessage,
       };
-      await socket.emit("send_message", messageData);
+      console.log(messageData)
+      await socket.emit("sendMessage", messageData, cb => console.log(cb));
       setMessageList((list) => [...list, messageData]);
       setCurrentMessage("");
     }
   };
 
   useEffect(() => {
-    socket.on("receive_groupRoom", (data) => {
-      setMessageList((list) => [...list, data]);
+    socket.on("receiveGroupRoom", (data) => {
+      setMessageList((list) => [...list, ...data]);
     });
   }, [socket]);
 
