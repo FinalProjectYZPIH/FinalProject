@@ -49,12 +49,7 @@ const useSocketIo = (
   }, []);
 
   const createRoom = (
-    {
-      attachMessages,
-      attachParticipants,
-      attachComments,
-      groupchat,
-    },
+    { attachMessages, attachParticipants, attachComments, groupchat },
     roomName = ""
   ) =>
     //roomObject = { chatMessages: [], participants: [], comments: [] }
@@ -83,28 +78,35 @@ const useSocketIo = (
         socket.emit("singleRoom", { singleRoom: roomData });
         return { singleRoom: roomData };
       }
-      console.log( roomData,"useSocketio >createRoom >> something is wrong");
+      console.log(roomData, "useSocketio >createRoom >> something is wrong");
       return roomData;
     };
 
   const sendMessage = (
-    { content, likes = 0, emojis = [], images = [], voices = [], videos = [] },
+    { content, likes, emojis, images, voices, videos },
     option = undefined
   ) => {
     if (socket) {
-      if (typeof content !== "undefined") {
+      if (
+        typeof content !== "undefined" ||
+        typeof likes !== "undefined" ||
+        typeof emojis !== "undefined" ||
+        typeof images !== "undefined" ||
+        typeof voices !== "undefined" ||
+        typeof videos !== "undefined"
+      ) {
         const messageData = {
           sender: userId,
-          content: content,
-          likes,
-          emojis,
-          images,
-          voices,
-          videos,
+          content, //string
+          likes: 0, //number
+          emojis: [], //[string]
+          images: [], //[string]
+          voices: [], //[string]?
+          videos: [], //[string]?
           time:
-          new Date(Date.now()).getHours() +
-          ":" +
-          new Date(Date.now()).getMinutes(),
+            new Date(Date.now()).getHours() +
+            ":" +
+            new Date(Date.now()).getMinutes(),
         };
         socket.emit("sendMessage", messageData, option);
 

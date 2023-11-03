@@ -9,7 +9,7 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-    userId:{  // für die zuweisung der frontend user  da mongodb._id schreibgeschützt ist und damit nicht arbeiten soll
+    userId:{  // für die zuweisung der frontend user  da wir mit mongodb._id nicht damit  arbeiten soll
       type: String,
       unique: true,
       default: nanoid()

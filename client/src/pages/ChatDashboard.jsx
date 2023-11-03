@@ -1,9 +1,9 @@
 import { useProfileStore } from "../context/data/dataStore";
 import { profileRequest } from "../context/api/auth";
 import { useState } from "react";
-import Chat from "../components/Chat";
 import { useNavigate } from "react-router-dom";
 import useSocketIo from "../libs/useSocketio";
+import GroupChat from "../components/GroupChat";
 
 export default function ChatDashboard() {
   const { defaultProfile, setLogout, setProfile, resetProfile } =
@@ -13,37 +13,56 @@ export default function ChatDashboard() {
     (state) => state.defaultProfile
   );
 
-  let testname = "mainUser";
   const navigate = useNavigate();
-  const { data: userData, isSuccess } = profileRequest("Yan");
+  const { data: userData, isSuccess, isError } = profileRequest("Yan");
   // console.log(userData.data);
-  setProfile({
-    userId: userData?.data?.userId,
-    role: userData?.data?.role,
-    username: userData?.data?.username,
-    email: userData?.data?.email,
-    avatar: "avatar",
-  });
 
+  if(isSuccess){
+    setProfile({
+      userId: userData?.data?.userId,
+      role: userData?.data?.role,
+      username: userData?.data?.username,
+      email: userData?.data?.email,
+      avatar: "avatar",
+    });
+  }
+  if(isError){
+    window.location.reload()
+    if(isOnline === false){
+      navigate("/login")
+    }
+  }
+    
   console.log(userId, role, username, email);
-  const { socket, sendMessage, createRoom } = useSocketIo(testname);
-  const [room, setRoom] = useState("");
+  const { socket, sendMessage, createRoom } = useSocketIo(username);
+  const [roomname, setRoomname] = useState("");
+  const [roomConfig, setRoomConfig] = useState({})
   const [showChat, setShowChat] = useState(false);
 
   const joinRoom = () => {
-    if (username !== "" && room !== "") {
-      console.log(room);
+    if (username !== "" && roomname !== "") {
+      console.log(roomname);
       // createRoom erstellt mit dem key "groupRoom oder singleRoom einen RoomObject der für Messages als einen Platzhalter gedacht ist "
-      const data = createRoom(
+      const roomData = createRoom(
         {
-          attachMessages: [`welcome to ${room}`],
+          attachMessages: [  {
+            sender: username,
+            content: `welcome to ${roomname} Room`,
+            likes: 0,
+            emojis: [],
+            images: [],
+            voices: [],
+            videos: [],
+          }],
           attachParticipants: ["user1", "user2"],
           attachComments: [{ like: 1 }],
           groupchat: true,
         },
-        room
+        roomname
       );
-      console.log(data);
+      
+      console.log(roomData);
+      setRoomConfig(roomData)
       // socket.emit("join_room", room);
       setShowChat(true);
     }
@@ -51,7 +70,6 @@ export default function ChatDashboard() {
   const handleLogout = async (e) => {
     e.preventDefault();
     setLogout();
-    resetProfile();
     if (isOnline === false) {
       navigate("/", { replace: true });
     }
@@ -75,20 +93,20 @@ export default function ChatDashboard() {
       </div>
       {!showChat ? (
         <div>
-          <h3>Join A Chat</h3>
+          <h3>Create or Join a Existing ChatRoom</h3>
           <input
             className="border border-1"
             type="text"
             placeholder="Create or Join a Room"
             onChange={(event) => {
-              setRoom(event.target.value);
+              setRoomname(event.target.value);
             }}
           />
           <button onClick={joinRoom}>Join A Room</button>
         </div>
       ) : (
         <>
-          <Chat socket={socket} username={testname} room={room} />
+          <GroupChat socket={socket} username={username} roomconfig={roomConfig} sendMessage={sendMessage}/>
         </>
       )}
     </div>

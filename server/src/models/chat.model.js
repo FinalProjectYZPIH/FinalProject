@@ -36,6 +36,7 @@ const MessageSchema = new mongoose.Schema({
   images: [{ type: String }], // URL oder Dateipfad zum Bild
   voices: [{ type: String }],
   videos: [{ type: String }],
+  time: {type: String}
 });
 
 const MessageModel = mongoose.model("Message", MessageSchema, "Messages");

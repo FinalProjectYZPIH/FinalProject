@@ -21,7 +21,7 @@ export const LoginComponent = () => {
   const [input, setInput] = useSearchParams({ i: "" });
   const inputParam = input.get("i");
 
-  const { setLogin, setLogout } = useProfileStore(); //benutze die globale variable um login und userobjekte einzusetzen und um zuverteilen
+  const { setLogin, setLogout, resetProfile } = useProfileStore(); //benutze die globale variable um login und userobjekte einzusetzen und um zuverteilen
   const { isOnline } = useProfileStore((state) => state.defaultProfile);
   const navigate = useNavigate();
 
@@ -33,6 +33,7 @@ export const LoginComponent = () => {
     setLogin();
     console.log(isOnline);
     navigate("/chat", { replace: true });
+
   }
 
   const { lightMode, setDarkMode } = useDarkLightMode();
@@ -45,12 +46,7 @@ export const LoginComponent = () => {
     });
 
     console.log(e.target[0].value, e.target[1].value);
-    if (isOnline === false) {
-      setLogout();
-    }
-    // setLogin();
-    // console.log(isOnline);
-    // navigate("/chat", { replace: true });
+
   };
 
   const google = () => {

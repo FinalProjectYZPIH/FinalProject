@@ -112,7 +112,7 @@ export function profileRequest(...key) {
     },
 
     // refetchInterval: 60000*10, // 10minute,
-    staleTime: false,//60000, //daten bleiben 60sek lang gültig,
+    staleTime: 60000 * 60, //daten bleiben 60sek lang gültig,
     // retry: 3,
     // retryDelay: 30000
   });

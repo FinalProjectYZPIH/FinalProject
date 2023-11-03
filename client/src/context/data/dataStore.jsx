@@ -104,23 +104,19 @@ export const useProfileStore = create(
           state.defaultProfile.avatar = avatar;
         }),
       resetProfile: () =>
-        set((state) => ({
-          defaultProfile: {
-            userId: null,
-            role: null,
-            username: null,
-            email: null,
-            avatar: null,
-            contacts: [
-              //friends
-            ],
-            notifications: 0, //[chatroom].reduce((startvalue,f) => startvalue + f.length   ,0)
-            chatRooms: [
-              //[chatroom,...].filter(a => a[0] === friendsUserid)
-            ],
-            settings: {},
-          },
-        })),
+        set((state) => {
+          state.defaultProfile.userId = null;
+          state.defaultProfile.role = null;
+          state.defaultProfile.username = null;
+          state.defaultProfile.email = null;
+          state.defaultProfile.avatar = null;
+          state.defaultProfile.contacts = null;
+          // friends
+          // (state.defaultProfile.notifications = 0), //[chatroom].reduce((startvalue,f) => startvalue + f.length   ,0)
+          // (state.defaultProfile.chatRooms = null),
+          // //[chatroom,...].filter(a => a[0] === friendsUserid)
+          // (state.defaultProfile.settings = null);
+        }),
 
       setChatRoom: ({ chatRooms }) =>
         set((state) => {
