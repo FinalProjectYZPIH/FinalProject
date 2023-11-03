@@ -4,17 +4,15 @@ import { useProfileStore } from "../../context/data/dataStore";
 import { Navigate } from "react-router-dom";
 
 export default function RootLayout() {
+  const { isOnline } = useProfileStore((state) => state.defaultProfile);
+  console.log(isOnline);
 
-  const {isOnline} = useProfileStore(state => state.defaultProfile)
-  console.log(isOnline)
-  
   return (
     <div>
       <ProtectionProvider isAllowed={true}>
-      RootLayout
-      <Outlet />
+        RootLayout
+        <Outlet />
       </ProtectionProvider>
-       
     </div>
   );
 }
