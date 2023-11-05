@@ -3,6 +3,7 @@ import { io } from "../server.js";
 import {Server} from "socket.io";
 // import {test} from "./test.js"
 import { corsOptions } from "../config/allowesOrigins.js";
+import {handleRoomchat} from "./handleRoomchat.js"
 
 const onlineUsers = {};
 
@@ -21,17 +22,15 @@ export function createSocket (app) {
   
   export function socketInitiation () {
     const onConnection = (socket,io) => {
+      handlePrivateChat(socket, io);
+      handleRoomchat(socket, io);
       // test(socket, io)
-      test1(socket, io)
     }
     io.on("connection", onConnection)
   }
   
-  
-  function test1  ( socket, io){
-    socket.on("connect", (data) => {
-      console.log(`User with ID: ${socket.id} joined room: ${data}`);
-    });
+
+  function handlePrivateChat (socket, io) {
 
     socket.on("singleRoom", data => {
       console.log("singleroom",data.singleRoom)
@@ -45,19 +44,6 @@ export function createSocket (app) {
       //   return data.groupRoom.chatMessages
       // } )
     })
-
-    socket.on("groupRoom", data => {
-      socket.join(data.groupRoom.chatName)
-      console.log("console.grouproom",data)
-      console.log(`User with ID: ${data.groupRoom.participants[data.groupRoom.participants?.length-1]} joined room: ${data.groupRoom?.chatName}`);
-      socket.on("sendMessage", (message, cb) => {
-        cb(`${message} received`)
-        data.groupRoom.chatMessages.push(message)
-        console.log(message)
-        socket.to(data.groupRoom.chatName).emit("messages_groupRoom", message)
-      } )
-    })
-    
     socket.on("customEvent", data => {
       console.log("custom",data.message)
     })
@@ -65,9 +51,10 @@ export function createSocket (app) {
     //   console.log("send",data)
     //   test(`${data.content} is received`)
     // });
-    
+
     socket.on("disconnect", () => {
       console.log("User Disconnected", socket.id);
     });
   }
   
+

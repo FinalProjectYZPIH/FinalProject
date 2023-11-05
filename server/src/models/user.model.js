@@ -9,10 +9,13 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-    userId:{  // für die zuweisung der frontend user  da wir mit mongodb._id nicht damit  arbeiten soll
+    userId:{  // hier soll der Socketid für den User für privat nachrichten nach erst Verbindung zugewiesen werden
       type: String,
       unique: true,
-      default: nanoid()
+    },
+    isOnline: {  // zur Verfolgung der UserStatus.  falls nötig?
+      type: Boolean,
+      default: false
     },
     firstname: {
       type: String,

@@ -4,9 +4,9 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 
 // ui
 import { Link } from "react-router-dom";
-import { Button, MediaButtons } from "./Buttons.jsx";
+import { Button, MediaButtons } from "./ui/Buttons.jsx";
 import { FacebookIcons, GoogleIcons } from "../assets/Icons.jsx";
-import { Inputs } from "./Inputs.jsx";
+import { Inputs } from "./ui/Inputs.jsx";
 import { useDarkLightMode } from "../context/data/dataStore.jsx";
 
 //api

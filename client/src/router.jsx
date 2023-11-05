@@ -14,6 +14,9 @@ import ChatDashboard from "./pages/ChatDashboard";
 import { ResetPassword } from "./pages/ResetPassword";
 import { Impressum } from "./pages/Impressum";
 import Login from "./pages/Login";
+import GroupChat from "./components/GroupChat";
+import SingleChat from "./components/SingleChat";
+import ContactProfile from "./components/ContactProfile";
 // import ChatTest from "./components/ChatTest";
 
 // function App() {
@@ -34,6 +37,9 @@ export const router = createBrowserRouter(
       <Route path="/" element={<Home />}></Route>
       <Route path="/chat" element={<RootLayout />}>
         <Route path="" element={<ChatDashboard />} />
+        <Route path=":roomName" element={<GroupChat />}/>
+        <Route path=":to" element={<SingleChat />}/>
+        <Route path=":profile" element={<ContactProfile />} />
       </Route>
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />

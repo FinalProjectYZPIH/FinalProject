@@ -3,6 +3,7 @@ import { devtools, persist, createJSONStorage } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { shallow } from "zustand/shallow";
 import { ThemeColors } from "./data";
+import {produce } from "immer"
 
 const themeLength = ThemeColors.length;
 
@@ -52,7 +53,7 @@ export const useDarkLightMode = create(
 
 export const useProfileStore = create(
   persist(
-    immer((set, get) => ({
+    immer( produce((set, get) => ({
       defaultProfile: {
         userId: null,
         role: null,
@@ -60,29 +61,29 @@ export const useProfileStore = create(
         username: null,
         email: null,
         avatar: null,
+        notifications: 0, //[chatroom].reduce((startvalue,f) => startvalue + f.length   ,0)
         contacts: [
           "userids",
           //friends
         ],
-        notifications: 0, //[chatroom].reduce((startvalue,f) => startvalue + f.length   ,0)
         chatRooms: [
-          //   {
-          //   singleroom: {
-          //     chatMessages: [{ content: "", likes: 5, emojis: [Array] }],
-          //     participants: ["userid", "user2"],
-          //     comments: [{ content: "", likes: 5, emojis: [Array] }],
-          //   },
-          // },
-          //   {
-          //   grouproom: {
-          //     chatName: "roomName",
-          //     groupchat: true,
-          //     chatAdmin: userId,
-          //     chatMessages: [{ content: "", likes: 5, emojis: [Array] }],
-          //     participants: ["userid", "user2"],
-          //     comments: [{ content: "", likes: 5, emojis: [Array] }],
-          //   },
-          // }
+            {
+            singleroom: {
+              chatMessages: [{ content: "sample chatmessage", likes: 5, emojis: [] }],
+              participants: ["userid", "user2"],
+              comments: [{ content: "sample coments", likes: 5, emojis: [] }],
+            },
+          },
+            {
+            grouproom: {
+              chatName: "Sample Grouproom",
+              groupchat: true,
+              chatAdmin: "TestAdmin",
+              chatMessages: [{ content: "sample chatmessage", likes: 5, emojis: [] }],
+              participants: ["userid", "user2", "user3"],
+              comments: [{ content: "sample coments", likes: 5, emojis: [] }],
+            },
+          }
         ],
         settings: {},
       },
@@ -110,7 +111,7 @@ export const useProfileStore = create(
           state.defaultProfile.username = null;
           state.defaultProfile.email = null;
           state.defaultProfile.avatar = null;
-          state.defaultProfile.contacts = null;
+          // state.defaultProfile.contacts = [];
           // friends
           // (state.defaultProfile.notifications = 0), //[chatroom].reduce((startvalue,f) => startvalue + f.length   ,0)
           // (state.defaultProfile.chatRooms = null),
@@ -138,7 +139,7 @@ export const useProfileStore = create(
         set((state) => {
           state.defaultProfile.notifications--;
         }),
-    })),
+    }))),
     {
       name: "Profile",
       onRehydrateStorage: (state) => {
@@ -149,7 +150,7 @@ export const useProfileStore = create(
           // return deepRead(defaultProfile);
 
           console.log("hydration finished");
-          return immer(() => state);
+          return immer(() => produce(state));
         } else {
           console.log("No valid data found in sessionStorage");
         }

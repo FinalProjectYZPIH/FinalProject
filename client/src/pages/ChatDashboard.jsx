@@ -4,20 +4,27 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useSocketIo from "../libs/useSocketio";
 import GroupChat from "../components/GroupChat";
+import ChatSidebar from "../components/ChatSidebar";
+import { useParams } from "react-router-dom";
+import DisplayBoard from "../components/DisplayBoard";
+import { useSocketProvider } from "../context/data/SocketProvider";
 
 export default function ChatDashboard() {
+  //globaldata
   const { defaultProfile, setLogout, setProfile, resetProfile } =
     useProfileStore();
 
   const { isOnline, userId, role, username, email } = useProfileStore(
     (state) => state.defaultProfile
   );
+  //api
+  // let { roomName } = useParams();
 
   const navigate = useNavigate();
   const { data: userData, isSuccess, isError } = profileRequest("Yan");
   // console.log(userData.data);
 
-  if(isSuccess){
+  if (isSuccess) {
     setProfile({
       userId: userData?.data?.userId,
       role: userData?.data?.role,
@@ -26,72 +33,61 @@ export default function ChatDashboard() {
       avatar: "avatar",
     });
   }
-  if(isError){
-    window.location.reload()
-    if(isOnline === false){
-      navigate("/login")
+  if (isError) {
+    window.location.reload();
+    if (isOnline === false) {
+      navigate("/login");
     }
   }
-    
   console.log(userId, role, username, email);
-  const { socket, sendMessage, createRoom } = useSocketIo(username);
+
+  //socket
+  const { socket, sendMessage, createRoom } = useSocketProvider()
+
+  // local data
   const [roomname, setRoomname] = useState("");
-  const [roomConfig, setRoomConfig] = useState({})
+  const [roomConfig, setRoomConfig] = useState({});
   const [showChat, setShowChat] = useState(false);
 
+  //events
   const joinRoom = () => {
     if (username !== "" && roomname !== "") {
-      console.log(roomname);
       // createRoom erstellt mit dem key "groupRoom oder singleRoom einen RoomObject der für Messages als einen Platzhalter gedacht ist "
       const roomData = createRoom(
         {
-          attachMessages: [  {
-            sender: username,
-            content: `welcome to ${roomname} Room`,
-            likes: 0,
-            emojis: [],
-            images: [],
-            voices: [],
-            videos: [],
-          }],
+          attachMessages: [
+            {
+              sender: username,
+              content: `welcome to ${roomname} Room`,
+              likes: 0,
+              emojis: [],
+              images: [],
+              voices: [],
+              videos: [],
+            },
+          ],
           attachParticipants: ["user1", "user2"],
           attachComments: [{ like: 1 }],
           groupchat: true,
         },
         roomname
       );
-      
+      // roomName = roomname;
       console.log(roomData);
-      setRoomConfig(roomData)
+      setRoomConfig(roomData);
       // socket.emit("join_room", room);
       setShowChat(true);
-    }
-  };
-  const handleLogout = async (e) => {
-    e.preventDefault();
-    setLogout();
-    if (isOnline === false) {
-      navigate("/", { replace: true });
+      // navigate(`/chat/${roomName}`);
     }
   };
 
   return (
-    <div className="App">
-      <div className="joinChatContainer flex items-center flex-col">
-        <div className="w-1/2 h-1/2 bg-slate-200 flex justify-center ">
-          Anzeigebildschirm
-        </div>
+    <div className="App flex justify-between">
+      <ChatSidebar />
 
-        {isOnline && isSuccess ? (
-          <div>{`${userData.data.username}`}</div>
-        ) : (
-          "failed to fetching userdata"
-        )}
-        <button className="border border-1 p-1" onClick={handleLogout}>
-          logout
-        </button>
-      </div>
-      {!showChat ? (
+      <DisplayBoard /> 
+      
+      {!showChat ? ( //hier soll für 2. sidebar gedacht sein. wenn der user in navbar klickt, es soll dann angezeigt werden.
         <div>
           <h3>Create or Join a Existing ChatRoom</h3>
           <input
@@ -106,7 +102,12 @@ export default function ChatDashboard() {
         </div>
       ) : (
         <>
-          <GroupChat socket={socket} username={username} roomconfig={roomConfig} sendMessage={sendMessage}/>
+          <GroupChat
+            socket={socket}
+            username={username}
+            roomconfig={roomConfig}
+            sendMessage={sendMessage}
+          />
         </>
       )}
     </div>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useSocketIo from "../libs/useSocketio";
+import { getTime } from "date-fns";
 // import ScrollToBottom from "react-scroll-to-bottom";
 
 // {groupRoom :{
@@ -29,6 +30,9 @@ import useSocketIo from "../libs/useSocketio";
 //   new Date(Date.now()).getMinutes(),
 // };
 function GroupChat({ socket, username, roomconfig, sendMessage }) {
+
+
+
   const defaultMessageObj = {
     content: "",
     likes: 0,
@@ -39,45 +43,38 @@ function GroupChat({ socket, username, roomconfig, sendMessage }) {
   };
   const [currentMessage, setCurrentMessage] = useState({
     ...defaultMessageObj,
-    time:
-      new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes(),
+    time: getTime(new Date()),
   });
 
-  const [messageList, setMessageList] = useState(roomconfig.groupRoom.chatMessages);
+  const [messageList, setMessageList] = useState(
+    roomconfig.groupRoom.chatMessages
+  );
 
   console.log(roomconfig.groupRoom.chatMessages);
   console.log(roomconfig.groupRoom.chatAdmin);
 
   // hier wird die daten aus backend immer mit dazugehörigen room aktualisiert
   useEffect(() => {
-    socket.on(
-      "messages_groupRoom",
-      (message) => {
-        console.log(message);
-        setMessageList((list) => [...list, message]);
-      }
-    );
+    socket.on("messages_groupRoom", (message) => {
+      console.log(message);
+      setMessageList((list) => [...list, message]);
+    });
   }, [socket]);
 
   const sendMessages = async () => {
     if (currentMessage.content !== "") {
-      const message = sendMessage(currentMessage, (cb) =>
-        console.log(cb)
-      );
-      console.log(message)
+      const message = sendMessage(currentMessage, (cb) => console.log(cb));
+      console.log(message);
       setCurrentMessage(message);
 
       setMessageList((list) => [...list, message]);
       setCurrentMessage({
         ...defaultMessageObj,
-        time:
-          new Date(Date.now()).getHours() +
-          ":" +
-          new Date(Date.now()).getMinutes(),
+        time: getTime(new Date())
       });
     }
   };
-  console.log(messageList)
+  console.log(messageList);
   return (
     <div className="chat-window bg-blue-200">
       <div className="chat-header">
