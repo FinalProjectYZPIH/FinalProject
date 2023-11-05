@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import useSocketIo from "../libs/useSocketio";
 import { getTime } from "date-fns";
+import { useSocketProvider } from "../context/data/SocketProvider";
+import { useProfileStore } from "../context/data/dataStore";
 // import ScrollToBottom from "react-scroll-to-bottom";
 
 // {groupRoom :{
@@ -29,10 +30,14 @@ import { getTime } from "date-fns";
 //   ":" +
 //   new Date(Date.now()).getMinutes(),
 // };
-function GroupChat({ socket, username, roomconfig, sendMessage }) {
+function GroupChat() {
 
+  const { username } = useProfileStore(state => state.defaultProfile)
+  const { socket, sendMessage, roomConfig} = useSocketProvider()
 
+  
 
+  console.log(roomConfig)
   const defaultMessageObj = {
     content: "",
     likes: 0,
@@ -47,11 +52,11 @@ function GroupChat({ socket, username, roomconfig, sendMessage }) {
   });
 
   const [messageList, setMessageList] = useState(
-    roomconfig.groupRoom.chatMessages
+    roomConfig.groupRoom.chatMessages
   );
 
-  console.log(roomconfig.groupRoom.chatMessages);
-  console.log(roomconfig.groupRoom.chatAdmin);
+  console.log(roomConfig.groupRoom.chatMessages);
+  console.log(roomConfig.groupRoom.chatAdmin);
 
   // hier wird die daten aus backend immer mit dazugehörigen room aktualisiert
   useEffect(() => {
