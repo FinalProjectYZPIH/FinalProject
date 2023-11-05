@@ -1,23 +1,33 @@
 import { Outlet } from "react-router-dom";
 import { useSocketProvider } from "../context/data/SocketProvider";
-import {HomeComponent} from "../components/HomeComponent"
+import { HomeComponent } from "../components/HomeComponent";
 import { useProfileStore } from "../context/data/dataStore";
+import { refreshRequest } from "../context/api/auth";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
+  const socket = useSocketProvider();
+  const { isOnline, setLogin } = useProfileStore(
+    (state) => state.defaultProfile
+  );
+  const { resetProfile } = useProfileStore();
 
-  const socket = useSocketProvider()
-  const { isOnline } = useProfileStore(state => state.defaultProfile)
-  const { resetProfile } = useProfileStore()
+  const navigate = useNavigate();
   function sendMessage(event) {
     event.preventDefault();
     socket.emit("message", { message: "hello" });
   }
 
-  if(isOnline ===false) {
+  if (isOnline === false) {
     console.log("Vor resetProfile:", useProfileStore.getState());
     resetProfile();
     console.log("Nach resetProfile:", useProfileStore.getState());
   }
+  const { isSuccess } = refreshRequest("validUser");
+  console.log(isSuccess);
+  if (isSuccess) return setLogin();
+
+  if (isOnline === true) return navigate("/chat");
 
   return (
     <div className="">

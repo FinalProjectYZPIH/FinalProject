@@ -76,7 +76,7 @@ export const useProfileStore = create(
           },
             {
             grouproom: {
-              chatName: "Sample Grouproom",
+              chatName: "SampleGrouproom",
               groupchat: true,
               chatAdmin: "TestAdmin",
               chatMessages: [{ content: "sample chatmessage", likes: 5, emojis: [] }],

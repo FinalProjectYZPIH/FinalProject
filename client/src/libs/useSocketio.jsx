@@ -5,7 +5,8 @@ const useSocketIo = (
   userId,
   namespace = "",
   socketConfig = {
-    // withCredentials: true, // cookie
+    withCredentials: true, // cookie
+    
     // reconnection: true, // erlaubt erneute verbindung
     // reconnectionAttempts: 3, // max. verbindungsversuch
     // query: {

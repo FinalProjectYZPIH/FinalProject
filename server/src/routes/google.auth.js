@@ -70,7 +70,7 @@ router.get("/callback", function (req, res, next) {
       // }
 
       if (accessValid) {
-        return res.status(200).redirect(`http://localhost:5173/`);
+        return res.status(200).redirect(`http://localhost:5173/chat`);
       }
       return res
         .status(200)
@@ -96,7 +96,7 @@ router.get("/callback", function (req, res, next) {
     // }
 
     if (accessValid) {
-      return res.status(200).redirect(`http://localhost:5173/`);
+      return res.status(200).redirect(`http://localhost:5173/chat`);
     }
 
     return res

@@ -33,7 +33,6 @@ export const LoginComponent = () => {
     setLogin();
     console.log(isOnline);
     navigate("/chat", { replace: true });
-
   }
 
   const { lightMode, setDarkMode } = useDarkLightMode();

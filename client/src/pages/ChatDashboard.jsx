@@ -2,12 +2,12 @@ import { useProfileStore } from "../context/data/dataStore";
 import { profileRequest } from "../context/api/auth";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useSocketIo from "../libs/useSocketio";
 import GroupChat from "../components/GroupChat";
 import ChatSidebar from "../components/ChatSidebar";
 import { useParams } from "react-router-dom";
 import DisplayBoard from "../components/DisplayBoard";
 import { useSocketProvider } from "../context/data/SocketProvider";
+import { Outlet } from "react-router-dom";
 
 export default function ChatDashboard() {
   //globaldata
@@ -18,7 +18,7 @@ export default function ChatDashboard() {
     (state) => state.defaultProfile
   );
   //api
-  // let { roomName } = useParams();
+  let { roomName } = useParams();
 
   const navigate = useNavigate();
   const { data: userData, isSuccess, isError } = profileRequest("Yan");
@@ -34,7 +34,8 @@ export default function ChatDashboard() {
     });
   }
   if (isError) {
-    window.location.reload();
+    setLogout()
+    window.location.reload()
     if (isOnline === false) {
       navigate("/login");
     }
@@ -42,11 +43,10 @@ export default function ChatDashboard() {
   console.log(userId, role, username, email);
 
   //socket
-  const { socket, sendMessage, createRoom } = useSocketProvider()
+  const { socket, sendMessage, createRoom, roomConfig, setRoomConfig } = useSocketProvider()
 
   // local data
-  const [roomname, setRoomname] = useState("");
-  const [roomConfig, setRoomConfig] = useState({});
+  const [roomname, setRoomName] = useState("");
   const [showChat, setShowChat] = useState(false);
 
   //events
@@ -83,10 +83,9 @@ export default function ChatDashboard() {
 
   return (
     <div className="App flex justify-between">
-      <ChatSidebar />
 
-      <DisplayBoard /> 
-      
+     {/* <ChatSidebar /> */}
+     <DisplayBoard />
       {!showChat ? ( //hier soll für 2. sidebar gedacht sein. wenn der user in navbar klickt, es soll dann angezeigt werden.
         <div>
           <h3>Create or Join a Existing ChatRoom</h3>
@@ -95,20 +94,15 @@ export default function ChatDashboard() {
             type="text"
             placeholder="Create or Join a Room"
             onChange={(event) => {
-              setRoomname(event.target.value);
+              setRoomName(event.target.value);
             }}
           />
           <button onClick={joinRoom}>Join A Room</button>
         </div>
       ) : (
-        <>
-          <GroupChat
-            socket={socket}
-            username={username}
-            roomconfig={roomConfig}
-            sendMessage={sendMessage}
-          />
-        </>
+        navigate(`/chat/${roomname}`)
+          // <GroupChat />
+
       )}
     </div>
   );

@@ -43,7 +43,7 @@ export const registerFormSchema = z
       .regex(emailRegex, { message: "Ungültige Email-Adresse" }),
     emailConfirmation: z.string({
       required_error: "emailConfirmation is required",
-    }),
+    }).toLowerCase(),
     password: z
       .string({ message: "Nur String erlaubt" })
       .min(8, { message: "Minimun 8 Characters" })

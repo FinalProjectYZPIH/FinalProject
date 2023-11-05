@@ -28,7 +28,6 @@ export function registerRequest() {
     onSettled: () => {
       toast.success("Erfolgreich... Failed!");
     },
-    
   });
   return registerMutation;
 }
@@ -38,7 +37,9 @@ export function loginRequest() {
   const loginMutation = useMutation({
     mutationFn: async (loginData) =>
       await axios.post("/api/auth/login", loginData),
-    onSuccess: () => {toast.success("Willkommen zurück!");}, // hier kann man success error und finally fälle einstellen
+    onSuccess: () => {
+      
+      toast.success("Willkommen zurück!");}, // hier kann man success error und finally fälle einstellen
     onError: () => {toast.error("Fail to  sign in...")},
     onSettled: () => {
     },
@@ -55,8 +56,8 @@ export function refreshRequest(...key) {
       return response
     },
     {
-      onSuccess: () => {}, // hier kann man success error und finally fälle einstellen
-      onError: () => {},
+      onSuccess: () => {toast.success("Erfolgreich...");}, // hier kann man success error und finally fälle einstellen
+      onError: () => {toast.success("Failed!");},
       onSettled: () => {
         toast.success("Erfolgreich... Failed!");
       },

@@ -1,9 +1,11 @@
+import { MessageModel } from "../models/chat.model.js";
 import UserModel from "../models/user.model.js";
 
 export function handleRoomchat  ( socket, io){
 
 
   socket.on("groupRoom", data => {
+   MessageModel.create(data)
     socket.join(data.groupRoom.chatName)
     console.log("console.grouproom",data)
     console.log(`User with ID: ${data.groupRoom.participants[data.groupRoom.participants?.length-1]} joined room: ${data.groupRoom?.chatName}`);
