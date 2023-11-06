@@ -1,35 +1,34 @@
 import mongoose from "mongoose";
 
-const ChatRoomSchema = new mongoose.Schema(
+const ChatSchema = new mongoose.Schema(
   {
-    chatName: { type: String, default: false },
+    chatName: { type: String, required: true },
     isGroupChat: { type: Boolean, default: false },
-    chatMessages: { type: mongoose.Schema.Types.ObjectId, ref: "Message"},
-    participants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // für gruppen nachricht
-    chatAdmin: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    messages: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Message",
+      },
+    ],
+    participants: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    chatAdmin: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
   {
     timestamps: {
-      createdAt: true,
+      createdAt: "created_at",
+      updatedAt: false, 
     },
-    // toJSON: { virtuals: true }, // So `res.json()` and other `JSON.stringify()` functions include virtuals
-    // toObject: { virtuals: true }, // So `console.log()` and other functions that use `toObject()` include virtuals
   }
 );
 
-// ChatSchema.virtual("messageCount", {
-//   ref: "Message", //related model
-//   localField: "_id", // local _id key
-//   foreignField: "content", // related opposite key
-// });
+const ChatModel = mongoose.model("Chat", ChatSchema, "Chats");
 
-const ChatRoomModel = mongoose.model("Chat", ChatRoomSchema, "Chats");
-
-export default ChatRoomModel;
-
-// // Beispiel: Erstellen eines neuen Chats  (unfährer ablauf)
-// const newChat = await ChatModel.create({ participants: [user1Id, user2Id] });
-
-// // Beispiel: Hinzufügen einer Nachricht zum Chat
-// const newMessage = new MessageModel({ sender: senderId, content: "Hallo!", timestamp: new Date() });
-// await newMessage.save();
+export default ChatModel;
