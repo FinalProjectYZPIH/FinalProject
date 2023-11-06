@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "./Buttons.jsx";
+import { Button } from "./ui/Buttons.jsx";
 import { Link } from "react-router-dom";
 import { useDarkLightMode } from "../context/data/dataStore";
 

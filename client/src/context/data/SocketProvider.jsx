@@ -1,6 +1,7 @@
-import { createContext, useContext,useState,useEffect } from "react"
-import io from "socket.io-client";
-import {messageData, roomChatData} from "../data/data.js"
+import { createContext, useContext } from "react"
+import { useProfileStore } from "./dataStore.jsx";
+import useSocketIo from "../../libs/useSocketio.jsx";
+import { useState } from "react";
 
 
 
@@ -15,16 +16,18 @@ export function useSocketProvider(){
 export default function SocketProvider({children}) {
     // benutze useSocketIo in libs ordner
     
-  //   const [socket, setSocket] = useState(null);
+    const { isOnline, userId, role, username, email } = useProfileStore(
+      (state) => state.defaultProfile
+    );
+    const [roomConfig, setRoomConfig] = useState({});
 
-  // useEffect(() => {
-  //   setSocket(io("http://localhost:5000"));
-  // }, []);
+    const { socket, sendMessage, createRoom } = useSocketIo(username);
 
-const socket = io.connect("http://localhost:3000");
+    
+
   return (
     
-    <SocketTheme.Provider value={{socket}}>
+    <SocketTheme.Provider value={{socket, sendMessage, createRoom, roomConfig, setRoomConfig}}>
         {children}
     </SocketTheme.Provider>
   )

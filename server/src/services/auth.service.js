@@ -6,6 +6,7 @@ import { signJwt, verifyJwt } from "../helpers/utils/jwt.utils.js";
 //external Modul
 import jwt from "jsonwebtoken";
 import { cookieSessionSchema } from "../models/validierungsSchema/session.schema.js";
+import logger from "../helpers/middleware/logger.js";
 
 export async function createSession(userId, userAgent, next ) {
   try {
@@ -61,7 +62,7 @@ export function acceptCookie(memberInfo, res, ipAdress = "") {
     }
     return false;
   } catch (error) {
-    console.log("cookie Überschreibungserror: ", error);
+    logger.error("cookie Überschreibungserror: ", error);
     return false;
   }
 }
@@ -69,7 +70,7 @@ export function acceptCookie(memberInfo, res, ipAdress = "") {
 export async function reSignToken(refreshToken, refreshkey, next) {
   try {
     const { decoded } = verifyJwt(refreshToken, refreshkey);
-    console.log("refresh", decoded);
+    logger.info("token resigned");
     if (!decoded || !decoded?.UserInfo.session)
       return next("Refresh Token failed");
 

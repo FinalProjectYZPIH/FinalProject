@@ -14,6 +14,11 @@ import ChatDashboard from "./pages/ChatDashboard";
 import { ResetPassword } from "./pages/ResetPassword";
 import { Impressum } from "./pages/Impressum";
 import Login from "./pages/Login";
+import GroupChat from "./components/GroupChat";
+import SingleChat from "./components/SingleChat";
+import ContactProfile from "./components/ContactProfile";
+import ChatSidebar from "./components/ChatSidebar";
+// import ChatTest from "./components/ChatTest";
 
 // function App() {
 
@@ -30,15 +35,19 @@ export const router = createBrowserRouter(
   //Template für React-router-dom
   createRoutesFromElements(
     <Route element={<AppWrapper />}>
-      <Route path="/" element={<Home />}></Route>
-      <Route path="/chat" element={<RootLayout />}>
+      <Route index path="/" element={<Home />}></Route>
+      <Route path="chat" element={<RootLayout />}>
         <Route path="" element={<ChatDashboard />} />
+        <Route path=":roomName" element={<GroupChat />} />
+        {/* <Route path=":to" element={<SingleChat />} /> */}
+        {/* <Route path=":profile" element={<ContactProfile />} /> */}
       </Route>
       <Route element={<AuthLayout />}>
-        <Route path="/login" element={<Login />} />
-        <Route path="/resetPassword" element={<ResetPassword />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/impressum" element={<Impressum />} />
+        <Route path="login" element={<Login />} />
+        <Route path="resetPassword" element={<ResetPassword />} />
+        <Route path="signup" element={<Signup />} />
+        <Route path="impressum" element={<Impressum />} />
+        {/* <Route path="/test" element={<ChatTest />} /> */}
       </Route>
     </Route>
   )

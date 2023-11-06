@@ -45,7 +45,7 @@ export const login = async (req, res, next) => {
   
   try {
     const loginResult = loginSchema.safeParse(req.body);
-    console.log(loginResult.error);
+
 
     if (!loginResult.success) {
       res.status(400);
@@ -53,7 +53,7 @@ export const login = async (req, res, next) => {
     }
 
     const loginData = req.body?.email || req.body?.username;
-    console.log(loginData);
+
     const { isValid, user } = await compareDBPassword(
       password,
       loginData,
@@ -71,10 +71,10 @@ export const login = async (req, res, next) => {
         user: user?._id,
       });
 
-      if (!session.emailVerified) {
-        console.log("bestätige erst dem emailseingang");
-        // return res.json({message: "bestaetige die bestaetigungsemail und logge nochmals ein"})
-      }
+      // if (!session.emailVerified) {
+      //   console.log("bestätige erst dem emailseingang");
+      //   // return res.json({message: "bestaetige die bestaetigungsemail und logge nochmals ein"})
+      // }
 
       //cookie Inhalt wird validiert und gespeichert
       const cookieInfo = cookieSessionSchema.safeParse({

@@ -6,8 +6,12 @@ import { Navigate } from "react-router-dom";
 export default function RootLayout() {
 
   const {isOnline} = useProfileStore(state => state.defaultProfile)
+  // const {resetProfile} = useProfileStore()
   console.log(isOnline)
-  
+
+  // if(isOnline === false) {
+  //   resetProfile()
+  // }
   return (
     <div>
       <ProtectionProvider isAllowed={isOnline}>

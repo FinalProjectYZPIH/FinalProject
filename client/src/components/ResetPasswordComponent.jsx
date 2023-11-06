@@ -1,7 +1,7 @@
 // ResetPasswordComponent.js
 import React, { useState } from 'react';
-import { Inputs } from './Inputs';
-import { Button } from './Buttons.jsx';
+import { Inputs } from './ui/Inputs';
+import { Button } from './ui/Buttons.jsx';
 import { useDarkLightMode } from "../context/data/dataStore.jsx";
 
 export const ResetPasswordComponent = () => {
