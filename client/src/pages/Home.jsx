@@ -1,15 +1,24 @@
 import { Outlet } from "react-router-dom";
 import { useSocketProvider } from "../context/data/SocketProvider";
 import {HomeComponent} from "../components/HomeComponent"
+import { useProfileStore } from "../context/data/dataStore";
 
 export default function Home() {
 
   const socket = useSocketProvider()
-  console.log(socket)
+  const { isOnline } = useProfileStore(state => state.defaultProfile)
+  const { resetProfile } = useProfileStore()
   function sendMessage(event) {
     event.preventDefault();
     socket.emit("message", { message: "hello" });
   }
+
+  if(isOnline ===false) {
+    console.log("Vor resetProfile:", useProfileStore.getState());
+    resetProfile();
+    console.log("Nach resetProfile:", useProfileStore.getState());
+  }
+
   return (
     <div className="">
       <Outlet />

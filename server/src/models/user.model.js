@@ -1,9 +1,22 @@
 // model fürs Datenbank >> MongdoDB
+import { customAlphabet } from "nanoid";
+
+const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyz0123456789", 10);
+
+
 
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
+    userId:{  // hier soll der Socketid für den User für privat nachrichten nach erst Verbindung zugewiesen werden
+      type: String,
+      unique: true,
+    },
+    isOnline: {  // zur Verfolgung der UserStatus.  falls nötig?
+      type: Boolean,
+      default: false
+    },
     firstname: {
       type: String,
       min: [2, "Mindestens 2 Buchstaben"],
@@ -50,6 +63,13 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+
+// userSchema.pre('save', function (next) {
+//   if (!this.userId) {
+//     this.userId = nanoid();
+//   }
+//   next();
+// });
 
 const UserModel = mongoose.model("User", userSchema, "Users");
 

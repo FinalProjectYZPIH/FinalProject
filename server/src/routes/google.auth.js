@@ -1,5 +1,5 @@
 import express from "express";
-import passport from "passport"
+import passport from "passport";
 import { cookieSessionSchema } from "../models/validierungsSchema/session.schema.js";
 import { acceptCookie } from "../services/auth.service.js";
 import SessionModel from "../models/session.model.js";
@@ -7,28 +7,36 @@ import logger from "../helpers/middleware/logger.js";
 
 const router = express.Router();
 
-router.get("/", passport.authenticate("google", {scope:["profile","email"]}));
+router.get(
+  "/",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
 
 router.get("/login/failed", (req, res) => {
-    const errorMessage = req.flash("error")[0] || "Something went wrong!";
-    res.status(401).json({
-      success: false,
-      message: errorMessage,
-    });
+  const errorMessage = req.flash("error")[0] || "Something went wrong!";
+  res.status(401).json({
+    success: false,
+    message: errorMessage,
   });
+});
 
-router.get("/callback",  function (req, res, next) {
+router.get("/callback", function (req, res, next) {
   passport.authenticate("google", async function (err, user, info) {
     if (err) {
       // Fehlerbehandlung, falls erforderlich
-      return res.status(500).json({ message: "Authentifizierung fehlgeschlagen" });
+      return res
+        .status(500)
+        .json({ message: "Authentifizierung fehlgeschlagen" });
     }
     if (!user) {
       // Authentifizierung fehlgeschlagen
-      return res.status(401).json({ message: "Authentifizierung fehlgeschlagen" });
+      return res
+        .status(401)
+        .json({ message: "Authentifizierung fehlgeschlagen" });
     }
 
     const duplicate = await SessionModel.findOne({ user: user?._id });
+
 
     if (duplicate){
         // Authentifizierung erfolgreich
@@ -59,17 +67,48 @@ router.get("/callback",  function (req, res, next) {
       logger.info("google already exist");
     } 
 
-    let session;
-    if(!duplicate) {
 
-      session = await SessionModel.create({ user: user?._id, userAgent: "google" })
+    let session;
+    if (!duplicate) {
+      session = await SessionModel.create({
+        user: user?._id,
+        userAgent: "google",
+      });
+      if (!session) {
+        logger.error("session creation failed");
+        return next("session creation failed");
+      }
     }
 
-    if(!session){
-      logger.error("session creation failed")
-      return next("session creation failed")
-    } 
-    
+
+
+    if (duplicate) {
+      logger.info("google already exist");
+      const cookieInfo = cookieSessionSchema.safeParse({
+        UserInfo: {
+          id: `${user?._id}` || "",
+          email: user?.email,
+          role: "member",
+          session: `${session?._id}` || "",
+        },
+      });
+
+      const accessValid = cookieInfo.success
+        ? acceptCookie(cookieInfo.data, res)
+        : null;
+
+      // if (session.emailVerified) {
+      //   res.locals.role = user?.role;
+      // }
+
+      if (accessValid) {
+        return res.status(200).redirect(`http://localhost:5173/`);
+      }
+      return res
+        .status(200)
+        .json({ message: "success logging in without cookie" });
+    }
+
 
     // Authentifizierung erfolgreich
     const cookieInfo = cookieSessionSchema.safeParse({
@@ -80,7 +119,7 @@ router.get("/callback",  function (req, res, next) {
         session: `${session?._id}` || "",
       },
     });
-    
+
     const accessValid = cookieInfo.success
       ? acceptCookie(cookieInfo.data, res)
       : null;
@@ -89,13 +128,15 @@ router.get("/callback",  function (req, res, next) {
     //   res.locals.role = user?.role;
     // }
 
-    if (accessValid){
-      return res.status(200).redirect(`http://localhost:5173/`)
+
+    if (accessValid) {
+      return res.status(200).redirect(`http://localhost:5173/`);
     }
 
-    res.status(200).json({ message: "success logging in without cookie" });
-  }
-  )(req, res, next);
+    return res
+      .status(200)
+      .json({ message: "success logging in without cookie" });
+  })(req, res, next);
 });
 
 // passport.authenticate("google",{

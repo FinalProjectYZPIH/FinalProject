@@ -10,6 +10,7 @@ import { createSession } from "../services/auth.service.js";
 
 import { verifyJwt } from "../helpers/utils/jwt.utils.js";
 import SessionModel from "../models/session.model.js";
+import logger from "../helpers/middleware/logger.js";
 
 export const createUser = async (req, res, next) => {
   try {
@@ -33,7 +34,7 @@ export const createUser = async (req, res, next) => {
     if (!user) {
       next("User creation failed");
     }
-    console.log({ message: `${user} created` });
+    logger.info({ message: `${user} created` });
     res.status(201).json({ message: `${user} created` });
     return user;
 
@@ -47,7 +48,7 @@ export const findAllUsers = async (req, res, next) => {
   const { accessJwt } = req?.cookies;
   const { valid } = verifyJwt(accessJwt, process.env.ACCESS_TOKEN);
 
-  console.log(accessJwt);
+
   try {
     if (valid) {
       const users = await UserService.dbFindAllUsers(res, next);
@@ -60,7 +61,7 @@ export const findAllUsers = async (req, res, next) => {
     return next("findAllUsers Invalid Token ID");
 
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     next(error);
   }
 };
@@ -84,14 +85,14 @@ export const findOneUser = async (req, res, next) => {
     return next("findOneUser Invalid Token ID");
 
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     next(error);
   }
 };
 
 export const getProfile = async (req, res, next) => {
   const { accessJwt } = req?.cookies;
-  console.log("acess token", req.cookies.accessJwt);
+  // console.log("acess token", req.cookies.accessJwt);
   if (!accessJwt) {
     // Wenn kein Token im Cookie vorhanden ist, wird ein Fehler zurückgegeben.
     res.status(400)
@@ -109,12 +110,12 @@ export const getProfile = async (req, res, next) => {
   try {
     // const { id } = req.params; //id is username
     const userId = decoded?.UserInfo.id;
-    console.log("userid", userId);
+    // console.log("userid", userId);
     const user = await UserService.dbFindOneUserById(userId, next);
     if (!user) return res.status(400).next("User not found");
     res.status(200).json(user);
   } catch (error) {
-    console.log("getProfile fehler",error);
+    logger.error("getProfile fehler",error);
     next(error);
   }
 };
@@ -155,7 +156,7 @@ export const updateUserById = async (req, res, next) => {
     return res.status(400).next("updateuser Invalid Token ID");
 
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     next(error);
   }
 };
@@ -189,7 +190,7 @@ export const deleteAccount = async (req, res, next) => {
     }
 
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     res.status(500).json({ message: error.message });
   }
 };

@@ -36,6 +36,7 @@ const MessageSchema = new mongoose.Schema({
   images: [{ type: String }], // URL oder Dateipfad zum Bild
   voices: [{ type: String }],
   videos: [{ type: String }],
+  time: {type: String}
 });
 
 const MessageModel = mongoose.model("Message", MessageSchema, "Messages");
@@ -43,7 +44,7 @@ const MessageModel = mongoose.model("Message", MessageSchema, "Messages");
 const ChatRoomSchema = new mongoose.Schema(
   {
     chatName: { type: String, default: false },
-    isGroupChat: { type: Boolean, default: false },
+    isGroupChat: { type: Boolean, default: false }, //falls der key groupRoom da ist dann ist dies true
     chatMessages: [MessageSchema],
     participants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // für gruppen nachricht
     chatAdmin: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
