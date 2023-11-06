@@ -57,7 +57,6 @@ const userSchema = new mongoose.Schema(
     birthday: {
       type: Date,
     },
-
     chats: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ChatRoom' }], // notifications = [...ChatRoom.....].length
     friends: [{type: mongoose.Schema.Types.ObjectId, ref: "User"}]
   },

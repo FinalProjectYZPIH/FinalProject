@@ -57,7 +57,7 @@ export const useProfileStore = create(
       defaultProfile: {
         userId: null,
         role: null,
-        isOnline: false,
+        isOnline: true,
         username: null,
         email: null,
         avatar: null,
@@ -67,6 +67,7 @@ export const useProfileStore = create(
           //friends
         ],
         chatRooms: [
+
             {
             singleroom: {
               chatMessages: [{ content: "sample chatmessage", likes: 5, emojis: [] }],
@@ -84,6 +85,10 @@ export const useProfileStore = create(
               comments: [{ content: "sample coments", likes: 5, emojis: [] }],
             },
           }
+
+
+          //[chatroom,...].filter(a => a[0] === friendsUserid)
+
         ],
         settings: {},
       },
@@ -93,11 +98,13 @@ export const useProfileStore = create(
         }),
       setLogout: () =>
         set((state) => {
+
           state.defaultProfile.isOnline = false;
           window.location.reload();
         }),
       setProfile: ({ userId, role, username, email, avatar = "" }) =>
         set((state) => {
+
           state.defaultProfile.userId = userId;
           state.defaultProfile.role = role;
           state.defaultProfile.username = username;
@@ -155,12 +162,14 @@ export const useProfileStore = create(
           console.log("No valid data found in sessionStorage");
         }
       },
+
       storage: createJSONStorage(() => sessionStorage),
     }
   )
 );
 
 // Chatliste werden in Localstorage gepeichert messageLIste: [{ participants: [userId1, userId2]}, ...]  2 teilnehmer= direkter chat  >2 teinehmer = groupchat
+
 
 // hier sind chatdaten für die speicherung im localstorage damit der chat effizienter läuft
 // export const useChatStore = create(
@@ -190,6 +199,27 @@ export const useProfileStore = create(
 //     storage: createJSONStorage(() => localStorage),
 //   }
 // );
+
+
+// hier sind chatdaten für die speicherung im localstorage damit der chat effizienter läuft 
+//export const useChatStore = create(
+//  persist(
+//    immer((set, get) => ({
+//      messageListe: [], //messageLIste: [{ participants: [userId1, userId2]}, ...]
+//      messageData: [], // ["string",....]
+
+      
+
+
+//    })),
+//    immer({
+//      name: "ChatStory",
+//      storage: createJSONStorage(() => sessionStorage),
+//    })
+//  )
+// );
+
+
 
 // daten vorstellungen
 // const roomChatData = {

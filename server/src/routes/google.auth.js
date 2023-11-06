@@ -37,6 +37,37 @@ router.get("/callback", function (req, res, next) {
 
     const duplicate = await SessionModel.findOne({ user: user?._id });
 
+
+    if (duplicate){
+        // Authentifizierung erfolgreich
+    const cookieInfo = cookieSessionSchema.safeParse({
+      UserInfo: {
+        id: `${user?._id}` || "",
+        email: user?.email,
+        role: "member",
+        session: `${session?._id}` || "",
+      },
+    });
+
+
+
+    const accessValid = cookieInfo.success
+      ? acceptCookie(cookieInfo.data, res)
+      : null;
+
+    // if (session.emailVerified) {
+    //   res.locals.role = user?.role;
+    // }
+
+    if (accessValid){
+      return res.status(200).redirect(`http://localhost:5173/`)
+    }
+
+    res.status(200).json({ message: "success logging in without cookie" });
+      logger.info("google already exist");
+    } 
+
+
     let session;
     if (!duplicate) {
       session = await SessionModel.create({
@@ -48,6 +79,7 @@ router.get("/callback", function (req, res, next) {
         return next("session creation failed");
       }
     }
+
 
 
     if (duplicate) {
@@ -77,6 +109,7 @@ router.get("/callback", function (req, res, next) {
         .json({ message: "success logging in without cookie" });
     }
 
+
     // Authentifizierung erfolgreich
     const cookieInfo = cookieSessionSchema.safeParse({
       UserInfo: {
@@ -94,6 +127,7 @@ router.get("/callback", function (req, res, next) {
     // if (session.emailVerified) {
     //   res.locals.role = user?.role;
     // }
+
 
     if (accessValid) {
       return res.status(200).redirect(`http://localhost:5173/`);

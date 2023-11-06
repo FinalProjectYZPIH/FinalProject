@@ -2,13 +2,18 @@ import { useProfileStore } from "../context/data/dataStore";
 import { profileRequest } from "../context/api/auth";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useSocketIo from "../libs/useSocketio";
+
+
 import GroupChat from "../components/GroupChat";
 import ChatSidebar from "../components/ChatSidebar";
 import { useParams } from "react-router-dom";
 import DisplayBoard from "../components/DisplayBoard";
 import { useSocketProvider } from "../context/data/SocketProvider";
 import { Outlet } from "react-router-dom";
+
+import { Button } from "../components/Buttons";
+
+
 
 export default function ChatDashboard() {
   //globaldata
@@ -84,11 +89,24 @@ export default function ChatDashboard() {
   return (
     <div className="App flex justify-between">
 
+
      <ChatSidebar />
      <DisplayBoard />
       {!showChat ? ( //hier soll für 2. sidebar gedacht sein. wenn der user in navbar klickt, es soll dann angezeigt werden.
         <div>
           <h3>Create or Join a Existing ChatRoom</h3>
+
+            {isOnline && isSuccess ? (
+              <div>{`${userData.data.username}`}</div>
+            ) : (
+              "failed to fetching userdata"
+            )}
+            <Button className="border border-1 p-1" onClick={handleLogout}>
+              logout
+            </Button>
+          </div>
+          <h3>Join A Chat</h3>
+
           <input
             className="border border-1"
             type="text"
@@ -100,10 +118,30 @@ export default function ChatDashboard() {
           <button onClick={joinRoom}>Join A Room</button>
         </div>
       ) : (
-        navigate(`/chat/${roomname}`)
-          // <GroupChat />
+        // navigate(`/chat/${roomname}`)
+          <GroupChat />
 
       )}
     </div>
   );
 }
+
+
+// const groupChatData = {
+//   chatName: "My Group Chat",
+//   isGroupChat: true,
+//   chatMessages: [], // Hier werden Nachrichten hinzugefügt
+//   participants: [userId1, userId2], // Teilnehmer des Gruppenchats
+//   chatAdmin: chatAdminUserId,
+// };
+
+// const messageData = {
+//   sender: userId,
+//   content: "Hello, this is a message!",
+//   likes: [], // Array von User-IDs, die den Beitrag mögen
+//   emojis: [], // Hier können Emojis hinzugefügt werden
+//   images: [], // Hier können Bild-URLs hinzugefügt werden
+//   voices: [], // Hier können Audio-URLs hinzugefügt werden
+//   videos: [], // Hier können Video-URLs hinzugefügt werden
+// };
+
