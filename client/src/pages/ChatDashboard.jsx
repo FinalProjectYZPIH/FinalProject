@@ -15,11 +15,8 @@ import { Button } from "../components/Buttons";
 import { useDarkLightMode } from "../context/data/dataStore";
 import { Inputs } from "../components/Inputs";
 
-<<<<<<< HEAD
 export default function ChatDashboard() {
   const { defaultProfile, setLogout, resetProfile } = useProfileStore();
-=======
->>>>>>> Development
 
 
 export default function ChatDashboard() {
