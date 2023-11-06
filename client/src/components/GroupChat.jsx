@@ -31,13 +31,10 @@ import { useProfileStore } from "../context/data/dataStore";
 //   new Date(Date.now()).getMinutes(),
 // };
 function GroupChat() {
+  const { username } = useProfileStore((state) => state.defaultProfile);
+  const { socket, sendMessage, roomConfig } = useSocketProvider();
 
-  const { username } = useProfileStore(state => state.defaultProfile)
-  const { socket, sendMessage, roomConfig} = useSocketProvider()
-
-  
-
-  console.log(roomConfig)
+  console.log(roomConfig);
   const defaultMessageObj = {
     content: "",
     likes: 0,
@@ -61,8 +58,8 @@ function GroupChat() {
   // hier wird die daten aus backend immer mit dazugehörigen room aktualisiert
   useEffect(() => {
     socket.on("messages_groupRoom", (message) => {
-      console.log(message);
       setMessageList((list) => [...list, message]);
+      console.log(message);
     });
   }, [socket]);
 
@@ -75,7 +72,7 @@ function GroupChat() {
       setMessageList((list) => [...list, message]);
       setCurrentMessage({
         ...defaultMessageObj,
-        time: getTime(new Date())
+        time: getTime(new Date()),
       });
     }
   };

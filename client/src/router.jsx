@@ -15,6 +15,7 @@ import { ResetPassword } from "./pages/ResetPassword";
 import { Impressum } from "./pages/Impressum";
 import Login from "./pages/Login";
 import { Logout } from "./pages/Logout";
+import GroupChat from "./components/GroupChat";
 
 // function App() {
 
@@ -34,7 +35,7 @@ export const router = createBrowserRouter(
       <Route index path="/" element={<Home />}></Route>
       <Route path="chat" element={<RootLayout />}>
         <Route path="" element={<ChatDashboard />} />
-        {/* <Route path=":roomName" element={<GroupChat />} /> */}
+        <Route path=":roomName" element={<GroupChat />} />
         {/* <Route path=":to" element={<SingleChat />} /> */}
         {/* <Route path=":profile" element={<ContactProfile />} /> */}
       </Route>

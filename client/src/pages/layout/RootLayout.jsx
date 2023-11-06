@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import ProtectionProvider from "../../context/auth/ProtectionProvider";
 import { useProfileStore } from "../../context/data/dataStore";
 import { Navigate } from "react-router-dom";
+import ChatSidebar from "../../components/ChatSidebar";
 
 export default function RootLayout() {
   const { isOnline } = useProfileStore((state) => state.defaultProfile);
@@ -9,8 +10,8 @@ export default function RootLayout() {
 
   return (
     <div>
-      <ProtectionProvider isAllowed={true}>
-        RootLayout
+      <ProtectionProvider isAllowed={isOnline}>
+        <ChatSidebar />
         <Outlet />
       </ProtectionProvider>
     </div>

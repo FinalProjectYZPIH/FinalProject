@@ -30,7 +30,7 @@ export default function Navigation() {
   ];
   const handleLogout = async (e) => {
     e.preventDefault();
-    setLogout();
+    setLogout() && toast.success("You are logged out");
     if (isOnline === false) {
       navigate("/", { replace: true });
     }
