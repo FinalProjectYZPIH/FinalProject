@@ -34,7 +34,7 @@ export const router = createBrowserRouter(
       <Route index path="/" element={<Home />}></Route>
       <Route path="chat" element={<RootLayout />}>
         <Route path="" element={<ChatDashboard />} />
-        <Route path=":roomName" element={<GroupChat />} />
+        {/* <Route path=":roomName" element={<GroupChat />} /> */}
         {/* <Route path=":to" element={<SingleChat />} /> */}
         {/* <Route path=":profile" element={<ContactProfile />} /> */}
       </Route>
