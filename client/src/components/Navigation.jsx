@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDarkLightMode, useProfileStore } from "../context/data/dataStore";
 import { CloudMoon, Sun, User } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ReactSwitch from "react-switch";
 
 // Beipiel
@@ -9,13 +9,8 @@ export default function Navigation() {
   const { lightMode, setDarkMode } = useDarkLightMode();
   const { isOnline, contacts, notifications, avatar, settings, chatRooms } =
     useProfileStore((state) => state.defaultProfile);
-
-  const [showNav, setShowNav] = useState(false);
-
-  const toggleNav = () => {
-    setShowNav(!showNav);
-  };
-
+  const navigate = useNavigate();
+  const { setLogout } = useProfileStore();
   const UserNav = {
     friends: contacts,
     notifications: notifications,
@@ -29,10 +24,16 @@ export default function Navigation() {
     { path: "/", name: "Home", isMember: false }, // kann auch bei path componente sein
     // { path: "/about", name: "About", isMember: false },
     { path: "/login", name: "Login", isMember: false },
-    { path: "/logout", name: "Logout", isMember: true },
     { path: "/chat", name: "Chat", isMember: true },
     // { path: "/account", name: "Account", isMember: true },
   ];
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    setLogout();
+    if (isOnline === false) {
+      navigate("/", { replace: true });
+    }
+  };
 
   return (
     <div

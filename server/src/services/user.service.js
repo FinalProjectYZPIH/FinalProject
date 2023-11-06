@@ -1,6 +1,7 @@
 import { updatePasswordSchema } from "../models/validierungsSchema/user.schema.js";
 import UserModel from "../models/user.model.js";
 
+
 // external module
 import bcrypt from "bcrypt";
 
@@ -15,11 +16,11 @@ export async function compareDBPassword( password,loginData, next,) {
     }
     const userResult = user || userOpt;
     const isValid = await bcrypt.compare(password, userResult.password);
-    console.log(isValid)
+    console.log("password compared",isValid)
 
     return { isValid: isValid, user: userResult };
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     return next(error);
   }
 }
@@ -47,6 +48,7 @@ export const dbCreateUser = async (req, res, next) => {
     const user = await UserModel.create({
       ...req.body,
       password: hashedPassword,
+      // userId: `${nanoid()}`
     });
 
     if (!user) return false;
@@ -127,7 +129,7 @@ export const dbUpdateUser = async (req, res, userIDParams, next) => {
 
     return updatedUser;
   } catch (error) {
-    console.log("dbUpdateUser error");
+    logger.info("dbUpdateUser error");
     next(error)
   }
 };

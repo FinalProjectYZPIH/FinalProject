@@ -7,6 +7,16 @@ export default function RootLayout() {
   const { isOnline } = useProfileStore((state) => state.defaultProfile);
   console.log(isOnline);
 
+<<<<<<< HEAD
+=======
+  const {isOnline} = useProfileStore(state => state.defaultProfile)
+  // const {resetProfile} = useProfileStore()
+  console.log(isOnline)
+
+  // if(isOnline === false) {
+  //   resetProfile()
+  // }
+>>>>>>> Development
   return (
     <div>
       <ProtectionProvider isAllowed={true}>

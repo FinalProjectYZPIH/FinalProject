@@ -1,45 +1,102 @@
 import { useProfileStore } from "../context/data/dataStore";
 import { profileRequest } from "../context/api/auth";
 import { useState } from "react";
-import Chat from "../components/Chat";
-import { useSocketProvider } from "../context/data/SocketProvider";
 import { useNavigate } from "react-router-dom";
+
+
+import GroupChat from "../components/GroupChat";
+import ChatSidebar from "../components/ChatSidebar";
+import { useParams } from "react-router-dom";
+import DisplayBoard from "../components/DisplayBoard";
+import { useSocketProvider } from "../context/data/SocketProvider";
+import { Outlet } from "react-router-dom";
+
 import { Button } from "../components/Buttons";
 import { useDarkLightMode } from "../context/data/dataStore";
 import { Inputs } from "../components/Inputs";
 
+<<<<<<< HEAD
 export default function ChatDashboard() {
   const { defaultProfile, setLogout, resetProfile } = useProfileStore();
+=======
+>>>>>>> Development
 
-  const { isOnline } = defaultProfile;
+
+export default function ChatDashboard() {
+  //globaldata
+  const { defaultProfile, setLogout, setProfile, resetProfile } =
+    useProfileStore();
+
+  const { isOnline, userId, role, username, email } = useProfileStore(
+    (state) => state.defaultProfile
+  );
+  //api
+  let { roomName } = useParams();
 
   const navigate = useNavigate();
+  const { data: userData, isSuccess, isError } = profileRequest("Yan");
+  // console.log(userData.data);
 
-  const { data: userData, isSuccess } = profileRequest("user");
+  if (isSuccess) {
+    setProfile({
+      userId: userData?.data?.userId,
+      role: userData?.data?.role,
+      username: userData?.data?.username,
+      email: userData?.data?.email,
+      avatar: "avatar",
+    });
+  }
+  if (isError) {
+    window.location.reload();
+    if (isOnline === false) {
+      navigate("/login");
+    }
+  }
+  console.log(userId, role, username, email);
 
-  const { socket } = useSocketProvider();
-  const [username, setUsername] = useState("");
-  const [room, setRoom] = useState("");
+  //socket
+  const { socket, sendMessage, createRoom, roomConfig, setRoomConfig } = useSocketProvider()
+
+  // local data
+  const [roomname, setRoomName] = useState("");
   const [showChat, setShowChat] = useState(false);
 
+  //events
   const joinRoom = () => {
-    if (username !== "" && room !== "") {
-      socket.emit("join_room", room);
+    if (username !== "" && roomname !== "") {
+      // createRoom erstellt mit dem key "groupRoom oder singleRoom einen RoomObject der für Messages als einen Platzhalter gedacht ist "
+      const roomData = createRoom(
+        {
+          attachMessages: [
+            {
+              sender: username,
+              content: `welcome to ${roomname} Room`,
+              likes: 0,
+              emojis: [],
+              images: [],
+              voices: [],
+              videos: [],
+            },
+          ],
+          attachParticipants: ["user1", "user2"],
+          attachComments: [{ like: 1 }],
+          groupchat: true,
+        },
+        roomname
+      );
+      // roomName = roomname;
+      console.log(roomData);
+      setRoomConfig(roomData);
+      // socket.emit("join_room", room);
       setShowChat(true);
-    }
-  };
-  const handleLogout = async (e) => {
-    e.preventDefault();
-    setLogout();
-    resetProfile();
-    if (isOnline === false) {
-      navigate("/", { replace: true });
+      // navigate(`/chat/${roomName}`);
     }
   };
 
   const { lightMode, setDarkMode } = useDarkLightMode();
 
   return (
+<<<<<<< HEAD
     <div
       className={`font-orbitron grid grid-cols-1 lg:grid-cols-2  w-screen h-screen sm:bg-cover sm:bg-center bg-no-repeat lg:bg-contain lg:bg-right ${lightMode ? "dark" : "light"
         }`}
@@ -50,6 +107,16 @@ export default function ChatDashboard() {
             <div className="w-1/2 h-1/2 bg-slate-200 flex justify-center ">
               Anzeigebildschirm
             </div>
+=======
+    <div className="App flex justify-between">
+
+
+     <ChatSidebar />
+     <DisplayBoard />
+      {!showChat ? ( //hier soll für 2. sidebar gedacht sein. wenn der user in navbar klickt, es soll dann angezeigt werden.
+        <div>
+          <h3>Create or Join a Existing ChatRoom</h3>
+>>>>>>> Development
 
             {isOnline && isSuccess ? (
               <div>{`${userData.data.username}`}</div>
@@ -84,6 +151,7 @@ export default function ChatDashboard() {
             logout
           </Button>
           </div>
+<<<<<<< HEAD
         </div>
       ) : (
         <>
@@ -93,6 +161,24 @@ export default function ChatDashboard() {
           </Button>
 
         </>
+=======
+          <h3>Join A Chat</h3>
+
+          <input
+            className="border border-1"
+            type="text"
+            placeholder="Create or Join a Room"
+            onChange={(event) => {
+              setRoomName(event.target.value);
+            }}
+          />
+          <button onClick={joinRoom}>Join A Room</button>
+        </div>
+      ) : (
+        // navigate(`/chat/${roomname}`)
+          <GroupChat />
+
+>>>>>>> Development
       )}
 
     </div>

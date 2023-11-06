@@ -31,9 +31,12 @@ export const router = createBrowserRouter(
   //Template für React-router-dom
   createRoutesFromElements(
     <Route element={<AppWrapper />}>
-      <Route path="/" element={<Home />}></Route>
-      <Route path="/chat" element={<RootLayout />}>
+      <Route index path="/" element={<Home />}></Route>
+      <Route path="chat" element={<RootLayout />}>
         <Route path="" element={<ChatDashboard />} />
+        <Route path=":roomName" element={<GroupChat />} />
+        {/* <Route path=":to" element={<SingleChat />} /> */}
+        {/* <Route path=":profile" element={<ContactProfile />} /> */}
       </Route>
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />

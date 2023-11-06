@@ -6,8 +6,8 @@ const useSocketIo = (
   namespace = "",
   socketConfig = {
     // withCredentials: true, // cookie
-    reconnection: true, // erlaubt erneute verbindung
-    reconnectionAttempts: 3, // max. verbindungsversuch
+    // reconnection: true, // erlaubt erneute verbindung
+    // reconnectionAttempts: 3, // max. verbindungsversuch
     // query: {
     //   token: "token",
     //   userId: "kann zur sicherheitsRaum benutzt werden",
@@ -20,88 +20,101 @@ const useSocketIo = (
     });*/
     // timeout: 15000, // verbindungsabruch nach 15sek
     timestampRequests: true, // zeitstempel bei jeden request hinzufügen
-    timestampParam: "zeitstempl",
+    timestampParam: "zeitstempel",
     // transports: ["websocket", "polling"], //verbindungsart nach partial
-  },
-  roomObject = { chatMessages: [], participants: [], comments: [], }
+  }
 ) => {
   const [socket, setSocket] = useState(null);
 
   //hier wird nachrichten verschickt
   useEffect(() => {
-    const newSocket = io(`${process.env.SERVER}${namespace}`, socketConfig);
+    const newSocket = io(
+      `${import.meta.env.VITE_SERVER}${namespace}`,
+      socketConfig
+    );
 
     newSocket.on("connect", () => {
       console.log("Socketio Verbunden");
+      setSocket(newSocket);
     });
 
     newSocket.on("connect_error", (error) => {
       console.error("Socketio Verbindungsfehler:", error);
       // Füge hier die Fehlerbehandlung hinzu, z.B. Anzeigen einer Fehlermeldung im UI.
     });
-    setSocket(newSocket);
 
     return () => {
       newSocket.disconnect();
     };
   }, []);
 
-  const createRoom = (roomName = "", groupchat = false) => {
-
-    if (socket && roomName && groupchat && userId) {
-      const roomData = {
-        ...roomObject,
-        chatName: roomName,
-        groupchat: groupchat , 
-        chatAdmin: userId , 
-      };
-
-      return socket.emit("groupRoom", {
-        roomChatData: roomData,
-      });
-    }
-    if (socket && !roomName && !groupchat) {
-      return socket.emit("singleRoom", {
-        roomChatData: { ...roomObject },
-      });
-    } 
-      console.log("useSocketio >createRoom >> something is wrong");
-    }
-  };
-
-  const sendMessage = (
-    // überspringe default parameter mit undefined
-    content,
-    likes = 0,
-    emojis,
-    images,
-    voices,
-    videos,
-
-  ) => {
-    if (socket) {
-      if (typeof messageText !== 'undefined') {
-        const messageData = {
-          sender: userId,
-          content: content,
-          likes: typeof likes !== 'undefined' ? likes : 0,
-          emojis: typeof emojis !== 'undefined' ? emojis : [],
-          images: typeof images !== 'undefined' ? images : [],
-          voices: typeof voices !== 'undefined' ? voices : [],
-          videos: typeof videos !== 'undefined' ? videos : [],  
+  const createRoom = (
+    { attachMessages, attachParticipants, attachComments, groupchat },
+    roomName = ""
+  ) =>
+    //roomObject = { chatMessages: [], participants: [], comments: [] }
+    {
+      let roomData;
+      if (socket && roomName && groupchat && userId) {
+        roomData = {
+          chatMessages: [...attachMessages],
+          participants: [...attachParticipants],
+          comments: [...attachComments],
+          chatName: roomName,
+          groupchat: groupchat,
+          chatAdmin: userId,
         };
 
-        socket.emit("sendMessage", messageData);
+        socket.emit("groupRoom", { groupRoom: roomData });
+        return { groupRoom: roomData };
+      }
+
+      if (socket && !roomName && !groupchat) {
+        roomData = {
+          chatMessages: [...attachMessages],
+          participants: [userId, ...attachParticipants], // hier sollen nur 2 users sein
+          comments: [...attachComments],
+        };
+        socket.emit("singleRoom", { singleRoom: roomData });
+        return { singleRoom: roomData };
+      }
+      console.log(roomData, "useSocketio >createRoom >> something is wrong");
+      return roomData;
+    };
+
+  const sendMessage = (
+    { content, likes, emojis, images, voices, videos },
+    option = undefined
+  ) => {
+    if (socket) {
+      if (
+        typeof content !== "undefined" ||
+        typeof likes !== "undefined" ||
+        typeof emojis !== "undefined" ||
+        typeof images !== "undefined" ||
+        typeof voices !== "undefined" ||
+        typeof videos !== "undefined"
+      ) {
+        const messageData = {
+          sender: userId,
+          content, //string
+          likes: 0, //number
+          emojis: [], //[string]
+          images: [], //[string]
+          voices: [], //[string]?
+          videos: [], //[string]?
+          time:
+            new Date(Date.now()).getHours() +
+            ":" +
+            new Date(Date.now()).getMinutes(),
+        };
+        socket.emit("sendMessage", messageData, option);
+
+        return messageData;
+      }
     }
   };
-
   return { socket, createRoom, sendMessage };
 };
 
 export default useSocketIo;
-
-//   likes: [], // Array von User-IDs, die den Beitrag mögen
-//   emojis: [], // Hier können Emojis hinzugefügt werden
-//   images: [], // Hier können Bild-URLs hinzugefügt werden
-//   voices: [], // Hier können Audio-URLs hinzugefügt werden
-//   videos: [], // Hier können Video-URLs hinzugefügt werden

@@ -1,8 +1,8 @@
 import React from "react";
 import "../index.css";
 // import { useNavigate } from 'react-router-dom';
-import { Button } from "./Buttons";
-import { Inputs } from "./Inputs";
+import { Button } from "./ui/Buttons";
+import { Inputs } from "./ui/Inputs";
 import backgroundImages from "../../tailwind.config.js";
 import { useColorStore, useDarkLightMode } from "../context/data/dataStore";
 

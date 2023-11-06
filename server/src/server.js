@@ -47,17 +47,20 @@ import {createSocket, socketInitiation} from "./socketio/app.js";
 // console.log(generateRandomKey(32));
 
 
+import {instrument} from "@socket.io/admin-ui"
+
+
 dotenv.config();
 const port = process.env.PORT || 3500;
 const app = express();
 
 // nutze express-session
 app.use(session({
-    secret: "commet-chat-app",
-    resave: false,
-    saveUninitialized: true,
-    cookie: {secure: true}
-  })
+  secret: "commet-chat-app",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {secure: true}
+})
 );
 
 
@@ -130,6 +133,10 @@ mongoose.connection.once("open", () => {
 });
 
 mongoose.connection.on("error", (err) => {
-    logger.error(err, "MONGODB FEHLER >>")
-    // console.log(err, `${err.no}:${err.code}\t${err.syscall}\t${err.hostname}`);
-  });
+  logger.error(err, "MONGODB FEHLER >>")
+  // console.log(err, `${err.no}:${err.code}\t${err.syscall}\t${err.hostname}`);
+});
+instrument(io, {
+  auth: false,
+
+});
