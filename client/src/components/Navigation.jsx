@@ -24,6 +24,7 @@ export default function Navigation() {
     { path: "/", name: "Home", isMember: false }, // kann auch bei path componente sein
     // { path: "/about", name: "About", isMember: false },
     { path: "/login", name: "Login", isMember: false },
+    { path: "/logout", name: "Logout", isMember: true },
     { path: "/chat", name: "Chat", isMember: true },
     // { path: "/account", name: "Account", isMember: true },
   ];
