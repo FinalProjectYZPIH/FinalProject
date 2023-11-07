@@ -66,6 +66,7 @@ Stay tuned for these exciting updates as we work to elevate your COMET experienc
 ## Contributors 🫀
 Imad Teryaki, Pawel Wojciechowski, Yanhui Wu, Zoë Rix 
 
+--- --- --- ---
 
 # ☄️ COMET 
 
@@ -87,7 +88,6 @@ Die Verwendung von COMET ist benutzerfreundlich und intuitiv.
 1. Beginne mit dem Einloggen oder Registrieren.
 2. Wähle einen Raum oder Kontakt.
 3. Starte ein Gespräch 🌟 
-   Beachte, dass deine Nachrichten nicht auf dem Server gespeichert werden.
 
 ## Wie es funktioniert ❓
 
@@ -131,6 +131,7 @@ Obwohl COMET bereits ein beeindruckendes Chat-Erlebnis bietet, verfolgt unser En
 - **Und mehr:** Unser Entwicklungsplan umfasst verschiedene weitere Verbesserungen, darunter Verbesserungen der Benutzeroberfläche, Leistungsoptimierungen und Fehlerbehebungen. Wir setzen uns kontinuierlich dafür ein, Ihnen das bestmögliche Chat-Erlebnis zu bieten.
 
 
-
+## Contributors 🫀
+Imad Teryaki, Pawel Wojciechowski, Yanhui Wu, Zoë Rix 
 
 
