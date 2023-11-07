@@ -12,18 +12,18 @@ export function useSocketProvider(){
 }
 
 
-
 export default function SocketProvider({children}) {
     // benutze useSocketIo in libs ordner
     
     const { isOnline, userId, role, username, email } = useProfileStore(
       (state) => state.defaultProfile
     );
+
+    console.log(userId)
     const [roomConfig, setRoomConfig] = useState({});
 
-    const { socket, sendMessage, createRoom } = useSocketIo(username);
 
-    
+    const { socket, sendMessage, createRoom } = useSocketIo(username);
 
   return (
     

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { getTime } from "date-fns";
 import { useSocketProvider } from "../context/data/SocketProvider";
 import { useProfileStore } from "../context/data/dataStore";
+import { useNavigate, useParams } from "react-router-dom";
+import { produce } from "immer";
 // import ScrollToBottom from "react-scroll-to-bottom";
 
 // {groupRoom :{
@@ -33,10 +35,11 @@ import { useProfileStore } from "../context/data/dataStore";
 function GroupChat() {
 
   const { username } = useProfileStore(state => state.defaultProfile)
-  const { socket, sendMessage, roomConfig} = useSocketProvider()
-
-  
-
+  const { socket, sendMessage, roomConfig, setRoomConfig} = useSocketProvider()
+  const { setChatRooms } = useProfileStore()
+  const { chatName } = useParams()
+  const navigate = useNavigate()
+console.log(chatName)
   console.log(roomConfig)
   const defaultMessageObj = {
     content: "",
@@ -51,18 +54,28 @@ function GroupChat() {
     time: getTime(new Date()),
   });
 
+  useEffect(()=> {
+    console.log(chatName)
+  },[chatName])
+
   const [messageList, setMessageList] = useState(
     roomConfig.groupRoom.chatMessages
   );
 
   console.log(roomConfig.groupRoom.chatMessages);
   console.log(roomConfig.groupRoom.chatAdmin);
+  
+  // useEffect(() => {
+  //   setRoomConfig((prev) => produce(() => ({...prev, chatName: chatName})))
+  // },[])
 
   // hier wird die daten aus backend immer mit dazugehörigen room aktualisiert
   useEffect(() => {
-    socket.on("messages_groupRoom", (message) => {
+    socket.on("messages_groupRoom", (message,room) => {
       console.log(message);
       setMessageList((list) => [...list, message]);
+      setChatRooms(room)
+  
     });
   }, [socket]);
 
@@ -87,7 +100,7 @@ function GroupChat() {
       </div>
       <div className="chat-body">
         {/* <ScrollToBottom className="message-container"> */}
-        {messageList.map((messageContent) => {
+        {(messageList || navigate("/chat")).map((messageContent) => {
           return (
             <div
               className="message"

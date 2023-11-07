@@ -32,7 +32,6 @@ const MessageSchema = new mongoose.Schema({
   content: { type: String, trim: true },
   likes:  {type: Number},//[{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], um speicher zu sparen
   emojis: [{ type: String }],
-  time: [{ type: String }],
   images: [{ type: String }], // URL oder Dateipfad zum Bild
   voices: [{ type: String }],
   videos: [{ type: String }],
@@ -45,7 +44,7 @@ const ChatRoomSchema = new mongoose.Schema(
   {
     chatName: { type: String, default: false },
     isGroupChat: { type: Boolean, default: false }, //falls der key groupRoom da ist dann ist dies true
-    chatMessages: [MessageSchema],
+    chatMessages: [{type: mongoose.Schema.Types.ObjectId, ref :"Message"}],
     participants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // für gruppen nachricht
     chatAdmin: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
@@ -64,7 +63,7 @@ const ChatRoomSchema = new mongoose.Schema(
 //   foreignField: "content", // related opposite key
 // });
 
-const ChatRoomModel = mongoose.model("Chat", ChatRoomSchema, "Chats");
+const ChatRoomModel = mongoose.model("Chat", ChatRoomSchema, "ChatRooms");
 
 export { ChatRoomModel, MessageModel };
 

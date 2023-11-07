@@ -14,9 +14,9 @@ router
   .patch("/updateUserpassword", UserController.updateUserpasswordById)
   .delete("/deleteAccount", UserController.deleteAccount)
   .get("/", UserController.findAllUsers)
-  .get("/addFriend", UserController.addFriend)
-  .get("/socketUpdate", UserController.updateSocketid)
-  .get("/:username", UserController.findFriend)
+  // .get("/addFriend", UserController.addFriend)
+  // .get("/socketUpdate", UserController.updateSocketid)
+  // .get("/:username", UserController.findFriend)
   // .delete("/deleteAllUsers", UserController.deleteAllUsers);
 
 export default router;

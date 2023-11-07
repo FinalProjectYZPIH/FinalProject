@@ -221,36 +221,36 @@ export const addFriend = async (req, res, next) => {
   }
 };
 
-export const updateSocketid = async (req, res, next) => {
-  const { accessJwt } = req?.cookies;
-  if (!accessJwt) {
-    res.status(400);
-    return next("Access token not found in cookies");
-  }
-  const { decoded, valid } = verifyJwt(accessJwt, process.env.ACCESS_TOKEN);
+// export const updateSocketid = async (req, res, next) => {
+//   const { accessJwt } = req?.cookies;
+//   if (!accessJwt) {
+//     res.status(400);
+//     return next("Access token not found in cookies");
+//   }
+//   const { decoded, valid } = verifyJwt(accessJwt, process.env.ACCESS_TOKEN);
 
-  if(!valid) {
-    // Wenn das Token ungültig ist, wird ein Fehler zurückgegeben.
-    res.status(400);
-    return next("Invalid access token");
-  }
+//   if(!valid) {
+//     // Wenn das Token ungültig ist, wird ein Fehler zurückgegeben.
+//     res.status(400);
+//     return next("Invalid access token");
+//   }
 
-  try {
-    if(valid) {
+//   try {
+//     if(valid) {
 
-      const updatedUser = UserService.updateUserSocket(decoded.UserInfo.id,req.body)
-      if(!updatedUser) {
-        logger.error("Update Socketid failed")
-        res.status(400)
-        return next("updateSocketid Failed")
-      }
-      res.status(200).json({message:`${updatedUser.username} socket updated`})   
-    }
-  } catch (error) {
-    logger.error(error)
-    next(error)
-  }
-};
+//       const updatedUser = UserService.updateUserSocket(decoded.UserInfo.id,socketId)
+//       if(!updatedUser) {
+//         logger.error("Update Socketid failed")
+//         res.status(400)
+//         return next("updateSocketid Failed")
+//       }
+//       res.status(200).json({message:`${updatedUser.username} socket updated`})   
+//     }
+//   } catch (error) {
+//     logger.error(error)
+//     next(error)
+//   }
+// };
 
 export const deleteAccount = async (req, res, next) => {
   const { accessJwt } = req?.cookies;

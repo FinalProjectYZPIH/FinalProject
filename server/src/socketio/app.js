@@ -4,10 +4,15 @@ import { Server } from "socket.io";
 // import {test} from "./test.js"
 import { corsOptions } from "../config/allowesOrigins.js";
 import { handleRoomchat } from "./handleRoomchat.js";
-import UserModel from "../models/user.model.js";
+
+// cookie
+import { parse } from "cookie";
 import { verifyJwt } from "../helpers/utils/jwt.utils.js";
-import {parse} from "cookie"
-const onlineUsers = {};
+import logger from "../helpers/middleware/logger.js";
+import { updateUserSocket } from "../services/user.service.js";
+import { localTest } from "./test.js";
+
+
 
 export function createSocket(app) {
   const httpServer = createServer(app);
@@ -22,28 +27,46 @@ export function createSocket(app) {
   return { httpServer, io };
 }
 
+let currentUserId = null ;
 export function socketInitiation() {
+  io.use(async (socket, next) => {
+    const token = socket.handshake.headers["cookie"];
+    const { accessJwt } = parse(token);
+    //  console.log( accessJwt)
+    const { decoded, valid } = verifyJwt(accessJwt, process.env.ACCESS_TOKEN);
+
+
+    try {
+      if (valid) {
+        const updatedUser = await updateUserSocket(decoded.UserInfo.id, socket.id);
+        if (!updatedUser) {
+            logger.error("Update Socketid failed");
+            return next("updateSocketid Failed");
+        }
+        
+        currentUserId = decoded.UserInfo.id;
+        next()
+        
+      }
+      if(!token) {
+        next()
+      }
+    } catch (error) {
+      logger.error(error);
+      next(error);
+    }
+    
+    // console.log(decoded?.UserInfo);
+  });
+
+
   const onConnection = (socket, io) => {
     handlePrivateChat(socket, io);
-    handleRoomchat(socket, io);
-    // test(socket, io)
+    handleRoomchat(socket, io, currentUserId);
+    localTest(socket, io)
   };
-  
-  io.use((socket) => {
-    const token = socket.handshake.headers["cookie"]
-    const {accessJwt} = parse(token)
-  //  console.log( accessJwt)
-    const { decoded } = verifyJwt(
-      accessJwt,
-      process.env.ACCESS_TOKEN
-      );
-      
-      console.log(decoded?.UserInfo);
-
-  });
   io.on("connection", onConnection);
 }
-
 
 function handlePrivateChat(socket, io) {
   socket.on("singleRoom", (data) => {

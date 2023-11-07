@@ -44,9 +44,9 @@ const useSocketIo = (
       // Füge hier die Fehlerbehandlung hinzu, z.B. Anzeigen einer Fehlermeldung im UI.
     });
 
-    return () => {
-      newSocket.disconnect();
-    };
+    // return () => {
+    //   newSocket.disconnect();
+    // };
   }, []);
 
   const createRoom = (

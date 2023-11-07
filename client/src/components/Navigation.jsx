@@ -2,14 +2,18 @@ import { useDarkLightMode, useProfileStore } from "../context/data/dataStore";
 import { CloudMoon, Sun, User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import ReactSwitch from "react-switch";
+import { logoutRequest } from "../context/api/auth";
 
 // Beipiel
 export default function Navigation() {
   const { lightMode, setDarkMode } = useDarkLightMode();
-  const { isOnline, contacts, notifications, avatar, settings, chatRooms } =
+  const { isOnline, notifications, avatar, settings, chatRooms, contacts } =
     useProfileStore((state) => state.defaultProfile);
   const navigate = useNavigate();
   const { setLogout } = useProfileStore();
+
+  const clearCookie = logoutRequest();
+
   const UserNav = {
     friends: contacts,
     notifications: notifications,
@@ -21,15 +25,14 @@ export default function Navigation() {
 
   const PageNav = [
     { path: "/", name: "Home", isMember: false }, // kann auch bei path componente sein
-    { path: "/about", name: "About", isMember: false },
     { path: "/login", name: "Login", isMember: false },
     { path: "/chat", name: "Chat", isMember: true },
-    { path: "/account", name: "Account", isMember: true },
   ];
   const handleLogout = async (e) => {
     e.preventDefault();
     setLogout();
     if (isOnline === false) {
+      clearCookie.mutate()
       navigate("/", { replace: true });
     }
   };
@@ -54,7 +57,7 @@ export default function Navigation() {
         profile
         {isOnline ? (
           <div className="">
-            {UserNav.friends} <button onClick={handleLogout}>Logout</button>
+            {/*UserNav*/} <button onClick={handleLogout}>Logout</button>
           </div>
         ) : null}
       </div>

@@ -3,6 +3,7 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
+
 } from "react-router-dom";
 import AuthLayout from "./pages/layout/AuthLayout";
 import Signup from "./pages/Signup";
@@ -16,7 +17,6 @@ import { Impressum } from "./pages/Impressum";
 import Login from "./pages/Login";
 import GroupChat from "./components/GroupChat";
 import SingleChat from "./components/SingleChat";
-import ContactProfile from "./components/ContactProfile";
 import ChatSidebar from "./components/ChatSidebar";
 // import ChatTest from "./components/ChatTest";
 
@@ -38,9 +38,9 @@ export const router = createBrowserRouter(
       <Route index path="/" element={<Home />}></Route>
       <Route path="chat" element={<RootLayout />}>
         <Route path="" element={<ChatDashboard />} />
-        <Route path=":roomName" element={<GroupChat />} />
+        
+        <Route path=":chatName" element={<GroupChat />} />
         {/* <Route path=":to" element={<SingleChat />} /> */}
-        {/* <Route path=":profile" element={<ContactProfile />} /> */}
       </Route>
       <Route element={<AuthLayout />}>
         <Route path="login" element={<Login />} />
