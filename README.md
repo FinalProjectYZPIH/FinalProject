@@ -20,7 +20,7 @@ Using COMET is user-friendly and intuitive.
 3. Begin a conversation 🌟 
    Please note that your messages cannot be stored on the server.
 
-## How It Works ❔
+## how it works ❓
 
 
 ## Take a Look 📷 
@@ -28,13 +28,18 @@ Using COMET is user-friendly and intuitive.
 
 ## Tools 🧰
 
-|Frontend                                                            |Backend|
+|Frontend                                                            |Backend                                                                                     |
 |:------------                                                       |:------------                                                                               |
 | Vite: The build tool and development server for the frontend.      | Express: A popular web framework for Node.js, used for creating APIs.                      |
 | React: The primary framework for the user interface.               | Node.js: JavaScript runtime environment.                                                   |
-| Socket.io: A library for real-time communication over WebSockets.  | socket.io                                                                                  |
+| Socket.io: A library for real-time communication over WebSockets.  | socket.io: A library for real-time communication over WebSockets.                          |
 | Axios: HTTP client for server communication.                       | MongoDB:  A scalable, document-oriented NoSQL database used for storing and managing data. |
 | Tailwind CSS: Utility-first CSS framework.                         | Authentication middleware for Node.js.                                                     |
+
+
+
+## whats next ❔
+
 
 ## Contributors 🫀
 Imad Teryaki, Pawel Wojciechowski, Yanhui Wu, Zoë Rix 
