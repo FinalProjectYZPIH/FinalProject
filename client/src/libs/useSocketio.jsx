@@ -50,19 +50,20 @@ const useSocketIo = (
   }, []);
 
   const createRoom = (
-    { attachMessages, attachParticipants, attachComments, groupchat },
+    { attachMessages, attachParticipants, attachComments },
     roomName = ""
   ) =>
     //roomObject = { chatMessages: [], participants: [], comments: [] }
     {
+      console.log([socket, roomName, userId].map(value => Boolean(value)))
       let roomData;
-      if (socket && roomName && groupchat && userId) {
+      if (socket && roomName && userId) {
         roomData = {
           chatMessages: [...attachMessages],
           participants: [...attachParticipants],
           comments: [...attachComments],
           chatName: roomName,
-          groupchat: groupchat,
+          groupchat: true,
           chatAdmin: userId,
         };
 
@@ -79,8 +80,10 @@ const useSocketIo = (
         socket.emit("singleRoom", { singleRoom: roomData });
         return { singleRoom: roomData };
       }
-      console.log(roomData, "useSocketio >createRoom >> something is wrong");
-      return roomData;
+        
+        console.log(roomData, "useSocketio >createRoom >> something is wrong");
+        return roomData;
+      
     };
 
   const sendMessage = (
