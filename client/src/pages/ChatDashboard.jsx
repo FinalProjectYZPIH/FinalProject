@@ -10,11 +10,11 @@ import { useParams } from "react-router-dom";
 import DisplayBoard from "../components/DisplayBoard";
 import { useSocketProvider } from "../context/data/SocketProvider";
 import { Outlet } from "react-router-dom";
-
-import { Button } from "../components/Buttons";
+import { useDarkLightMode } from "../context/data/dataStore";
+import { Button } from "../components/ui/Buttons"
 
 export default function ChatDashboard() {
-  const { defaultProfile, setLogout,resetProfile } = useProfileStore();
+  const { defaultProfile, setLogout,resetProfile,setProfile } = useProfileStore();
 
   const { isOnline, userId, role, username, email } = useProfileStore(
     (state) => state.defaultProfile

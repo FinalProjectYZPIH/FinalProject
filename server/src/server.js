@@ -17,7 +17,7 @@ import googleAuthRoute from "./routes/google.auth.js";
 import facebookAuthRoute from "./routes/facebook.auth.js";
 import messengerTestRoute from "./routes/messengerTest.route.js";
 import friendRequestRoute from "./routes/friendRequest.route.js";
-import chatRoute from "./routes/chat.route.js";
+// import chatRoute from "./routes/chat.route.js";
 
 // config
 import { corsOptions } from "./config/allowesOrigins.js";
