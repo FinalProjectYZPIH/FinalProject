@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { getTime } from "date-fns";
 import { useSocketProvider } from "../context/data/SocketProvider";
 import { useProfileStore } from "../context/data/dataStore";
+import { useDarkLightMode } from "../context/data/dataStore.jsx";
+import { Inputs } from "./ui/Inputs";
 // import ScrollToBottom from "react-scroll-to-bottom";
 
 // {groupRoom :{
@@ -33,6 +35,7 @@ import { useProfileStore } from "../context/data/dataStore";
 function GroupChat() {
   const { username } = useProfileStore((state) => state.defaultProfile);
   const { socket, sendMessage, roomConfig } = useSocketProvider();
+  const { lightMode, setDarkMode } = useDarkLightMode();
 
   console.log(roomConfig);
   const defaultMessageObj = {
@@ -78,48 +81,56 @@ function GroupChat() {
   };
   console.log(messageList);
   return (
-    <div className="chat-window bg-blue-200">
-      <div className="chat-header">
+    <div
+      className={`chat-window font-orbitron grid grid-cols-1 lg:grid-cols-2 w-screen h-screen sm:bg-cover sm:bg-center  bg-no-repeat lg:bg-contain lg:bg-right ${
+        lightMode ? "dark" : "light"
+      }`}
+    >
+      <div className="chat-header border border-cyan-400 rounded-lg p-5 m-5 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-25">
         <p>Live Chat</p>
-      </div>
-      <div className="chat-body">
-        {/* <ScrollToBottom className="message-container"> */}
-        {messageList.map((messageContent) => {
-          return (
-            <div
-              className="message"
-              id={username === messageContent.sender ? "you" : "other"}
-            >
-              <div>
-                <div className="message-content">
-                  <p>{messageContent.content}</p>
-                </div>
-                <div className="message-meta">
-                  <p id="time">{messageContent.time}</p>
-                  <p id="author">{messageContent.sender}</p>
+        <div className="chat-body border border-cyan-800  rounded-lg py-5 px-2">
+          {/* <ScrollToBottom className="message-container"> */}
+          {messageList.map((messageContent, index) => {
+            return (
+              <div
+                key={index}
+                className={
+                  username === messageContent.author
+                    ? "self-message text-end flex justify-end items-center"
+                    : "other-message text-start flex justify-start "
+                }
+              >
+                <div>
+                  <div className="message-content w-60 border border-cyan-400 p-2 m-1 rounded-lg ">
+                    <p>{messageContent.content}</p>
+                    <div className="message-meta  text-sm p-2">
+                      <p id="time">{messageContent.time}</p>
+                      <p id="author">{messageContent.sender}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
-        {/* </ScrollToBottom> */}
-      </div>
-      <div className="chat-footer">
-        <input
-          type="text"
-          value={currentMessage.content}
-          placeholder="Hey..."
-          onChange={(event) => {
-            setCurrentMessage({
-              ...currentMessage,
-              content: event.target.value,
-            });
-          }}
-          onKeyPress={(event) => {
-            event.key === "Enter" && sendMessages();
-          }}
-        />
-        <button onClick={sendMessages}>&#9658;</button>
+            );
+          })}
+          {/* </ScrollToBottom> */}
+          <div className="chat-footer">
+            <Inputs
+              type="text"
+              value={currentMessage.content}
+              placeholder="Hey..."
+              onChangeFn={(event) => {
+                setCurrentMessage({
+                  ...currentMessage,
+                  content: event.target.value,
+                });
+              }}
+              onKeyPress={(event) => {
+                event.key === "Enter" && sendMessages();
+              }}
+            />
+            <button onClick={sendMessages}>&#9658;</button>
+          </div>
+        </div>
       </div>
     </div>
   );

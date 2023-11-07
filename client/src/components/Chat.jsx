@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Inputs } from "./Inputs";
+import { useDarkLightMode } from "../context/data/dataStore.jsx";
 // import ScrollToBottom from "react-scroll-to-bottom";
 
 function Chat({ socket, username, room }) {
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
-
+  const { lightMode, setDarkMode } = useDarkLightMode();
+  
   const sendMessage = async () => {
     if (currentMessage !== "") {
       const messageData = {
@@ -30,15 +32,17 @@ function Chat({ socket, username, room }) {
   }, [socket]);
 
   return (
-    <div className="chat-window">
-      <div className="chat-header">
+    <div className={`chat-window font-orbitron grid grid-cols-1 lg:grid-cols-2 w-screen h-screen sm:bg-cover sm:bg-center  bg-no-repeat lg:bg-contain lg:bg-right ${
+      lightMode ? "dark" : "light"
+    }`}>
+      <div className="chat-header flex items-center justify-evenly">
         <p>Live Chat</p>
       </div>
-      <div className="chat-body">
+      <div className="chat-body border border-black">
         {/* <ScrollToBottom className="message-container"> */}
-          {messageList.map((messageContent) => {
+          {messageList.map((messageContent, index) => {
             return (
-              <div
+              <div key={index}
                 className="message flex justify-center hover:bg-white h-64"
                 id={username === messageContent.author ? "you" : "other"}
               >

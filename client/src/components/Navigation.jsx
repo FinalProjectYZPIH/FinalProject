@@ -3,6 +3,8 @@ import { useDarkLightMode, useProfileStore } from "../context/data/dataStore";
 import { CloudMoon, Sun, User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import ReactSwitch from "react-switch";
+import { Button } from "@mui/material";
+import { logoutRequest } from "../context/api/auth";
 
 // Beipiel
 export default function Navigation() {
@@ -20,18 +22,22 @@ export default function Navigation() {
     config: settings,
   };
 
+  const clearCookies = logoutRequest();
+
   const PageNav = [
     { path: "/", name: "Home", isMember: false }, // kann auch bei path componente sein
     // { path: "/about", name: "About", isMember: false },
     { path: "/login", name: "Login", isMember: false },
-    { path: "/logout", name: "Logout", isMember: true },
+    // { path: "/logout", name: "Logout", isMember: true },
     { path: "/chat", name: "Chat", isMember: true },
     // { path: "/account", name: "Account", isMember: true },
   ];
+
   const handleLogout = async (e) => {
     e.preventDefault();
     setLogout() && toast.success("You are logged out");
     if (isOnline === false) {
+      clearCookies.mutate();
       navigate("/", { replace: true });
     }
   };
@@ -53,10 +59,13 @@ export default function Navigation() {
             </div>
           ) : null
         )}
+        <div className="flex items-center justify-center bg-transparent hover:border-y-teal-400 hover:bg-cyan-400 text-sky-400 hover:text-white hover:bg-opacity-1 hover:border-transparent w-20 rounded-lg mx-0.5">
+          <button onClick={handleLogout}>Logout</button>
+        </div>
       </div>
       <form>
         <input
-          className="w-32 h-7 pl-4 pr-8 text-gray-900 rounded-full outline-cyan-400"
+          className="w-32 h-7 pl-4 pr-8 text-gray-900 rounded-full border border-cyan-400 outline-cyan-400"
           id="search"
           type="search"
           placeholder="Search..."
