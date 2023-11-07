@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import { createFriendRequest, respondToFriendRequest } from '../controllers/friendRequest';
+import { createFriendRequest, respondToFriendRequest } from '../controllers/friendRequest.js';
 
 // POST: Create a new friend request
 router.post('/', createFriendRequest);

@@ -10,15 +10,11 @@ import { useParams } from "react-router-dom";
 import DisplayBoard from "../components/DisplayBoard";
 import { useSocketProvider } from "../context/data/SocketProvider";
 import { Outlet } from "react-router-dom";
-
-import { Button } from "../components/Buttons";
-
-
+import { useDarkLightMode } from "../context/data/dataStore";
+import { Button } from "../components/ui/Buttons"
 
 export default function ChatDashboard() {
-  //globaldata
-  const { defaultProfile, setLogout, setProfile, resetProfile } =
-    useProfileStore();
+  const { defaultProfile, setLogout,resetProfile,setProfile } = useProfileStore();
 
   const { isOnline, userId, role, username, email } = useProfileStore(
     (state) => state.defaultProfile
@@ -86,42 +82,50 @@ export default function ChatDashboard() {
     }
   };
 
+  const { lightMode, setDarkMode } = useDarkLightMode();
+
   return (
-    <div className="App flex justify-between">
-
-
-     <ChatSidebar />
-     <DisplayBoard />
-      {!showChat ? ( //hier soll für 2. sidebar gedacht sein. wenn der user in navbar klickt, es soll dann angezeigt werden.
-        <div>
-          <h3>Create or Join a Existing ChatRoom</h3>
+    <div className="App">
+      {!showChat ? (
+        <div className="joinChatContainer">
+          <div className="flex items-center flex-col ">
+            <div className="w-1/2 h-1/2 bg-slate-200 flex justify-center ">
+              Anzeigebildschirm
+            </div>
 
             {isOnline && isSuccess ? (
               <div>{`${userData.data.username}`}</div>
             ) : (
               "failed to fetching userdata"
             )}
-            <Button className="border border-1 p-1" onClick={handleLogout}>
-              logout
-            </Button>
+
           </div>
           <h3>Join A Chat</h3>
-
           <input
-            className="border border-1"
             type="text"
-            placeholder="Create or Join a Room"
+            placeholder="John..."
             onChange={(event) => {
-              setRoomName(event.target.value);
+              setUsername(event.target.value);
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Room ID..."
+            onChange={(event) => {
+              setRoom(event.target.value);
             }}
           />
           <button onClick={joinRoom}>Join A Room</button>
         </div>
       ) : (
-        // navigate(`/chat/${roomname}`)
-          <GroupChat />
-
+        <>
+          <Chat socket={socket} username={username} room={room} />
+          <button className="border border-1 p-1" onClick={handleLogout}>
+            logout
+          </button>
+        </>
       )}
+
     </div>
   );
 }
