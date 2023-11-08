@@ -14,9 +14,7 @@ import { useDarkLightMode } from "../context/data/dataStore";
 import { Inputs } from "../components/ui/Inputs";
 
 export default function ChatDashboard() {
-  //globaldata
-  const { defaultProfile, setLogout, setProfile, resetProfile } =
-    useProfileStore();
+  const { defaultProfile, setLogout,resetProfile,setProfile } = useProfileStore();
 
   const { isOnline, userId, role, username, email } = useProfileStore(
     (state) => state.defaultProfile

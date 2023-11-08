@@ -20,76 +20,62 @@ router.get("/login/failed", (req, res) => {
   });
 });
 
-router.get("/callback", function (req, res, next) {
-  passport.authenticate("google", async function (err, user, info) {
-    if (err) {
-      // Fehlerbehandlung, falls erforderlich
-      return res
-        .status(500)
-        .json({ message: "Authentifizierung fehlgeschlagen" });
-    }
-    if (!user) {
-      // Authentifizierung fehlgeschlagen
-      return res
-        .status(401)
-        .json({ message: "Authentifizierung fehlgeschlagen" });
-    }
-
-    const duplicate = await SessionModel.findOne({ user: user?._id });
-
-
-    if (duplicate){
-        // Authentifizierung erfolgreich
-    const cookieInfo = cookieSessionSchema.safeParse({
-      UserInfo: {
-        id: `${user?._id}` || "",
-        email: user?.email,
-        role: "member",
-        session: `${session?._id}` || "",
-      },
-    });
-
-
-
-    const accessValid = cookieInfo.success
-      ? acceptCookie(cookieInfo.data, res)
-      : null;
-
-    // if (session.emailVerified) {
-    //   res.locals.role = user?.role;
-    // }
-
-    if (accessValid){
-      return res.status(200).redirect(`http://localhost:5173/`)
-    }
-
-    res.status(200).json({ message: "success logging in without cookie" });
-      logger.info("google already exist");
-    } 
-
-
-    let session;
-    if (!duplicate) {
-      session = await SessionModel.create({
-        user: user?._id,
-        userAgent: "google",
-      });
-      if (!session) {
-        logger.error("session creation failed");
-        return next("session creation failed");
+router.get("/callback", async (req, res, next) => {
+  try {
+    passport.authenticate("google", async (err, user, info) => {
+      if (err) {
+        // Error handling, if necessary
+        return res.status(500).json({ message: "Authentication failed" });
       }
-    }
+      if (!user) {
+        // Authentication failed
+        return res.status(401).json({ message: "Authentication failed" });
+      }
 
+      const duplicate = await SessionModel.findOne({ user: user._id });
 
+      if (duplicate) {
+        // Authentication successful
+        const cookieInfo = cookieSessionSchema.safeParse({
+          UserInfo: {
+            id: `${user._id}` || "",
+            email: user.email,
+            role: "member",
+            session: `${duplicate._id}` || "",
+          },
+        });
 
-    if (duplicate) {
-      logger.info("google already exist");
+        const accessValid = cookieInfo.success
+          ? acceptCookie(cookieInfo.data, res)
+          : null;
+
+        if (accessValid) {
+          return res.status(200).redirect(`http://localhost:5173/chat`);
+        }
+
+        logger.info("User already exists");
+        return res.status(200).json({ message: "Success logging in without a cookie" });
+      }
+
+      let session;
+      if (!duplicate) {
+        session = await SessionModel.create({
+          user: user._id,
+          userAgent: "google",
+        });
+        if (!session) {
+          logger.error("Session creation failed");
+          return next("Session creation failed");
+        }
+      }
+
+      // Authentication successful
       const cookieInfo = cookieSessionSchema.safeParse({
         UserInfo: {
-          id: `${user?._id}` || "",
-          email: user?.email,
+          id: `${user._id}` || "",
+          email: user.email,
           role: "member",
-          session: `${session?._id}` || "",
+          session: `${session._id}` || "",
         },
       });
 
@@ -97,52 +83,16 @@ router.get("/callback", function (req, res, next) {
         ? acceptCookie(cookieInfo.data, res)
         : null;
 
-      // if (session.emailVerified) {
-      //   res.locals.role = user?.role;
-      // }
-
       if (accessValid) {
-        return res.status(200).redirect(`http://localhost:5173/`);
+        return res.status(200).redirect(`http://localhost:5173/chat`);
       }
-      return res
-        .status(200)
-        .json({ message: "success logging in without cookie" });
-    }
 
-
-    // Authentifizierung erfolgreich
-    const cookieInfo = cookieSessionSchema.safeParse({
-      UserInfo: {
-        id: `${user?._id}` || "",
-        email: user?.email,
-        role: "member",
-        session: `${session?._id}` || "",
-      },
-    });
-
-    const accessValid = cookieInfo.success
-      ? acceptCookie(cookieInfo.data, res)
-      : null;
-
-    // if (session.emailVerified) {
-    //   res.locals.role = user?.role;
-    // }
-
-
-    if (accessValid) {
-      return res.status(200).redirect(`http://localhost:5173/`);
-    }
-
-    return res
-      .status(200)
-      .json({ message: "success logging in without cookie" });
-  })(req, res, next);
+      return res.status(200).json({ message: "Success logging in without a cookie" });
+    })(req, res, next);
+  } catch (error) {
+    logger.error("An error occurred during callback: " + error);
+    res.status(500).json({ message: "An error occurred during authentication" });
+  }
 });
-
-// passport.authenticate("google",{
-//     successRedirect:`http://localhost:5173/`,
-//     failureRedirect:"/login/failed",
-//     failureFlash:true
-// }))
 
 export default router;
