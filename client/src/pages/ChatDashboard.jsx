@@ -97,7 +97,7 @@ export default function ChatDashboard() {
       {/* <DisplayBoard /> */}
       {!showChat ? ( //hier soll für 2. sidebar gedacht sein. wenn der user in navbar klickt, es soll dann angezeigt werden.
         <div className=" flex flex-col justify-evenly items-center">
-          <div className="h-3/4 w-2/4 px-5 flex justify-evenly flex-col items-center border border-slate-400 rounded-md shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-25">
+          <div className="h-3/5 w-96 px-5 flex justify-evenly flex-col items-center border border-slate-400 rounded-md shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-25">
             <h3 className="text-4xl">Create or Join a Existing ChatRoom</h3>
             <Inputs
               className="border border-1"

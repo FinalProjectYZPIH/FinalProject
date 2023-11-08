@@ -4,7 +4,8 @@ import { useSocketProvider } from "../context/data/SocketProvider";
 import { useProfileStore } from "../context/data/dataStore";
 import { useDarkLightMode } from "../context/data/dataStore.jsx";
 import { Inputs } from "./ui/Inputs";
-// import ScrollToBottom from "react-scroll-to-bottom";
+import ScrollToBottom from "react-scroll-to-bottom";
+import { Button } from "./ui/Buttons";
 
 // {groupRoom :{
 //   chatMessages: [...attachMessages],
@@ -86,49 +87,54 @@ function GroupChat() {
         lightMode ? "dark" : "light"
       }`}
     >
-      <div className="chat-header border border-cyan-400 rounded-lg p-5 m-5 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-25">
+      <div className="chat-header border border-cyan-400 rounded-lg p-5 m-5 h-3/4 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-25">
         <p>Live Chat</p>
-        <div className="chat-body border border-cyan-800  rounded-lg py-5 px-2">
-          {/* <ScrollToBottom className="message-container"> */}
-          {messageList.map((messageContent, index) => {
-            return (
-              <div
-                key={index}
-                className={
-                  username === messageContent.author
-                    ? "self-message text-end flex justify-end items-center"
-                    : "other-message text-start flex justify-start "
-                }
-              >
-                <div>
-                  <div className="message-content w-60 border border-cyan-400 p-2 m-1 rounded-lg ">
-                    <p>{messageContent.content}</p>
-                    <div className="message-meta  text-sm p-2">
-                      <p id="time">{messageContent.time}</p>
-                      <p id="author">{messageContent.sender}</p>
+        <div className="chat-body flex flex-col border border-cyan-800 h-[500px] rounded-lg py-5 px-2">
+          <ScrollToBottom className="overflow-x-hidden">
+            {messageList.map((messageContent, index) => {
+              return (
+                <div
+                  key={index}
+                  className={
+                    username === messageContent.author ||
+                    username === messageContent.sender
+                      ? "self-message flex justify-end rounded-lg break-words"
+                      : "other-message flex justify-start rounded-lg break-words  "
+                  }
+                >
+                  <div>
+                    <div className="message-content w-60 border border-cyan-400 p-2 m-1 rounded-lg ">
+                      <p>{messageContent.content}</p>
+                      <div className="message-meta flex justify-end text-xs p-2">
+                        <p id="author">{messageContent.sender}</p>
+                        <p className="pl-2" id="time">
+                          {messageContent.time}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
-          {/* </ScrollToBottom> */}
-          <div className="chat-footer">
-            <Inputs
-              type="text"
-              value={currentMessage.content}
-              placeholder="Hey..."
-              onChangeFn={(event) => {
-                setCurrentMessage({
-                  ...currentMessage,
-                  content: event.target.value,
-                });
-              }}
-              onKeyPress={(event) => {
-                event.key === "Enter" && sendMessages();
-              }}
-            />
-            <button onClick={sendMessages}>&#9658;</button>
+              );
+            })}
+          </ScrollToBottom>
+        </div>
+        <div className="chat-footer flex fixed bottom-1">
+          <Inputs
+            type="text"
+            value={currentMessage.content}
+            placeholder="Hey..."
+            onChangeFn={(event) => {
+              setCurrentMessage({
+                ...currentMessage,
+                content: event.target.value,
+              });
+            }}
+            onKeyPress={(event) => {
+              event.key === "Enter" && sendMessages();
+            }}
+          />
+          <div className="mt-4 py-1 w-36">
+            <Button onClick={sendMessages}>GO</Button>
           </div>
         </div>
       </div>
