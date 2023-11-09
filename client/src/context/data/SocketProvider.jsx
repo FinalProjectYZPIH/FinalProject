@@ -12,7 +12,6 @@ export function useSocketProvider(){
 }
 
 
-
 export default function SocketProvider({children}) {
     // benutze useSocketIo in libs ordner
     
@@ -21,9 +20,11 @@ export default function SocketProvider({children}) {
     );
     const [roomConfig, setRoomConfig] = useState({});
 
-    const { socket, sendMessage, createRoom } = useSocketIo(username);
+    console.log(userId)
+    const [roomConfig, setRoomConfig] = useState({});
 
-    
+
+    const { socket, sendMessage, createRoom } = useSocketIo(username);
 
   return (
     

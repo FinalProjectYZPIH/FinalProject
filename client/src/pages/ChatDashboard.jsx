@@ -1,26 +1,49 @@
-import { useProfileStore } from "../context/data/dataStore";
+import { useProfileStore, useRooms } from "../context/data/dataStore";
 import { profileRequest } from "../context/api/auth";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+<<<<<<< HEAD
 import toast from "react-hot-toast";
+=======
+>>>>>>> origin/yan
 import GroupChat from "../components/GroupChat";
 import ChatSidebar from "../components/ChatSidebar";
 import { useParams } from "react-router-dom";
 // import DisplayBoard from "../components/DisplayBoard";
 import { useSocketProvider } from "../context/data/SocketProvider";
 import { Outlet } from "react-router-dom";
+<<<<<<< HEAD
 import { Button } from "../components/ui/Buttons";
 import { useDarkLightMode } from "../context/data/dataStore";
 import { Inputs } from "../components/ui/Inputs";
 
 export default function ChatDashboard() {
   const { defaultProfile, setLogout,resetProfile,setProfile } = useProfileStore();
+=======
+
+export default function ChatDashboard() {
+  //globaldata
+  const {
+    defaultProfile,
+    setLogout,
+    setProfile,
+    resetProfile,
+    setChatRooms,
+    chatRooms,
+  } = useProfileStore();
+>>>>>>> origin/yan
 
   const { isOnline, userId, role, username, email } = useProfileStore(
     (state) => state.defaultProfile
   );
+
+  // const { setRooms } = useRooms();
+
   //api
+<<<<<<< HEAD
   let { roomName } = useParams();
+=======
+>>>>>>> origin/yan
 
   const navigate = useNavigate();
   const { data: userData, isSuccess, isError } = profileRequest("Yan");
@@ -36,6 +59,11 @@ export default function ChatDashboard() {
     });
   }
   if (isError) {
+<<<<<<< HEAD
+=======
+    setLogout();
+    window.location.reload();
+>>>>>>> origin/yan
     if (isOnline === false) {
       navigate("/login");
       setLogout() && toast.success("You are logged out");
@@ -68,21 +96,26 @@ export default function ChatDashboard() {
               videos: [],
             },
           ],
-          attachParticipants: ["user1", "user2"],
+          attachParticipants: [
+            "6549298316dca878ff3e508d",
+            "654929ca16dca878ff3e509c",
+          ], //zoe pawel
           attachComments: [{ like: 1 }],
           groupchat: true,
         },
         roomname
       );
       // roomName = roomname;
-      console.log(roomData);
+      console.log("createRoom>>", roomData);
       setRoomConfig(roomData);
+      setChatRooms(roomData);
       // socket.emit("join_room", room);
       setShowChat(true);
       // navigate(`/chat/${roomName}`);
     }
   };
 
+<<<<<<< HEAD
   const { lightMode, setDarkMode } = useDarkLightMode();
 
   return (
@@ -113,6 +146,31 @@ export default function ChatDashboard() {
       ) : (
         navigate(`/chat/${roomname}`)
         // <GroupChat />
+=======
+  return (
+    <div className="App flex justify-between">
+      {/* <ChatSidebar /> */}
+      {/* <DisplayBoard /> */}
+      {!showChat ? ( //hier soll für 2. sidebar gedacht sein. wenn der user in navbar klickt, es soll dann angezeigt werden.
+        <div>
+          <h3>Create or Join a Existing ChatRoom</h3>
+          <input
+            className="border border-1"
+            type="text"
+            placeholder="Create or Join a Room"
+            onChange={(event) => {
+              setRoomName(event.target.value);
+            }}
+          />
+          <button onClick={joinRoom}>Join A Room</button>
+        </div>
+      ) : (
+        <>
+          {/* {setRooms(roomname)} */}
+          {navigate(`/chat/${roomname}`)}
+          {/** <GroupChat />*/}
+        </>
+>>>>>>> origin/yan
       )}
     </div>
   );

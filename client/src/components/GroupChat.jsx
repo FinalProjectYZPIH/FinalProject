@@ -34,11 +34,14 @@ import { Button } from "./ui/Buttons";
 //   new Date(Date.now()).getMinutes(),
 // };
 function GroupChat() {
-  const { username } = useProfileStore((state) => state.defaultProfile);
-  const { socket, sendMessage, roomConfig } = useSocketProvider();
-  const { lightMode, setDarkMode } = useDarkLightMode();
 
-  console.log(roomConfig);
+  const { username } = useProfileStore(state => state.defaultProfile)
+  const { socket, sendMessage, roomConfig, setRoomConfig} = useSocketProvider()
+  const { setChatRooms } = useProfileStore()
+  const { chatName } = useParams()
+  const navigate = useNavigate()
+console.log(chatName)
+  console.log(roomConfig)
   const defaultMessageObj = {
     content: "",
     likes: 0,
@@ -52,18 +55,28 @@ function GroupChat() {
     time: getTime(new Date()),
   });
 
+  useEffect(()=> {
+    console.log(chatName)
+  },[chatName])
+
   const [messageList, setMessageList] = useState(
     roomConfig.groupRoom.chatMessages
   );
 
   console.log(roomConfig.groupRoom.chatMessages);
   console.log(roomConfig.groupRoom.chatAdmin);
+  
+  // useEffect(() => {
+  //   setRoomConfig((prev) => produce(() => ({...prev, chatName: chatName})))
+  // },[])
 
   // hier wird die daten aus backend immer mit dazugehörigen room aktualisiert
   useEffect(() => {
-    socket.on("messages_groupRoom", (message) => {
-      setMessageList((list) => [...list, message]);
+    socket.on("messages_groupRoom", (message,room) => {
       console.log(message);
+      setMessageList((list) => [...list, message]);
+      setChatRooms(room)
+  
     });
   }, [socket]);
 

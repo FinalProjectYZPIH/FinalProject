@@ -1,20 +1,40 @@
 
+let onlineUsers = [];
 
+const addNewUser = (username, socketId) => {
+  !onlineUsers.some((user) => user.username === username) &&
+    onlineUsers.push({ username, socketId });
+};
 
-// export const test = ( socket, io) => {
-//     socket.on("join_room", (data) => {
-//         socket.join(data);
-//         console.log(`User with ID: ${socket.id} joined room: ${data}`);
-//       });
+const removeUser = (socketId) => {
+  onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId);
+};
+
+const getUser = (username) => {
+  return onlineUsers.find((user) => user.username === username);
+};
+
+export const localTest = ( socket, io) => {
+    socket.on("newUser", (username) => {
+        addNewUser(username, socket.id);
+      });
     
-//       socket.on("send_message", (data) => {
-//         socket.to(data.room).emit("receive_message", data);
-//       });
+      socket.on("sendNotification", ({ senderName, receiverName, type }) => {
+        const receiver = getUser(receiverName);
+        io.to(receiver.socketId).emit("getNotification", {
+          senderName,
+          type,
+        });
+      });
     
-//       socket.on("disconnect", () => {
-//         console.log("User Disconnected", socket.id);
-//       });
-// }
+      socket.on("sendText", ({ senderName, receiverName, text }) => {
+        const receiver = getUser(receiverName);
+        io.to(receiver.socketId).emit("getText", {
+          senderName,
+          text,
+        });
+      });
+}
 
 
 // const usersConnections = {}; // Hier wird die Zuordnung zwischen _id und Socket.IO-Verbindungen gespeichert

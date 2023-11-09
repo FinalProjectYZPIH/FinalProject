@@ -9,10 +9,13 @@ import { logoutRequest } from "../context/api/auth";
 // Beipiel
 export default function Navigation() {
   const { lightMode, setDarkMode } = useDarkLightMode();
-  const { isOnline, contacts, notifications, avatar, settings, chatRooms } =
+  const { isOnline, notifications, avatar, settings, chatRooms, contacts } =
     useProfileStore((state) => state.defaultProfile);
   const navigate = useNavigate();
   const { setLogout } = useProfileStore();
+
+  const clearCookie = logoutRequest();
+
   const UserNav = {
     friends: contacts,
     notifications: notifications,
