@@ -14,7 +14,6 @@ import ChatDashboard from "./pages/ChatDashboard";
 import { ResetPassword } from "./pages/ResetPassword";
 import { Impressum } from "./pages/Impressum";
 import Login from "./pages/Login";
-import { Logout } from "./pages/Logout";
 import GroupChat from "./components/GroupChat";
 
 // function App() {
@@ -41,7 +40,6 @@ export const router = createBrowserRouter(
       </Route>
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />
-        <Route path="/logout" element={<Logout />} />
         <Route path="/resetPassword" element={<ResetPassword />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/impressum" element={<Impressum />} />
