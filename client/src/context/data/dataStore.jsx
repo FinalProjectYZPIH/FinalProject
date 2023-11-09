@@ -152,6 +152,26 @@ export const useProfileStore = create(
             //friends
           ],
           chatRooms: [
+            {
+              type: "single",
+              chatName: "SingleRoomName",
+              chatMessages: [
+                { content: "Guten Nachmittag!", likes: 5, emojis: [] },
+              ],
+              participants: ["Yan", "Zoe"],
+              comments: [{ content: "sample coments", likes: 5, emojis: [] }],
+            },
+            {
+              type: "group",
+              chatName: "Room_League",
+              chatAdmin: "Zoe",
+              chatMessages: [
+                { content: "Welcome to Zoe's Room", likes: 5, emojis: [] },
+              ],
+              participants: ["userid", "user2", "user3"],
+              comments: [{ content: "sample coments", likes: 5, emojis: [] }],
+            },
+
             //   {
             //   singleroom: {
             //     chatMessages: [{ content: "Guten Tag!", likes: 5, emojis: [] }],
@@ -159,13 +179,7 @@ export const useProfileStore = create(
             //     comments: [{ content: "sample coments", likes: 5, emojis: [] }],
             //   },
             // },
-            // {
-            //   singleroom: {
-            //     chatMessages: [{ content: "Guten Nachmittag!", likes: 5, emojis: [] }],
-            //     participants: ["Yan", "Zoe"],
-            //     comments: [{ content: "sample coments", likes: 5, emojis: [] }],
-            //   },
-            // },
+
             // {
             //   grouproom: {
             //     chatName: "Room_League",
@@ -173,42 +187,6 @@ export const useProfileStore = create(
             //     chatAdmin: "Zoe",
             //     chatMessages: [
             //       { content: "Welcome to Zoe'Room", likes: 5, emojis: [] },
-            //     ],
-            //     participants: ["userid", "user2", "user3"],
-            //     comments: [{ content: "sample coments", likes: 5, emojis: [] }],
-            //   },
-            // },
-            // {
-            //   grouproom: {
-            //     chatName: "ClassRoom",
-            //     groupchat: true,
-            //     chatAdmin: "Yan",
-            //     chatMessages: [
-            //       { content: "Welcome to Yans'Room", likes: 5, emojis: [] },
-            //     ],
-            //     participants: ["userid", "user2", "user3"],
-            //     comments: [{ content: "sample coments", likes: 5, emojis: [] }],
-            //   },
-            // },
-            // {
-            //   grouproom: {
-            //     chatName: "SchoolUniverse",
-            //     groupchat: true,
-            //     chatAdmin: "Pawel",
-            //     chatMessages: [
-            //       { content: "Welcome to Pawels'Room", likes: 5, emojis: [] },
-            //     ],
-            //     participants: ["userid", "user2", "user3"],
-            //     comments: [{ content: "sample coments", likes: 5, emojis: [] }],
-            //   },
-            // },
-            // {
-            //   grouproom: {
-            //     chatName: "SilentHIll",
-            //     groupchat: true,
-            //     chatAdmin: "Imad",
-            //     chatMessages: [
-            //       { content: "Welcome to Imads'Room", likes: 5, emojis: [] },
             //     ],
             //     participants: ["userid", "user2", "user3"],
             //     comments: [{ content: "sample coments", likes: 5, emojis: [] }],
@@ -249,28 +227,19 @@ export const useProfileStore = create(
             // (state.defaultProfile.settings = null);
           }),
 
-        setChatRooms: (newChatRooms) =>
-//           set((state) => {
-//             const roomIndex = state.defaultProfile.chatRooms.findIndex(
-//               (roomObj) =>{
-
-//                 roomObj.groupRoom.roomName === newChatRooms.groupRoom.roomName
-//                 console.log(roomObj.groupRoom.roomName)
-//                 console.log(newChatRooms.groupRoom.roomName)
-//               }
-//             );
-// console.log(roomIndex)
-//             if (roomIndex === -1) {
-//               // Wenn der Raum nicht gefunden wurde, hinzufügen
-//                state.defaultProfile.chatRooms.push(newChatRooms);
-//             } else if(roomIndex === 0 || roomIndex> 0) {
-//               // Wenn der Raum gefunden wurde, ersetzen
-//                (state.defaultProfile.chatRooms[roomIndex] =
-//                 newChatRooms);
-//             }
-            set((state) => {
-              // if(newChatRooms.groupRoom.roomName === state.defaultProfile.chatRooms.groupRoom.chatName)
-              state.defaultProfile.chatRooms.push(newChatRooms);
+        setChatRooms: (newChatRoom) =>
+        set((state) => {
+          return produce(state, (draftState) => {
+            // Änderungen am draftState vornehmen
+            const newRoom = draftState.defaultProfile.chatRooms.find(
+              (room) => room.chatName === newChatRoom.chatName
+            );
+        
+            if (!newRoom) {
+              draftState.defaultProfile.chatRooms.push(newChatRoom);
+            }
+          });
+            // state.defaultProfile.chatRooms.push(newChatRoom)
           }),
         setContacts: (contacts) =>
           set((state) => {

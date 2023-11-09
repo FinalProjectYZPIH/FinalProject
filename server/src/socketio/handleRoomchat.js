@@ -4,12 +4,12 @@ import UserModel from "../models/user.model.js";
 
 export function handleRoomchat(socket, io, userId = null) {
   socket.on("groupRoom", async (data) => {
-    socket.join(data.groupRoom.chatName);
+    socket.join(data.chatName);
     console.log("console.grouproom", data);
     console.log(
       `User with ID: ${
-        data.groupRoom.participants[data.groupRoom.participants?.length - 1]
-      } joined room: ${data.groupRoom?.chatName}`
+        data.participants[data.participants?.length - 1]
+      } joined room: ${data?.chatName}`
     );
 
     // try {
@@ -28,7 +28,7 @@ export function handleRoomchat(socket, io, userId = null) {
         
         socket.on("sendMessage", async (message, cb) => {
           cb(`${message} received`);
-          const newRoom = data.groupRoom.chatMessages.push(message);
+          const newRoom = data.chatMessages.push(message);
           console.log(message);
           // try {
             // const newMessage = new MessageModel(message);
@@ -39,7 +39,7 @@ export function handleRoomchat(socket, io, userId = null) {
             // await newChatRoom.save();
             // await newMessage.save();
           // } catch (error) {logger.error("sendMessage error")}
-          socket.to(data.groupRoom.chatName).emit("messages_groupRoom", message,newRoom);
+          socket.to(data.chatName).emit("messages_groupRoom", message,newRoom);
         
           // currentUser.chats[newChatRoom._id]
           // await currentUser.save()

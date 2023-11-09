@@ -6,19 +6,21 @@ import { useNavigate, useParams } from "react-router-dom";
 import { produce } from "immer";
 // import ScrollToBottom from "react-scroll-to-bottom";
 
-// {groupRoom :{
-//   chatMessages: [...attachMessages],
-//   participants: [...attachParticipants],
-//   comments: [...attachComments],
-//   chatName: roomName,
-//   groupchat: groupchat,
-//   chatAdmin: userId
-// }}
-// {singleRoom : {
-//   chatMessages: [...attachMessages],
-//   participants: [userId, ...attachParticipants], // hier sollen nur 2 users sein
-//   comments: [...attachComments]
-// }}
+// {
+//   type: 'single',
+//   chatName: 'SingleRoomName',
+//   chatMessages: [{ content: 'Guten Nachmittag!', likes: 5, emojis: [] }],
+//   participants: ['Yan', 'Zoe'],
+//   comments: [{ content: 'sample coments', likes: 5, emojis: [] }],
+// },
+// {
+//   type: 'group',
+//   chatName: 'Room_League',
+//   chatAdmin: 'Zoe',
+//   chatMessages: [{ content: "Welcome to Zoe's Room", likes: 5, emojis: [] }],
+//   participants: ['userid', 'user2', 'user3'],
+//   comments: [{ content: 'sample coments', likes: 5, emojis: [] }],
+// },
 // messageData = {
 //   sender: userId,
 //   content: content,
@@ -33,14 +35,15 @@ import { produce } from "immer";
 //   new Date(Date.now()).getMinutes(),
 // };
 function GroupChat() {
-
-  const { username } = useProfileStore(state => state.defaultProfile)
-  const { socket, sendMessage, roomConfig, setRoomConfig} = useSocketProvider()
-  const { setChatRooms } = useProfileStore()
-  const { chatName } = useParams()
-  const navigate = useNavigate()
-console.log(chatName)
-  console.log(roomConfig)
+  const { username } = useProfileStore((state) => state.defaultProfile);
+  const { socket, sendMessage, roomConfig, setRoomConfig, setUrlRooms, urlRooms } =
+    useSocketProvider();
+  const { setChatRooms } = useProfileStore();
+  // const [urlRooms, setUrlRooms] = useState([]);
+  const { chatName } = useParams();
+  const navigate = useNavigate();
+  console.log(chatName);
+  console.log(roomConfig);
   const defaultMessageObj = {
     content: "",
     likes: 0,
@@ -54,28 +57,26 @@ console.log(chatName)
     time: getTime(new Date()),
   });
 
-  useEffect(()=> {
-    console.log(chatName)
-  },[chatName])
-
-  const [messageList, setMessageList] = useState(
-    roomConfig.groupRoom.chatMessages
-  );
-
-  console.log(roomConfig.groupRoom.chatMessages);
-  console.log(roomConfig.groupRoom.chatAdmin);
-  
   // useEffect(() => {
-  //   setRoomConfig((prev) => produce(() => ({...prev, chatName: chatName})))
-  // },[])
+  //   setUrlRooms((prev) => [...prev,{[chatName]: roomConfig}]);
+  // }, [chatName]);
+
+  const [messageList, setMessageList] = useState(roomConfig.chatMessages);
+
+  console.log(roomConfig.chatMessages);
+  console.log(roomConfig.chatAdmin);
+
+  useEffect(() => {
+    setRoomConfig((prev) =>({ ...prev, [chatName]: chatName, chatMessages: [...prev.chatMessages, ...messageList] }));
+    setChatRooms(roomConfig);
+  }, [chatName]);
 
   // hier wird die daten aus backend immer mit dazugehörigen room aktualisiert
   useEffect(() => {
-    socket.on("messages_groupRoom", (message,room) => {
+    socket.on("messages_groupRoom", (message, room) => {
       console.log(message);
       setMessageList((list) => [...list, message]);
-      setChatRooms(room)
-  
+      setChatRooms(room);
     });
   }, [socket]);
 
@@ -83,12 +84,11 @@ console.log(chatName)
     if (currentMessage.content !== "") {
       const message = sendMessage(currentMessage, (cb) => console.log(cb));
       console.log(message);
-      setCurrentMessage(message);
 
       setMessageList((list) => [...list, message]);
       setCurrentMessage({
         ...defaultMessageObj,
-        time: getTime(new Date())
+        time: getTime(new Date()),
       });
     }
   };
@@ -100,7 +100,7 @@ console.log(chatName)
       </div>
       <div className="chat-body">
         {/* <ScrollToBottom className="message-container"> */}
-        {(messageList || navigate("/chat")).map((messageContent) => {
+        {(messageList ?? []).map((messageContent) => {
           return (
             <div
               className="message"

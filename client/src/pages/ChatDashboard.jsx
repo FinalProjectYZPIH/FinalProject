@@ -10,6 +10,9 @@ import { useSocketProvider } from "../context/data/SocketProvider";
 import { Outlet } from "react-router-dom";
 
 export default function ChatDashboard() {
+  
+  // const { setRooms } = useRooms();
+  
   //globaldata
   const {
     defaultProfile,
@@ -23,15 +26,21 @@ export default function ChatDashboard() {
   const { isOnline, userId, role, username, email } = useProfileStore(
     (state) => state.defaultProfile
   );
+  console.log(userId, role, username, email);
 
-  // const { setRooms } = useRooms();
+  //socket
+  const { socket, sendMessage, createRoom, roomConfig, setRoomConfig } =
+    useSocketProvider();
 
+  // local data
+  const [roomname, setRoomName] = useState("");
+  const [showChat, setShowChat] = useState(false);
   //api
-
+  
   const navigate = useNavigate();
   const { data: userData, isSuccess, isError } = profileRequest("Yan");
   // console.log(userData.data);
-
+  
   if (isSuccess) {
     setProfile({
       userId: userData?.data?.userId,
@@ -48,15 +57,6 @@ export default function ChatDashboard() {
       navigate("/login");
     }
   }
-  console.log(userId, role, username, email);
-
-  //socket
-  const { socket, sendMessage, createRoom, roomConfig, setRoomConfig } =
-    useSocketProvider();
-
-  // local data
-  const [roomname, setRoomName] = useState("");
-  const [showChat, setShowChat] = useState(false);
 
   //events
   const joinRoom = () => {
@@ -65,22 +65,22 @@ export default function ChatDashboard() {
       const roomData = createRoom(
         {
           attachMessages: [
-            {
-              sender: username,
-              content: `welcome to ${roomname} Room`,
-              likes: 0,
-              emojis: [],
-              images: [],
-              voices: [],
-              videos: [],
-            },
+            // {
+            //   sender: username,
+            //   content: `welcome to ${roomname} Room`,
+            //   likes: 0,
+            //   emojis: [],
+            //   images: [],
+            //   voices: [],
+            //   videos: [],
+            // },
           ],
           attachParticipants: [
             "6549298316dca878ff3e508d",
             "654929ca16dca878ff3e509c",
           ], //zoe pawel
           attachComments: [{ like: 1 }],
-          groupchat: true,
+          type :"group",
         },
         roomname
       );
