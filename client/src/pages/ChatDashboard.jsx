@@ -12,6 +12,7 @@ import { useSocketProvider } from "../context/data/SocketProvider";
 import { Outlet } from "react-router-dom";
 import { useDarkLightMode } from "../context/data/dataStore";
 import { Button } from "../components/ui/Buttons"
+import FriendRequests from "../components/FriendRequests";
 
 export default function ChatDashboard() {
   const { defaultProfile, setLogout,resetProfile,setProfile } = useProfileStore();
@@ -49,6 +50,7 @@ export default function ChatDashboard() {
   // local data
   const [roomname, setRoomName] = useState("");
   const [showChat, setShowChat] = useState(false);
+  const [friendsRequestsList, setFriendsRequestsList] = useState(false);
 
   //events
   const joinRoom = () => {
@@ -125,6 +127,13 @@ export default function ChatDashboard() {
           </button>
         </>
       )}
+
+      <button onClick={()=>{setFriendsRequestsList(!friendsRequestsList)}}>
+        Friends Requests
+      </button>
+
+      {friendsRequestsList === true &&
+        <FriendRequests userId = {userId} />}
 
     </div>
   );

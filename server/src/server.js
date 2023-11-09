@@ -102,7 +102,7 @@ app.use(passport.initialize());
 socketInitiation();
 
 // Friendrequest route
-app.use("/friendRequest", friendRequestRoute);
+app.use("api/friendRequests", friendRequestRoute);
 
 // Chat erstellen route
 // app.use("chat", chatRoute);
