@@ -28,6 +28,7 @@ passport.use(
             firstname: profile.name.givenName,
             lastname: profile.name.familyName,
             email: profile.emails[0].value,
+            isVerified: profile.emails[0].verified,
             username: profile.displayName.split(" ").join("").toLowerCase(),
             googleId: profile.id,
             avatarImage: profile.photos[0].value,
@@ -46,6 +47,8 @@ passport.use(
   )
 );
 
+
+
 passport.use(
   new FacebookStrategy(
     {
@@ -56,7 +59,7 @@ passport.use(
     // userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo" 
     },
     async function (accessToken, refreshToken, profile, done) {
-      // console.log(profile)
+      console.log(profile)
       // console.log(profile.displayName.split(" ").join(""))
       // console.log(email)
       try {
@@ -68,6 +71,7 @@ passport.use(
             firstname: profile.name.givenName,
             lastname: profile.name.familyName,
             email: profile.emails[0].value,
+            isVerified: true,
             username: profile.displayName.split(" ").join("").toLowerCase(),
             facebookId: profile.id,
             avatarImage: profile.photos[0].value,
@@ -87,14 +91,17 @@ passport.use(
 );
 
 passport.serializeUser((user, done) => {
-  done(null, user?.id);
+
+  done(null, user.id);
+
 });
 
 passport.deserializeUser((id, done) => {
   SessionModel.findOne({user: id}, (err, user) => {
     done(err, user);
 
-  } )
+  });
 });
 
 export default passport;
+

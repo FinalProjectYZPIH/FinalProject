@@ -102,9 +102,8 @@ export default function ChatDashboard() {
         <div>
           <h3>Create or Join a Existing ChatRoom</h3>
           <input
-            className="border border-1"
             type="text"
-            placeholder="Create or Join a Room"
+            placeholder="John..."
             onChange={(event) => {
               setRoomName(event.target.value);
             }}
@@ -118,6 +117,27 @@ export default function ChatDashboard() {
           {/** <GroupChat />*/}
         </>
       )}
+
     </div>
   );
 }
+
+
+// const groupChatData = {
+//   chatName: "My Group Chat",
+//   isGroupChat: true,
+//   chatMessages: [], // Hier werden Nachrichten hinzugefügt
+//   participants: [userId1, userId2], // Teilnehmer des Gruppenchats
+//   chatAdmin: chatAdminUserId,
+// };
+
+// const messageData = {
+//   sender: userId,
+//   content: "Hello, this is a message!",
+//   likes: [], // Array von User-IDs, die den Beitrag mögen
+//   emojis: [], // Hier können Emojis hinzugefügt werden
+//   images: [], // Hier können Bild-URLs hinzugefügt werden
+//   voices: [], // Hier können Audio-URLs hinzugefügt werden
+//   videos: [], // Hier können Video-URLs hinzugefügt werden
+// };
+

@@ -282,6 +282,7 @@ export const useProfileStore = create(
 
 // Chatliste werden in Localstorage gepeichert messageLIste: [{ participants: [userId1, userId2]}, ...]  2 teilnehmer= direkter chat  >2 teinehmer = groupchat
 
+
 // hier sind chatdaten für die speicherung im localstorage damit der chat effizienter läuft
 // export const useChatStore = create(
 //   persist(
@@ -310,6 +311,27 @@ export const useProfileStore = create(
 //     storage: createJSONStorage(() => localStorage),
 //   }
 // );
+
+
+// hier sind chatdaten für die speicherung im localstorage damit der chat effizienter läuft 
+//export const useChatStore = create(
+//  persist(
+//    immer((set, get) => ({
+//      messageListe: [], //messageLIste: [{ participants: [userId1, userId2]}, ...]
+//      messageData: [], // ["string",....]
+
+      
+
+
+//    })),
+//    immer({
+//      name: "ChatStory",
+//      storage: createJSONStorage(() => sessionStorage),
+//    })
+//  )
+// );
+
+
 
 // daten vorstellungen
 // const roomChatData = {

@@ -1,5 +1,5 @@
 import logger from "../helpers/middleware/logger.js";
-import { ChatRoomModel, MessageModel } from "../models/chat.model.js";
+import ChatRoomModel from "../models/chat.model.js";
 import UserModel from "../models/user.model.js";
 
 export function handleRoomchat(socket, io, userId = null) {

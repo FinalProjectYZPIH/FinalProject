@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { profileRequest } from "../api/auth";
+// import { profileRequest } from "../api/auth";
 
 
 export default function ProtectionProvider({
@@ -7,14 +7,13 @@ export default function ProtectionProvider({
   children,
   redirectTo = "/login",
 }) {
-  const { data: userData, isSuccess } = profileRequest("google-user");
+  // const { data: userData, isSuccess } = profileRequest("google-user");
 
 
 
-    if(isSuccess) return children;
-  
+    // if(isSuccess) return children;
+
     
-
   if (!isAllowed) {
     return <Navigate to={redirectTo} />;
   }

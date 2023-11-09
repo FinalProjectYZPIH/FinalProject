@@ -1,4 +1,4 @@
-export const Inputs = ({ type, label, ph, onChangeFn, value }) => {
+export const Inputs = ({ type, label, ph, onChangeFn, value, onKeyPress }) => {
     return (
         <div >
             <label htmlFor={label} className="text-sm px-2 py-2.3">{label}</label>
@@ -10,6 +10,7 @@ export const Inputs = ({ type, label, ph, onChangeFn, value }) => {
                 name={label}
                 onChange={onChangeFn}
                 value={value}
+                onKeyPress={onKeyPress}
             />
         </div>
     );
