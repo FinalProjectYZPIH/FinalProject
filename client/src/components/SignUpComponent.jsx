@@ -14,10 +14,10 @@ export const SignUpComponent = () => {
         lightMode ? "dark" : "light"
       }`}
     >
-      <div className="flex items-center justify-center  bg-cover  h-screen">
-        <div className="flex flex-col justify-evenly items-center w-2/3 lg:w-auto h-screen">
-          <div className=" m-10 h-screen-sm w-screen-sm border border-slate-400 rounded-md p-14 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-25">
-            <h1 className="text-4xl text-blue-600 text-center mb-6">SIGN UP</h1>
+      <div className="flex items-center justify-center bg-cover h-screen">
+        <div className="flex flex-col justify-evenly items-center">
+          <div className="h-full w-screen-sm border border-slate-400 rounded-md px-10 py-7 mt-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-25">
+            <h1 className="text-4xl text-blue-600 text-center">SIGN UP</h1>
             <form action="">
               <Inputs
                 label="First Name"

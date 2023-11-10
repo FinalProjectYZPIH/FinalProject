@@ -55,6 +55,7 @@ export const useProfileStore = create(
   persist(
     immer( produce((set, get) => ({
       defaultProfile: {
+        userIdDB:null,
         userId: null,
         role: null,
         isOnline: true,
@@ -102,9 +103,9 @@ export const useProfileStore = create(
           state.defaultProfile.isOnline = false;
           window.location.reload();
         }),
-      setProfile: ({ userId, role, username, email, avatar = "" }) =>
+      setProfile: ({ userIdDB,userId, role, username, email, avatar = "" }) =>
         set((state) => {
-
+          state.defaultProfile.userIdDB = userIdDB;
           state.defaultProfile.userId = userId;
           state.defaultProfile.role = role;
           state.defaultProfile.username = username;
@@ -113,6 +114,7 @@ export const useProfileStore = create(
         }),
       resetProfile: () =>
         set((state) => {
+          state.defaultProfile.userIdDB = null;
           state.defaultProfile.userId = null;
           state.defaultProfile.role = null;
           state.defaultProfile.username = null;
@@ -149,19 +151,7 @@ export const useProfileStore = create(
     }))),
     {
       name: "Profile",
-      onRehydrateStorage: (state) => {
-        console.log("hydration starts");
-        const storedData = JSON.parse(sessionStorage.getItem("Profile"));
-        // optional
-        if (storedData && typeof storedData === "object") {
-          // return deepRead(defaultProfile);
-
-          console.log("hydration finished");
-          return immer(() => produce(state));
-        } else {
-          console.log("No valid data found in sessionStorage");
-        }
-      },
+      onRehydrateStorage:(state) => immer(() => state),
 
       storage: createJSONStorage(() => sessionStorage),
     }
