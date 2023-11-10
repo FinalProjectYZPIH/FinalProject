@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import "../index.css";
 // import { useNavigate } from 'react-router-dom';
 import { Button } from "./ui/Buttons";
@@ -7,17 +7,31 @@ import backgroundImages from "../../tailwind.config.js";
 import { useColorStore, useDarkLightMode } from "../context/data/dataStore";
 import { registerRequest } from "../context/api/auth.jsx";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { useState } from "react";
 
 export const SignUpComponent = () => {
   const { lightMode, setDarkMode } = useDarkLightMode();
   const register = registerRequest();
 
-  const [input, setInput] = useSearchParams({ i: "" });
-  const inputParam = input.get("i");
+  const [password, setPassword] = useState("");
+  const [input, setInput] = useSearchParams({
+    firstname: "",
+    lastname: "",
+    username: "",
+    birthday: "",
+    email: "",
+    emailConfirmation: "",
+  });
+  const firstnameParam = input.get("firstname");
+  const lastnameParam = input.get("lastname");
+  const usernameParam = input.get("username");
+  const birthdayParam = input.get("birthday");
+  const emailParam = input.get("email");
+  const emailConfirmationParam = input.get("emailConfirmation");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(e.target.firstname.value);
+    // console.log(e.target.firstname.value);
     register.mutate({
       firstname: e.target.firstname.value,
       lastname: e.target.lastname.value,
@@ -25,14 +39,10 @@ export const SignUpComponent = () => {
       birthday: e.target.birthday.value,
       email: e.target.email.value,
       emailConfirmation: e.target.emailConfirmation.value,
-      password: e.target.password.value,
+      password: password,
       passwordConfirmation: e.target.passwordConfirmation.value,
     });
   };
-
-  useEffect(() => {
-    
-  })
 
   return (
     <div
@@ -49,13 +59,13 @@ export const SignUpComponent = () => {
                 label="First Name"
                 ph="Enter your first name"
                 type="text"
-                value={inputParam}
+                value={firstnameParam}
                 onChangeFn={(
                   e // hier werden alle inputs im url gespeichert
                 ) =>
                   setInput(
                     (prev) => {
-                      prev.set("i", e.target.value);
+                      prev.set("firstname", e.target.value);
                       return prev;
                     },
                     { replace: true }
@@ -66,13 +76,13 @@ export const SignUpComponent = () => {
                 label="Last Name"
                 ph="Enter your last name"
                 type="text"
-                value={inputParam}
+                value={lastnameParam}
                 onChangeFn={(
                   e // hier werden alle inputs im url gespeichert
                 ) =>
                   setInput(
                     (prev) => {
-                      prev.set("i", e.target.value);
+                      prev.set("lastname", e.target.value);
                       return prev;
                     },
                     { replace: true }
@@ -83,13 +93,30 @@ export const SignUpComponent = () => {
                 label="User Name"
                 ph="Choose your User name"
                 type="text"
-                value={inputParam}
+                value={usernameParam}
                 onChangeFn={(
                   e // hier werden alle inputs im url gespeichert
                 ) =>
                   setInput(
                     (prev) => {
-                      prev.set("i", e.target.value);
+                      prev.set("username", e.target.value);
+                      return prev;
+                    },
+                    { replace: true }
+                  )
+                }
+              ></Inputs>
+              <Inputs
+                label="Birthday"
+                ph="Your Birthday"
+                type="text"
+                value={birthdayParam}
+                onChangeFn={(
+                  e // hier werden alle inputs im url gespeichert
+                ) =>
+                  setInput(
+                    (prev) => {
+                      prev.set("birthday", e.target.value);
                       return prev;
                     },
                     { replace: true }
@@ -100,13 +127,13 @@ export const SignUpComponent = () => {
                 label="Email"
                 ph="Your Email"
                 type="email"
-                value={inputParam}
+                value={emailParam}
                 onChangeFn={(
                   e // hier werden alle inputs im url gespeichert
                 ) =>
                   setInput(
                     (prev) => {
-                      prev.set("i", e.target.value);
+                      prev.set("email", e.target.value);
                       return prev;
                     },
                     { replace: true }
@@ -117,30 +144,13 @@ export const SignUpComponent = () => {
                 label="Confirm Email"
                 ph="Confirm Email"
                 type="email"
-                value={inputParam}
+                value={emailConfirmationParam}
                 onChangeFn={(
                   e // hier werden alle inputs im url gespeichert
                 ) =>
                   setInput(
                     (prev) => {
-                      prev.set("i", e.target.value);
-                      return prev;
-                    },
-                    { replace: true }
-                  )
-                }
-              ></Inputs>
-              <Inputs
-                label="Birthday"
-                ph="Your Birthday"
-                type="email"
-                value={inputParam}
-                onChangeFn={(
-                  e // hier werden alle inputs im url gespeichert
-                ) =>
-                  setInput(
-                    (prev) => {
-                      prev.set("i", e.target.value);
+                      prev.set("emailConfirmation", e.target.value);
                       return prev;
                     },
                     { replace: true }
@@ -149,13 +159,13 @@ export const SignUpComponent = () => {
               ></Inputs>
               <Inputs
                 label="Password"
-                value={value}
+                value={password}
+                onChangeFn={(e) => setPassword(e.target.value)}
                 ph="Choose a password"
                 type="password"
               />
               <Inputs
                 label="Confirm Password"
-                value={value}
                 ph="confirm password"
                 type="password"
               />
