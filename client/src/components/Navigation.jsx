@@ -39,19 +39,17 @@ export default function Navigation() {
   const handleLogout = async (e) => {
     e.preventDefault();
     setLogout() && toast.success("You are logged out");
-    if (isOnline === false) {
-      clearCookies.mutate();
-      navigate("/", { replace: true });
-    }
+    // if (isOnline === false) {
+    //   clearCookies.mutate();
+    //   setLogout();
+    // }
   };
 
   return (
     <div
-      className={`fixed top-0 flex justify-between items-center w-full h-9 shadow-lg ${
-        lightMode ? "text-white" : "text-black"
-      }`}
+      className={`fixed top-0 left-0 z-10 bg-white flex justify-between items-center w-full h-9 shadow-lg`}
     >
-      <div className="flex w-2/3 h-full rounded-lg sm:pl-0">
+      <div className="flex justify-between w-2/3 h-full rounded-lg sm:pl-0">
         {PageNav.map((navObj) =>
           !navObj.isMember || isOnline ? (
             <div
@@ -65,17 +63,19 @@ export default function Navigation() {
         <div className="flex items-center justify-center bg-transparent hover:border-y-teal-400 hover:bg-cyan-400 text-sky-400 hover:text-white hover:bg-opacity-1 hover:border-transparent w-20 rounded-lg mx-0.5">
           <button onClick={handleLogout}>Logout</button>
         </div>
+        <div className="w-52">
+          <form>
+            <input
+              className="w-32 focus:w-52 h-8 pl-4 mt-0.5 pr-8 text-gray-900 rounded-full border border-cyan-400 outline-cyan-400"
+              id="search"
+              type="search"
+              placeholder="Search..."
+            />
+          </form>
+        </div>
       </div>
-      <form>
-        <input
-          className="w-32 h-7 pl-4 pr-8 text-gray-900 rounded-full border border-cyan-400 outline-cyan-400"
-          id="search"
-          type="search"
-          placeholder="Search..."
-        />
-      </form>
       <div className="flex items-center mx-2">
-        {isOnline && <div>{UserNav.friends}</div>}
+        {/* {isOnline && <div>{UserNav.friends}</div>} */}
         <img
           className="w-8 h-8 rounded-full ml-2 border border-cyan-400"
           src={UserNav.avatar}

@@ -1,27 +1,5 @@
 import mongoose from "mongoose";
 
-<<<<<<< HEAD
-const ChatSchema = new mongoose.Schema(
-  {
-    chatName: { type: String, required: true },
-    isGroupChat: { type: Boolean, default: false },
-    messages: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Message",
-      },
-    ],
-    participants: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
-    chatAdmin: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-=======
 // const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyz0123456789", 10);
 
 // const AttachMessageSchema = new mongoose.Schema(  nötig??
@@ -68,7 +46,6 @@ const ChatRoomSchema = new mongoose.Schema(
     chatMessages: [{type: mongoose.Schema.Types.ObjectId, ref :"Message"}],
     participants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // für gruppen nachricht
     chatAdmin: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
->>>>>>> origin/yan
   },
   {
     timestamps: {
@@ -78,11 +55,7 @@ const ChatRoomSchema = new mongoose.Schema(
   }
 );
 
-const ChatModel = mongoose.model("Chat", ChatSchema, "Chats");
 
-<<<<<<< HEAD
-export default ChatModel;
-=======
 const ChatRoomModel = mongoose.model("Chat", ChatRoomSchema, "ChatRooms");
 
 export { ChatRoomModel, MessageModel };
@@ -93,4 +66,3 @@ export { ChatRoomModel, MessageModel };
 // // Beispiel: Hinzufügen einer Nachricht zum Chat
 // const newMessage = new MessageModel({ sender: senderId, content: "Hallo!", timestamp: new Date() });
 // await newMessage.save();
->>>>>>> origin/yan

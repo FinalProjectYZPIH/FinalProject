@@ -2,8 +2,7 @@
 import { verifyJwt } from "../helpers/utils/jwt.utils.js";
 
 //models
-import MessageModel from "../models/messages.model.js";
-import ChatModel from "../models/chat.model.js"
+import { MessageModel , ChatRoomModel } from "../models/chat.model.js";
 import ImageModel from "../models/image.model.js";
 
 //services
@@ -12,44 +11,50 @@ import * as Userservice from "./user.service.js";
 export async function createMessage(res, oppositeUserId, message) {
   try {
     const newMessage = await MessageModel.create({
-    //   likes: [],
+      //   likes: [],
       emojis: "emoji",
       sender: oppositeUserId,
       content: message,
-    //   images: [],
+      //   images: [],
       timestamp: new Date(),
     });
-    if(!newMessage) return console.log("failed create newMessage")
-    return newMessage
-    
+    if (!newMessage) return console.log("failed create newMessage");
+    return newMessage;
   } catch (error) {
     res.status(500).json({ message: error.message + " createMessage Error" });
   }
   // Verknüpfen Sie die Nachricht mit dem Chat
 }
-export async function createChat(res, userId, messageObj, [...participantsId] = "") {
+export async function createChat(
+  res,
+  userId,
+  messageObj,
+  [...participantsId] = ""
+) {
   try {
-
-    // suche bestehender user aus datenbank 
-    const foundUser = await Userservice.dbFindOneUserById(res, userId)
+    // suche bestehender user aus datenbank
+    const foundUser = await Userservice.dbFindOneUserById(res, userId);
     //erstelle erst einen chatmodel
     const newChat = await ChatModel.create({
-        chatbox: messageObj,
-        participants: [userId, messageObj?.sender, ...participantsId]
-    })
+      chatbox: messageObj,
+      participants: [userId, messageObj?.sender, ...participantsId],
+    });
 
-    if(!newChat || !foundUser) return res.status(400).json({message: "create newChat or foundUser failed"})
+    if (!newChat || !foundUser)
+      return res
+        .status(400)
+        .json({ message: "create newChat or foundUser failed" });
 
     //pushe newChat._id ins foundUser.chats rein
-    foundUser?.chats.push(newChat?.id)
+    foundUser?.chats.push(newChat?.id);
 
-    await foundUser.save()
+    await foundUser.save();
 
-    return newChat
+    return newChat;
   } catch (error) {
-    console.log("chat created failed",error);
-    res.status(500)
-    throw error
+    console.log("chat created failed", error);
+    res.status(500);
+    throw error;
   }
 }
 

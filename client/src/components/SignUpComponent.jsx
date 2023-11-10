@@ -1,13 +1,39 @@
-import React from "react";
+import React, {useEffect} from "react";
 import "../index.css";
 // import { useNavigate } from 'react-router-dom';
 import { Button } from "./ui/Buttons";
 import { Inputs } from "./ui/Inputs";
 import backgroundImages from "../../tailwind.config.js";
 import { useColorStore, useDarkLightMode } from "../context/data/dataStore";
+import { registerRequest } from "../context/api/auth.jsx";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 export const SignUpComponent = () => {
   const { lightMode, setDarkMode } = useDarkLightMode();
+  const register = registerRequest();
+
+  const [input, setInput] = useSearchParams({ i: "" });
+  const inputParam = input.get("i");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(e.target.firstname.value);
+    register.mutate({
+      firstname: e.target.firstname.value,
+      lastname: e.target.lastname.value,
+      username: e.target.username.value,
+      birthday: e.target.birthday.value,
+      email: e.target.email.value,
+      emailConfirmation: e.target.emailConfirmation.value,
+      password: e.target.password.value,
+      passwordConfirmation: e.target.passwordConfirmation.value,
+    });
+  };
+
+  useEffect(() => {
+    
+  })
+
   return (
     <div
       className={`font-orbitron grid grid-cols-1 lg:grid-cols-2 w-screen h-screen sm:bg-cover sm:bg-center bg-no-repeat lg:bg-contain lg:bg-right ${
@@ -18,20 +44,118 @@ export const SignUpComponent = () => {
         <div className="flex flex-col justify-evenly items-center">
           <div className="h-full w-screen-sm border border-slate-400 rounded-md px-10 py-7 mt-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-25">
             <h1 className="text-4xl text-blue-600 text-center">SIGN UP</h1>
-            <form action="">
+            <form onSubmit={handleSubmit}>
               <Inputs
                 label="First Name"
                 ph="Enter your first name"
                 type="text"
+                value={inputParam}
+                onChangeFn={(
+                  e // hier werden alle inputs im url gespeichert
+                ) =>
+                  setInput(
+                    (prev) => {
+                      prev.set("i", e.target.value);
+                      return prev;
+                    },
+                    { replace: true }
+                  )
+                }
+              ></Inputs>
+              <Inputs
+                label="Last Name"
+                ph="Enter your last name"
+                type="text"
+                value={inputParam}
+                onChangeFn={(
+                  e // hier werden alle inputs im url gespeichert
+                ) =>
+                  setInput(
+                    (prev) => {
+                      prev.set("i", e.target.value);
+                      return prev;
+                    },
+                    { replace: true }
+                  )
+                }
+              ></Inputs>
+              <Inputs
+                label="User Name"
+                ph="Choose your User name"
+                type="text"
+                value={inputParam}
+                onChangeFn={(
+                  e // hier werden alle inputs im url gespeichert
+                ) =>
+                  setInput(
+                    (prev) => {
+                      prev.set("i", e.target.value);
+                      return prev;
+                    },
+                    { replace: true }
+                  )
+                }
+              ></Inputs>
+              <Inputs
+                label="Email"
+                ph="Your Email"
+                type="email"
+                value={inputParam}
+                onChangeFn={(
+                  e // hier werden alle inputs im url gespeichert
+                ) =>
+                  setInput(
+                    (prev) => {
+                      prev.set("i", e.target.value);
+                      return prev;
+                    },
+                    { replace: true }
+                  )
+                }
+              ></Inputs>
+              <Inputs
+                label="Confirm Email"
+                ph="Confirm Email"
+                type="email"
+                value={inputParam}
+                onChangeFn={(
+                  e // hier werden alle inputs im url gespeichert
+                ) =>
+                  setInput(
+                    (prev) => {
+                      prev.set("i", e.target.value);
+                      return prev;
+                    },
+                    { replace: true }
+                  )
+                }
+              ></Inputs>
+              <Inputs
+                label="Birthday"
+                ph="Your Birthday"
+                type="email"
+                value={inputParam}
+                onChangeFn={(
+                  e // hier werden alle inputs im url gespeichert
+                ) =>
+                  setInput(
+                    (prev) => {
+                      prev.set("i", e.target.value);
+                      return prev;
+                    },
+                    { replace: true }
+                  )
+                }
+              ></Inputs>
+              <Inputs
+                label="Password"
+                value={value}
+                ph="Choose a password"
+                type="password"
               />
-              <Inputs label="Last Name" ph="Enter your last name" type="text" />
-              <Inputs label="Username" ph="Choose a username" type="text" />
-              <Inputs label="Email" ph="Enter your email" type="email" />
-              <Inputs label="Confirm Email" ph="Confirm email" type="email" />
-              <Inputs label="Birthday" ph="Enter your birthday" type="date" />
-              <Inputs label="Password" ph="Choose a password" type="password" />
               <Inputs
                 label="Confirm Password"
+                value={value}
                 ph="confirm password"
                 type="password"
               />

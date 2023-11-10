@@ -6,6 +6,8 @@ import { useDarkLightMode } from "../context/data/dataStore.jsx";
 import { Inputs } from "./ui/Inputs";
 import ScrollToBottom from "react-scroll-to-bottom";
 import { Button } from "./ui/Buttons";
+import { useParams, useNavigate } from "react-router-dom";
+import Navigation from "./Navigation.jsx";
 
 // {groupRoom :{
 //   chatMessages: [...attachMessages],
@@ -34,14 +36,15 @@ import { Button } from "./ui/Buttons";
 //   new Date(Date.now()).getMinutes(),
 // };
 function GroupChat() {
-
-  const { username } = useProfileStore(state => state.defaultProfile)
-  const { socket, sendMessage, roomConfig, setRoomConfig} = useSocketProvider()
-  const { setChatRooms } = useProfileStore()
-  const { chatName } = useParams()
-  const navigate = useNavigate()
-console.log(chatName)
-  console.log(roomConfig)
+  const { username } = useProfileStore((state) => state.defaultProfile);
+  const { socket, sendMessage, roomConfig, setRoomConfig } =
+    useSocketProvider();
+  const { lightMode } = useDarkLightMode();
+  const { setChatRooms } = useProfileStore();
+  const { chatName } = useParams();
+  const navigate = useNavigate();
+  console.log(chatName);
+  console.log(roomConfig);
   const defaultMessageObj = {
     content: "",
     likes: 0,
@@ -55,9 +58,9 @@ console.log(chatName)
     time: getTime(new Date()),
   });
 
-  useEffect(()=> {
-    console.log(chatName)
-  },[chatName])
+  useEffect(() => {
+    console.log(chatName);
+  }, [chatName]);
 
   const [messageList, setMessageList] = useState(
     roomConfig.groupRoom.chatMessages
@@ -65,18 +68,17 @@ console.log(chatName)
 
   console.log(roomConfig.groupRoom.chatMessages);
   console.log(roomConfig.groupRoom.chatAdmin);
-  
+
   // useEffect(() => {
   //   setRoomConfig((prev) => produce(() => ({...prev, chatName: chatName})))
   // },[])
 
   // hier wird die daten aus backend immer mit dazugehörigen room aktualisiert
   useEffect(() => {
-    socket.on("messages_groupRoom", (message,room) => {
+    socket.on("messages_groupRoom", (message, room) => {
       console.log(message);
       setMessageList((list) => [...list, message]);
-      setChatRooms(room)
-  
+      setChatRooms(room);
     });
   }, [socket]);
 
@@ -96,10 +98,11 @@ console.log(chatName)
   console.log(messageList);
   return (
     <div
-      className={`chat-window font-orbitron grid grid-cols-1 lg:grid-cols-2 w-screen h-screen sm:bg-cover sm:bg-center  bg-no-repeat lg:bg-contain lg:bg-right ${
-        lightMode ? "dark" : "light"
+      className={`chat-window font-orbitron grid grid-cols-1 w-screen h-screen sm:bg-cover mt-2 sm:bg-center  bg-no-repeat lg:bg-contain lg:bg-right ${
+        lightMode ? "dark bg-none" : "light bg-none"
       }`}
     >
+      <Navigation />
       <div className="chat-header border border-cyan-400 rounded-lg p-5 m-5 h-3/4 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-25">
         <p>Live Chat</p>
         <div className="chat-body flex flex-col border border-cyan-800 h-[500px] rounded-lg py-5 px-2">

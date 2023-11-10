@@ -18,7 +18,6 @@ export default function SocketProvider({children}) {
     const { isOnline, userId, role, username, email } = useProfileStore(
       (state) => state.defaultProfile
     );
-    const [roomConfig, setRoomConfig] = useState({});
 
     console.log(userId)
     const [roomConfig, setRoomConfig] = useState({});

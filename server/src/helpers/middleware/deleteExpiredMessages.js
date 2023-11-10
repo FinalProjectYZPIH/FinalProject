@@ -1,5 +1,5 @@
-import schedule from 'node-schedule';
-import ChatModel from '../../models/chat.model.js';
+import schedule from "node-schedule";
+import { ChatRoomModel } from "../../models/chat.model.js";
 
 const deleteExpiredMessages = () => {
   // Define a rule for running the task every day
@@ -9,18 +9,18 @@ const deleteExpiredMessages = () => {
   rule.minute = 0;
 
   // Schedule the task
-   schedule.scheduleJob(rule, async () => {
+  schedule.scheduleJob(rule, async () => {
     try {
       // Calculate the date and time one day ago
       const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
       // Find and delete messages older than one day
       await ChatModel.updateMany(
-        { 'messages.timestamp': { $lt: oneDayAgo } },
-        { $pull: { messages: { 'timestamp': { $lt: oneDayAgo } } } }
+        { "messages.timestamp": { $lt: oneDayAgo } },
+        { $pull: { messages: { timestamp: { $lt: oneDayAgo } } } }
       );
     } catch (error) {
-      console.error('Error deleting expired messages:', error);
+      console.error("Error deleting expired messages:", error);
     }
   });
 };

@@ -87,32 +87,12 @@ router.get("/callback", async (req, res, next) => {
         return res.status(200).redirect(`http://localhost:5173/chat`);
       }
 
-    // Authentifizierung erfolgreich
-    const cookieInfo = cookieSessionSchema.safeParse({
-      UserInfo: {
-        id: `${user?._id}` || "",
-        email: user?.email,
-        role: "member",
-        session: `${session?._id}` || "",
-      },
-    });
-
-    const accessValid = cookieInfo.success
-      ? acceptCookie(cookieInfo.data, res)
-      : null;
-
-    // if (session.emailVerified) {
-    //   res.locals.role = user?.role;
-    // }
-
-    if (accessValid) {
-      return res.status(200).redirect(`http://localhost:5173/chat`);
-    }
-
-    return res
-      .status(200)
-      .json({ message: "success logging in without cookie" });
-  })(req, res, next);
+      return res.status(200).json({ message: "Success logging in without a cookie" });
+    })(req, res, next);
+  } catch (error) {
+    logger.error("An error occurred during callback: " + error);
+    res.status(500).json({ message: "An error occurred during authentication" });
+  }
 });
 
 export default router;
