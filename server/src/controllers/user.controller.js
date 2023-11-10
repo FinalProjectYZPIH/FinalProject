@@ -195,14 +195,19 @@ export const deleteAccount = async (req, res, next) => {
   }
 };
 
-
-
-// export const deleteAllUsers = async (req, res) => {
-//   try {
-//     await User.deleteMany();
-//     res.status(200).json({ message: "All User deleted" });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).json({ message: error.message });
-//   }
-// };
+export const searchForUser = async (req,res) => {
+  const { query } = req.query;
+  try {
+    const users = await User.find({
+      $or: [
+        { username: { $regex: query, $options: 'i' } },
+        { email: { $regex: query, $options: 'i' } },
+        { displayname: { $regex: query, $options: 'i' } },
+      ],
+    });
+    res.status(200).json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+}

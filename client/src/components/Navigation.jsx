@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import ReactSwitch from "react-switch";
 import { Button } from "@mui/material";
 import FriendRequests from "../components/FriendRequests"
+import Search from "./Search";
 
 // Beipiel
 export default function Navigation() {
@@ -68,14 +69,7 @@ export default function Navigation() {
           <button onClick={handleLogout}>Logout</button>
         </div>
       </div>
-      <form>
-        <input
-          className="w-32 h-7 pl-4 pr-8 text-gray-900 rounded-full border border-cyan-400 outline-cyan-400"
-          id="search"
-          type="search"
-          placeholder="Search..."
-        />
-      </form>
+      <Search/>
       <div className="flex items-center mx-2">
         {isOnline && <div>{UserNav.friends}</div>}
         <img
