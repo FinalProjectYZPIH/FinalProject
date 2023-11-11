@@ -35,15 +35,13 @@ import { produce } from "immer";
 //   new Date(Date.now()).getMinutes(),
 // };
 function GroupChat() {
-  const { username } = useProfileStore((state) => state.defaultProfile);
-  const { socket, sendMessage, roomConfig, setRoomConfig, setUrlRooms, urlRooms } =
+  const { username, chatRooms,  } = useProfileStore((state) => state.defaultProfile);
+  const { socket, sendMessage} =
     useSocketProvider();
   const { setChatRooms } = useProfileStore();
-  // const [urlRooms, setUrlRooms] = useState([]);
   const { chatName } = useParams();
   const navigate = useNavigate();
-  console.log(chatName);
-  console.log(roomConfig);
+  console.log(chatName)
   const defaultMessageObj = {
     content: "",
     likes: 0,
@@ -56,19 +54,17 @@ function GroupChat() {
     ...defaultMessageObj,
     time: getTime(new Date()),
   });
+  const [messageList, setMessageList] = useState([]);
+  const [roomConfig, setRoomConfig] = useState(chatRooms?.find((room) => room?.chatName === chatName));
 
-  // useEffect(() => {
-  //   setUrlRooms((prev) => [...prev,{[chatName]: roomConfig}]);
-  // }, [chatName]);
+  // const [comments, setComments] = useState(roomConfig?.comments);
+  // const [admin, setAdmin] = useState(roomConfig?.chatAdmin)
 
-  const [messageList, setMessageList] = useState(roomConfig.chatMessages);
-
-  console.log(roomConfig.chatMessages);
-  console.log(roomConfig.chatAdmin);
+  // console.log(roomConfig?.chatMessages);
+  // console.log(roomConfig?.chatAdmin);
 
   useEffect(() => {
-    setRoomConfig((prev) =>({ ...prev, [chatName]: chatName, chatMessages: [...prev.chatMessages, ...messageList] }));
-    setChatRooms(roomConfig);
+    setMessageList(roomConfig?.chatMessages);
   }, [chatName]);
 
   // hier wird die daten aus backend immer mit dazugehörigen room aktualisiert
@@ -77,30 +73,53 @@ function GroupChat() {
       console.log(message);
       setMessageList((list) => [...list, message]);
       setChatRooms(room);
+      console.log("roomtest",room)
     });
   }, [socket]);
+
+  const storedData = JSON.parse(sessionStorage.getItem("Profile"));
+console.log("Stored Data:", storedData?.defaultProfile?.chatMessages);
 
   const sendMessages = async () => {
     if (currentMessage.content !== "") {
       const message = sendMessage(currentMessage, (cb) => console.log(cb));
       console.log(message);
-
-      setMessageList((list) => [...list, message]);
       setCurrentMessage({
         ...defaultMessageObj,
         time: getTime(new Date()),
       });
+
+      setMessageList((list) => [...list, message]);
     }
   };
   console.log(messageList);
+  console.log(roomConfig?.chatMessages)
   return (
     <div className="chat-window bg-blue-200">
       <div className="chat-header">
-        <p>Live Chat</p>
+        <p className="bg-red-300 w-full p-1">{`${chatName}`} Room</p>
       </div>
       <div className="chat-body">
         {/* <ScrollToBottom className="message-container"> */}
-        {(messageList ?? []).map((messageContent) => {
+        {roomConfig?.chatMessages?.map((messageContent) => {
+          return (
+            <div
+              className="message"
+              id={username === messageContent.sender ? "you" : "other"}
+            >
+              <div>
+                <div className="message-content">
+                  <p>{messageContent.content}</p>
+                </div>
+                <div className="message-meta">
+                  <p id="time">{messageContent.time}</p>
+                  <p id="author">{messageContent.sender}</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+        {(messageList ?? ["refreshed"]).map((messageContent) => {
           return (
             <div
               className="message"

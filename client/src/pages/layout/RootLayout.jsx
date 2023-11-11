@@ -4,6 +4,10 @@ import { useProfileStore } from "../../context/data/dataStore";
 import { Navigate } from "react-router-dom";
 import ChatSidebar from "../../components/ChatSidebar";
 import ContactSidebar from "../../components/ContactSidebar";
+import { Routes, Route } from "react-router-dom";
+import ChatDashboard from "../ChatDashboard";
+import GroupChat from "../../components/GroupChat";
+import App from "../App";
 
 export default function RootLayout() {
   const { isOnline } = useProfileStore((state) => state.defaultProfile);
@@ -14,12 +18,17 @@ export default function RootLayout() {
   //   resetProfile()
   // }
   return (
-    <div className="flex justify-evenly mt-6">
-      <ProtectionProvider isAllowed={isOnline}>
-        <ChatSidebar />
+    <ProtectionProvider isAllowed={isOnline}>
+      <Routes>
+        {/* <Route path="" element={<Navigate to="/chat" />} /> */}
+        <Route path="chat" element={<App />}>
+          <Route path="" element={<ChatDashboard />} />
+          <Route path=":chatName" element={<GroupChat />} />
+        </Route>
+      </Routes>
+      {/* 
         <Outlet />
-        <ContactSidebar />
-      </ProtectionProvider>
-    </div>
+        <ContactSidebar /> */}
+    </ProtectionProvider>
   );
 }

@@ -11,38 +11,40 @@ import { Outlet } from "react-router-dom";
 
 export default function ChatDashboard() {
   
-  // const { setRooms } = useRooms();
   
+
   //globaldata
   const {
     defaultProfile,
-    setLogout,
-    setProfile,
     resetProfile,
+    setProfile,
     setChatRooms,
-    chatRooms,
+    setLogout,
   } = useProfileStore();
 
-  const { isOnline, userId, role, username, email } = useProfileStore(
+  const { isOnline, userId, role, username, email, userIdDB, chatRooms } = useProfileStore(
     (state) => state.defaultProfile
   );
-  console.log(userId, role, username, email);
+  console.log(userId, role, username, email, userIdDB);
+  // console.log(userData.data);
 
   //socket
-  const { socket, sendMessage, createRoom, roomConfig, setRoomConfig } =
+  const { socket, sendMessage, createRoom } =
     useSocketProvider();
 
   // local data
   const [roomname, setRoomName] = useState("");
   const [showChat, setShowChat] = useState(false);
+  // const [roomConfig, setRoomConfig] = useState({});
+
   //api
   
   const navigate = useNavigate();
   const { data: userData, isSuccess, isError } = profileRequest("Yan");
-  // console.log(userData.data);
   
   if (isSuccess) {
     setProfile({
+      userIdDB : userData?.data?._id,
       userId: userData?.data?.userId,
       role: userData?.data?.role,
       username: userData?.data?.username,
@@ -54,7 +56,7 @@ export default function ChatDashboard() {
     setLogout();
     window.location.reload();
     if (isOnline === false) {
-      navigate("/login");
+      navigate("/");
     }
   }
 
@@ -84,11 +86,9 @@ export default function ChatDashboard() {
         },
         roomname
       );
-      // roomName = roomname;
       console.log("createRoom>>", roomData);
-      setRoomConfig(roomData);
+      // setRoomConfig(roomData);
       setChatRooms(roomData);
-      // socket.emit("join_room", room);
       setShowChat(true);
       // navigate(`/chat/${roomName}`);
     }
@@ -96,8 +96,7 @@ export default function ChatDashboard() {
 
   return (
     <div className="App flex justify-between">
-      {/* <ChatSidebar /> */}
-      {/* <DisplayBoard /> */}
+
       {!showChat ? ( //hier soll für 2. sidebar gedacht sein. wenn der user in navbar klickt, es soll dann angezeigt werden.
         <div>
           <h3>Create or Join a Existing ChatRoom</h3>
@@ -113,8 +112,9 @@ export default function ChatDashboard() {
       ) : (
         <>
           {/* {setRooms(roomname)} */}
+          
           {navigate(`/chat/${roomname}`)}
-          {/** <GroupChat />*/}
+           {/* <GroupChat chatName={roomConfig?.chatName} messages={roomConfig} /> */}
         </>
       )}
 

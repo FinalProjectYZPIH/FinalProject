@@ -12,84 +12,47 @@ export default function ChatSidebar() {
   const { chatRooms, isOnline } = useProfileStore(
     (state) => state.defaultProfile
   );
-  // const { setChatRooms } = useProfileStore();  
-  // const {rooms } = useRooms()
+
   const [select, setSelect] = useState(null)
 
   const navigate = useNavigate()
 
-  const {urlRooms } = useSocketProvider()
 
- 
 
-// console.log(rooms)
-    // const handleClick = (type, chatName, participants) => {
-    //   if(type === "single"){
-    //     setSelect(participants[1])
-    //     select === participants[1] && navigate( `/chat/${participants[1]}`)
-    //   }
-    //   if(type === "group"){
-    //     setSelect(chatName)
-    //     select === chatName && navigate(`/chat/${chatName}`)
-    //     console.log(select)
-    //   }
-    //   console.log(type,chatName)
-    // }
-
-    const handleClick = (type, chatName, participants) => {
-      if(type === "single"){
-        setSelect(participants[1])
-        select === participants[1] && redirect( `/chat/${participants[1]}`)
+    const handleClick = (room) => {
+      if(room?.type === "single"){
+        setSelect(room?.participants[1])
+        select === room?.participants[1] && redirect( `/chat/${room?.participants[1]}`)
         
       }
-      if(type === "group"){
-        setSelect(chatName)
+      if(room?.type === "group"){
+        setSelect(room?.chatName)
         
         console.log(select)
       }
-      console.log(type,chatName)
+      console.log(room?.type,room?.chatName)
     }
-    console.log(urlRooms)
+    // console.log(urlRooms)
   return (
     <div className="w-20">
       Chatsidebar
      {console.log(chatRooms)}
 
-      {/* {(urlRooms || [])?.map((room) => {
-        const chatKey = Object.keys(room)[0]
-        const {type, participants, chatName} = room[chatKey]  // die room[chatKey] w an backend weitergegeben
+      {chatRooms?.map((room) => {
 
-          if (type === "single") {
+          if (room?.type === "single") {
             return (
-              <div className= {`${select === participants[1] ? "bg-slate-600" : ""} cursor-pointer`} onClick={() => handleClick(type, chatName, participants)} key={participants[1]}>
-              {participants[1]} 
+              <div className= {`${select === room?.participants[1] ? "bg-slate-600" : ""} cursor-pointer`} onClick={() => handleClick(room)} key={room?.participants[1]}>
+              {room?.participants[1]} 
             </div>
           );
-        } else if (type === "group") {
+        } else if (room?.type === "group") {
           return (
-            <div className= {`${select === chatName ? "bg-slate-600" : "bg-red-500"} cursor-pointer`} onClick={() => handleClick(type, chatName, participants)} key={chatName}>{chatName}</div>
+            <div className= {`${select === room?.chatName ? "bg-slate-600" : "bg-red-500"} cursor-pointer`} onClick={() => handleClick(room)} key={room?.chatName}>{select === room?.chatName ? <Link to={`/chat/${room?.chatName}`}>{room?.chatName}</Link> : room?.chatName}</div>
             );
           }
         
-        
-        return null;
-      })} */}
-      
-      {(chatRooms || [])?.map(({type, chatName, participants }) => {
-
-          if (type === "single") {
-            return (
-              <div className= {`${select === participants[1] ? "bg-slate-600" : ""} cursor-pointer`} onClick={() => handleClick(type, chatName, participants)} key={participants[1]}>
-              {participants[1]} 
-            </div>
-          );
-        } else if (type === "group") {
-          return (
-            <div className= {`${select === chatName ? "bg-slate-600" : "bg-red-500"} cursor-pointer`} onClick={() => handleClick(type, chatName, participants)} key={chatName}>{select === chatName ? <Link to={`/chat/${chatName}`}>{chatName}</Link> : chatName}</div>
-            );
-          }
-        
-        
+          // <GroupChat chatName={roomConfig?.chatName} messages={roomConfig} />
         return null;
       })}
 

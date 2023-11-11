@@ -4,6 +4,7 @@ import { immer } from "zustand/middleware/immer";
 import { shallow } from "zustand/shallow";
 import { ThemeColors } from "./data";
 import { produce } from "immer";
+// import { mergeDeepLeft } from "ramda";
 
 const themeLength = ThemeColors.length;
 
@@ -64,11 +65,12 @@ export const useRooms = create(
   )
 );
 
-export const useProfileStore = create(
+export const useProfileStore = create( 
   persist(
     immer(
       produce((set, get) => ({
         defaultProfile: {
+          userIdDB: null,
           userId: null,
           role: null,
           isOnline: false,
@@ -121,57 +123,27 @@ export const useProfileStore = create(
               avatar: "",
               notifications: 0,
             },
-            {
-              socketId: "add",
-              username: "Oleg",
-              Online: true,
-              avatar: "",
-              notifications: 0,
-            },
-            {
-              socketId: "add",
-              username: "Dirk",
-              Online: false,
-              avatar: "",
-              notifications: 0,
-            },
-            {
-              socketId: "add",
-              username: "Sabriye",
-              Online: true,
-              avatar: "",
-              notifications: 0,
-            },
-            {
-              socketId: "add",
-              username: "Melanie",
-              Online: false,
-              avatar: "",
-              notifications: 0,
-            },
             //friends
           ],
           chatRooms: [
             {
               type: "single",
-              chatName: "SingleRoomName",
+              chatName: "",
               chatMessages: [
-                { content: "Guten Nachmittag!", likes: 5, emojis: [] },
               ],
               participants: ["Yan", "Zoe"],
-              comments: [{ content: "sample coments", likes: 5, emojis: [] }],
+              comments: [],
             },
             {
               type: "group",
-              chatName: "Room_League",
+              chatName: "",
               chatAdmin: "Zoe",
               chatMessages: [
-                { content: "Welcome to Zoe's Room", likes: 5, emojis: [] },
+               
               ],
               participants: ["userid", "user2", "user3"],
-              comments: [{ content: "sample coments", likes: 5, emojis: [] }],
+              comments: [],
             },
-
             //   {
             //   singleroom: {
             //     chatMessages: [{ content: "Guten Tag!", likes: 5, emojis: [] }],
@@ -180,18 +152,6 @@ export const useProfileStore = create(
             //   },
             // },
 
-            // {
-            //   grouproom: {
-            //     chatName: "Room_League",
-            //     groupchat: true,
-            //     chatAdmin: "Zoe",
-            //     chatMessages: [
-            //       { content: "Welcome to Zoe'Room", likes: 5, emojis: [] },
-            //     ],
-            //     participants: ["userid", "user2", "user3"],
-            //     comments: [{ content: "sample coments", likes: 5, emojis: [] }],
-            //   },
-            // },
           ],
           settings: {},
         },
@@ -204,8 +164,16 @@ export const useProfileStore = create(
             state.defaultProfile.isOnline = false;
             window.location.reload();
           }),
-        setProfile: ({ userId, role, username, email, avatar = "" }) =>
+        setProfile: ({
+          userIdDB,
+          userId,
+          role,
+          username,
+          email,
+          avatar = "",
+        }) =>
           set((state) => {
+            state.defaultProfile.userIdDB = userIdDB;
             state.defaultProfile.userId = userId;
             state.defaultProfile.role = role;
             state.defaultProfile.username = username;
@@ -214,6 +182,7 @@ export const useProfileStore = create(
           }),
         resetProfile: () =>
           set((state) => {
+            state.defaultProfile.userIdDB = null;
             state.defaultProfile.userId = null;
             state.defaultProfile.role = null;
             state.defaultProfile.username = null;
@@ -228,18 +197,32 @@ export const useProfileStore = create(
           }),
 
         setChatRooms: (newChatRoom) =>
-        set((state) => {
-          return produce(state, (draftState) => {
-            // Änderungen am draftState vornehmen
-            const newRoom = draftState.defaultProfile.chatRooms.find(
-              (room) => room.chatName === newChatRoom.chatName
-            );
-        
-            if (!newRoom) {
-              draftState.defaultProfile.chatRooms.push(newChatRoom);
-            }
-          });
-            // state.defaultProfile.chatRooms.push(newChatRoom)
+          set((state) => {
+            return produce(state, (draftState) => {
+              // Änderungen am draftState vornehmen
+              // const newRoom = draftState.defaultProfile.chatRooms.find(
+              //   (room) => room?.chatName === newChatRoom?.chatName
+              // );
+              // if (!newRoom ) {
+              //   draftState.defaultProfile.chatRooms.push(newChatRoom);
+              // }
+              // Überprüfen, ob es ein Zimmer mit dem gleichen chatName gibt
+              const existingRoomIndex =
+                draftState.defaultProfile.chatRooms.findIndex(
+                  (room) => room?.chatName === newChatRoom?.chatName
+                );
+              // Wenn ein Zimmer mit dem gleichen chatName gefunden wird, ersetze es durch newChatRoom
+              if (existingRoomIndex !== -1) {
+                draftState.defaultProfile.chatRooms[existingRoomIndex] =
+                  newChatRoom;
+              } else {
+                // draftState.defaultProfile.chatRooms.push(newChatRoom);
+                draftState.defaultProfile.chatRooms.push({
+                  ...newChatRoom,
+                  chatMessages: [], // Initialisiere chatMessages als leeres Array
+                });
+              }
+            });
           }),
         setContacts: (contacts) =>
           set((state) => {
@@ -261,7 +244,28 @@ export const useProfileStore = create(
     ),
     {
       name: "Profile",
-      onRehydrateStorage: (state) => immer(() => state),
+      onRehydrateStorage: (state) => {
+        console.log("Rehydration successful");
+        return produce(state, (draftState) => {
+          draftState.defaultProfile.chatRooms.forEach((room) => {
+            if (room && room.chatMessages) {
+              // Initialisiere chatMessages, wenn es nicht vorhanden ist
+              room.chatMessages = room.chatMessages || [];
+            }
+          });
+          // console.log("Draft State:", draftState);
+          // return draftState
+        });
+      },
+      // merge: (persistedState, currentState) => {
+      //   mergeDeepLeft(persistedState, currentState)
+      // },
+      // onRehydrateStorage: (state) => {
+      //   console.log("Rehydration successful");
+      //   console.log(state)
+      //   return state;
+      // },
+      
       // {
       //   console.log("hydration starts");
       //   const storedData = JSON.parse(sessionStorage.getItem("Profile"));
@@ -275,13 +279,16 @@ export const useProfileStore = create(
       //     console.log("No valid data found in sessionStorage");
       //   }
       // },
-      storage: createJSONStorage(() => sessionStorage),
+
+      storage: createJSONStorage(() => {
+        console.log("Persisting state to sessionStorage");
+        return sessionStorage;
+      }),
     }
   )
 );
 
 // Chatliste werden in Localstorage gepeichert messageLIste: [{ participants: [userId1, userId2]}, ...]  2 teilnehmer= direkter chat  >2 teinehmer = groupchat
-
 
 // hier sind chatdaten für die speicherung im localstorage damit der chat effizienter läuft
 // export const useChatStore = create(
@@ -312,16 +319,12 @@ export const useProfileStore = create(
 //   }
 // );
 
-
-// hier sind chatdaten für die speicherung im localstorage damit der chat effizienter läuft 
+// hier sind chatdaten für die speicherung im localstorage damit der chat effizienter läuft
 //export const useChatStore = create(
 //  persist(
 //    immer((set, get) => ({
 //      messageListe: [], //messageLIste: [{ participants: [userId1, userId2]}, ...]
 //      messageData: [], // ["string",....]
-
-      
-
 
 //    })),
 //    immer({
@@ -330,8 +333,6 @@ export const useProfileStore = create(
 //    })
 //  )
 // );
-
-
 
 // daten vorstellungen
 // const roomChatData = {
