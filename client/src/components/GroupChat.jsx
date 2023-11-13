@@ -10,7 +10,6 @@ import { useDarkLightMode } from "../context/data/dataStore.jsx";
 import { Inputs } from "./ui/Inputs";
 import ScrollToBottom from "react-scroll-to-bottom";
 import { Button } from "./ui/Buttons";
-import Navigation from "./Navigation.jsx";
 
 // {
 //   type: 'single',

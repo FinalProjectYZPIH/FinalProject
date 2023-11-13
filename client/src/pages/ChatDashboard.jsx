@@ -9,16 +9,24 @@ import { useParams } from "react-router-dom";
 // import DisplayBoard from "../components/DisplayBoard";
 import { useSocketProvider } from "../context/data/SocketProvider";
 import { Outlet } from "react-router-dom";
-import FriendRequests from "../components/FriendRequests";
+
 
 import { useDarkLightMode } from "../context/data/dataStore.jsx";
 import { Inputs } from "../components/ui/Inputs.jsx";
 import { Button } from "../components/ui/Buttons.jsx";
 import Navigation from "../components/Navigation.jsx";
 
+import FriendRequests from "../components/FriendRequests";
 
 export default function ChatDashboard() {
   
+
+
+
+
+
+
+
   //globaldata
   const {
     defaultProfile,
@@ -59,12 +67,19 @@ export default function ChatDashboard() {
     });
   }
 
+
   if (isOnline === false) {
     navigate("/", { replace: true });
     toast.error("You are offline");
-  }
 
-  console.log(userId, role, username, email);
+    // setLogout();
+    // window.location.reload();
+
+    // if (isOnline === false) {
+    //   navigate("/login");
+    //   setLogout() && toast.success("You are logged out");
+    // }
+  }
 
 
   //events
