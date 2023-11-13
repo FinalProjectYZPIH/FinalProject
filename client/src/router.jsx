@@ -16,9 +16,10 @@ import { ResetPassword } from "./pages/ResetPassword";
 import { Impressum } from "./pages/Impressum";
 import Login from "./pages/Login";
 import GroupChat from "./components/GroupChat";
+
 import SingleChat from "./components/SingleChat";
 import ChatSidebar from "./components/ChatSidebar";
-// import ChatTest from "./components/ChatTest";
+
 
 // function App() {
 
@@ -43,11 +44,10 @@ export const router = createBrowserRouter(
         {/* <Route path=":to" element={<SingleChat />} /> */}
       </Route>
       <Route element={<AuthLayout />}>
-        <Route path="login" element={<Login />} />
-        <Route path="resetPassword" element={<ResetPassword />} />
-        <Route path="signup" element={<Signup />} />
-        <Route path="impressum" element={<Impressum />} />
-        {/* <Route path="/test" element={<ChatTest />} /> */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/resetPassword" element={<ResetPassword />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/impressum" element={<Impressum />} />
       </Route>
     </Route>
   )

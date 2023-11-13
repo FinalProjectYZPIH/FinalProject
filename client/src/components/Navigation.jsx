@@ -1,13 +1,23 @@
 import React, { useState } from "react";
 import { useDarkLightMode, useProfileStore } from "../context/data/dataStore";
+import { logoutRequest } from "../context/api/auth";
 import { CloudMoon, Sun, User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import ReactSwitch from "react-switch";
 import { Button } from "@mui/material";
+
 import { logoutRequest } from "../context/api/auth";
+
+import FriendRequests from "../components/FriendRequests"
+import Search from "./Search";
+
 
 // Beipiel
 export default function Navigation() {
+  const [friendsRequestsList, setFriendsRequestsList] = useState(false)
+
+  const {userIdDB} = useProfileStore(state => state.defaultProfile)
+
   const { lightMode, setDarkMode } = useDarkLightMode();
   const { isOnline, notifications, avatar, settings, chatRooms, contacts } =
     useProfileStore((state) => state.defaultProfile);
@@ -66,14 +76,9 @@ export default function Navigation() {
           <button onClick={handleLogout}>Logout</button>
         </div>
       </div>
-      <form>
-        <input
-          className="w-32 h-7 pl-4 pr-8 text-gray-900 rounded-full border border-cyan-400 outline-cyan-400"
-          id="search"
-          type="search"
-          placeholder="Search..."
-        />
-      </form>
+
+      <Search/>
+
       <div className="flex items-center mx-2">
         {isOnline && <div>{UserNav.friends}</div>}
         <img
@@ -82,6 +87,14 @@ export default function Navigation() {
           alt="Profile"
         />
       </div>
+
+      <button onClick={()=>{setFriendsRequestsList(!friendsRequestsList)}}>
+         Req
+      </button>
+      {friendsRequestsList === true &&
+        <FriendRequests userId = {userIdDB} />}
+
+
       <ReactSwitch
         onChange={setDarkMode}
         checked={lightMode}

@@ -88,8 +88,9 @@ export function googleRequest(...key) {
 export function logoutRequest() {
   const logoutQuery = useMutation({
     mutationFn: async () => await axios.post("/api/auth/logout"),
-    onSuccess: () => {toast.success("Erfolgreich... logout!")}, // hier kann man success error und finally fälle einstellen
-    onError: () => {toast.success("Clear cookie failed!")},
+    onSuccess: () => {toast.success("Sie sind elforgereich abgemeldet");}, // hier kann man success error und finally fälle einstellen
+    onError: () => {},
+
     onSettled: () => {
 
     },

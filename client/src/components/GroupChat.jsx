@@ -34,6 +34,9 @@ import { Button } from "./ui/Buttons";
 //   new Date(Date.now()).getMinutes(),
 // };
 function GroupChat() {
+  const { username } = useProfileStore((state) => state.defaultProfile);
+  const { socket, sendMessage, roomConfig } = useSocketProvider();
+  const { lightMode, setDarkMode } = useDarkLightMode();
 
   const { username } = useProfileStore(state => state.defaultProfile)
   const { socket, sendMessage, roomConfig, setRoomConfig} = useSocketProvider()
@@ -42,6 +45,7 @@ function GroupChat() {
   const navigate = useNavigate()
 console.log(chatName)
   console.log(roomConfig)
+
   const defaultMessageObj = {
     content: "",
     likes: 0,

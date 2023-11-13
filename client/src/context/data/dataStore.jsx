@@ -51,18 +51,7 @@ export const useDarkLightMode = create(
   )
 );
 
-export const useRooms = create(
-  persist(
-    (set, get) => ({
-      rooms: [],
-      setRooms: (room) => set((state) => ({ rooms: [...state.rooms, room] })),
-    }),
-    {
-      name: "Rooms",
-      storage: createJSONStorage(() => localStorage),
-    }
-  )
-);
+
 
 export const useProfileStore = create(
   persist(
@@ -93,6 +82,7 @@ export const useProfileStore = create(
               avatar: "",
               notifications: 0,
             },
+
             {
               socketId: "add",
               username: "Imad",
@@ -121,76 +111,11 @@ export const useProfileStore = create(
               avatar: "",
               notifications: 0,
             },
-            {
-              socketId: "add",
-              username: "Oleg",
-              Online: true,
-              avatar: "",
-              notifications: 0,
-            },
-            {
-              socketId: "add",
-              username: "Dirk",
-              Online: false,
-              avatar: "",
-              notifications: 0,
-            },
-            {
-              socketId: "add",
-              username: "Sabriye",
-              Online: true,
-              avatar: "",
-              notifications: 0,
-            },
-            {
-              socketId: "add",
-              username: "Melanie",
-              Online: false,
-              avatar: "",
-              notifications: 0,
-            },
+
             //friends
           ],
           chatRooms: [
-            //   {
-            //   singleroom: {
-            //     chatMessages: [{ content: "Guten Tag!", likes: 5, emojis: [] }],
-            //     participants: ["Pawel", "Zoe"],
-            //     comments: [{ content: "sample coments", likes: 5, emojis: [] }],
-            //   },
-            // },
-            // {
-            //   singleroom: {
-            //     chatMessages: [{ content: "Guten Nachmittag!", likes: 5, emojis: [] }],
-            //     participants: ["Yan", "Zoe"],
-            //     comments: [{ content: "sample coments", likes: 5, emojis: [] }],
-            //   },
-            // },
-            // {
-            //   grouproom: {
-            //     chatName: "Room_League",
-            //     groupchat: true,
-            //     chatAdmin: "Zoe",
-            //     chatMessages: [
-            //       { content: "Welcome to Zoe'Room", likes: 5, emojis: [] },
-            //     ],
-            //     participants: ["userid", "user2", "user3"],
-            //     comments: [{ content: "sample coments", likes: 5, emojis: [] }],
-            //   },
-            // },
-            // {
-            //   grouproom: {
-            //     chatName: "ClassRoom",
-            //     groupchat: true,
-            //     chatAdmin: "Yan",
-            //     chatMessages: [
-            //       { content: "Welcome to Yans'Room", likes: 5, emojis: [] },
-            //     ],
-            //     participants: ["userid", "user2", "user3"],
-            //     comments: [{ content: "sample coments", likes: 5, emojis: [] }],
-            //   },
-            // },
-            // {
+            //   {            // {
             //   grouproom: {
             //     chatName: "SchoolUniverse",
             //     groupchat: true,
@@ -254,6 +179,50 @@ export const useProfileStore = create(
 //             const roomIndex = state.defaultProfile.chatRooms.findIndex(
 //               (roomObj) =>{
 
+          }
+
+
+          //[chatroom,...].filter(a => a[0] === friendsUserid)
+
+        ],
+        settings: {},
+      },
+      setLogin: () =>
+        set((state) => {
+          state.defaultProfile.isOnline = true;
+        }),
+      setLogout: () =>
+        set((state) => {
+
+          state.defaultProfile.isOnline = false;
+          window.location.reload();
+        }),
+      setProfile: ({ userIdDB,userId, role, username, email, avatar = "" }) =>
+        set((state) => {
+          state.defaultProfile.userIdDB = userIdDB;
+          state.defaultProfile.userId = userId;
+          state.defaultProfile.role = role;
+          state.defaultProfile.username = username;
+          state.defaultProfile.email = email;
+          state.defaultProfile.avatar = avatar;
+        }),
+      resetProfile: () =>
+        set((state) => {
+          state.defaultProfile.userIdDB = null;
+          state.defaultProfile.userId = null;
+          state.defaultProfile.role = null;
+          state.defaultProfile.username = null;
+          state.defaultProfile.email = null;
+          state.defaultProfile.avatar = null;
+          // state.defaultProfile.contacts = [];
+          // friends
+          // (state.defaultProfile.notifications = 0), //[chatroom].reduce((startvalue,f) => startvalue + f.length   ,0)
+          // (state.defaultProfile.chatRooms = null),
+          // //[chatroom,...].filter(a => a[0] === friendsUserid)
+          // (state.defaultProfile.settings = null);
+        }),
+
+
 //                 roomObj.groupRoom.roomName === newChatRooms.groupRoom.roomName
 //                 console.log(roomObj.groupRoom.roomName)
 //                 console.log(newChatRooms.groupRoom.roomName)
@@ -292,6 +261,7 @@ export const useProfileStore = create(
     ),
     {
       name: "Profile",
+
       onRehydrateStorage: (state) => immer(() => state),
       // {
       //   console.log("hydration starts");
@@ -299,6 +269,7 @@ export const useProfileStore = create(
       //   // optional
       //   if (storedData && typeof storedData === "object") {
       //     // return deepRead(defaultProfile);
+
 
       //     console.log("hydration finished");
       //     return immer(() => state);

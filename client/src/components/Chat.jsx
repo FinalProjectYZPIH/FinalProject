@@ -42,8 +42,10 @@ function Chat({ socket, username, room }) {
         {/* <ScrollToBottom className="message-container"> */}
           {messageList.map((messageContent, index) => {
             return (
+
               <div key={index}
                 className="message flex justify-center hover:bg-white h-64"
+
                 id={username === messageContent.author ? "you" : "other"}
               >
                 <div>
