@@ -23,6 +23,7 @@ export function registerRequest() {
   //   passwordConfirmation,
   // });
   const registerMutation = useMutation({
+
     mutationFn: async (loginData) => {
       return await axios.post("/api/user/createUser", loginData);
     },
@@ -33,6 +34,7 @@ export function registerRequest() {
     onError: (error) => {
       toast.error("Fehler bei der Anmeldung:", error);
     },
+
   });
 
   return registerMutation;

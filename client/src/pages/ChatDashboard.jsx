@@ -11,11 +11,15 @@ import { useSocketProvider } from "../context/data/SocketProvider";
 import { Outlet } from "react-router-dom";
 import FriendRequests from "../components/FriendRequests";
 
+
 import { useDarkLightMode } from "../context/data/dataStore.jsx";
 import { Inputs } from "../components/ui/Inputs.jsx";
 import { Button } from "../components/ui/Buttons.jsx";
 import Navigation from "../components/Navigation.jsx";
 
+
+
+  
 
 export default function ChatDashboard() {
   
@@ -65,6 +69,7 @@ export default function ChatDashboard() {
   }
 
   console.log(userId, role, username, email);
+
 
 
   //events
