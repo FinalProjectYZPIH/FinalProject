@@ -4,6 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import ChatDashboard from "../ChatDashboard";
 import GroupChat from "../../components/GroupChat";
 import App from "../App";
+import Navigation from "../../components/Navigation";
 
 
 export default function RootLayout() {
@@ -11,7 +12,10 @@ export default function RootLayout() {
   console.log(isOnline);
 
   return (
+    // <>
     <ProtectionProvider isAllowed={isOnline}>
+{/* <Navigation /> */}
+<Navigation />
       <Routes>
         {/* <Route path="" element={<Navigate to="/chat" />} /> */}
         <Route path="chat" element={<App />}>
@@ -20,5 +24,6 @@ export default function RootLayout() {
         </Route>
       </Routes>
     </ProtectionProvider>
+    // </>
   );
 }

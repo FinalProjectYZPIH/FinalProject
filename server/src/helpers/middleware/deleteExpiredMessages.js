@@ -9,7 +9,7 @@ const deleteExpiredMessages = () => {
   rule.minute = 0;
 
   // Schedule the task
-   schedule.scheduleJob(rule, async () => {
+  schedule.scheduleJob(rule, async () => {
     try {
       // Calculate the date and time one day ago
       const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
@@ -20,7 +20,7 @@ const deleteExpiredMessages = () => {
         { $pull: { messages: { 'timestamp': { $lt: oneDayAgo } } } }
       );
     } catch (error) {
-      console.error('Error deleting expired messages:', error);
+      console.error("Error deleting expired messages:", error);
     }
   });
 };
