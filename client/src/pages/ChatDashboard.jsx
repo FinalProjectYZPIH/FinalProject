@@ -1,18 +1,24 @@
-import { useProfileStore, useRooms } from "../context/data/dataStore";
+import { useProfileStore } from "../context/data/dataStore";
 import { profileRequest } from "../context/api/auth";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import toast from "react-hot-toast";
 import GroupChat from "../components/GroupChat";
 import ChatSidebar from "../components/ChatSidebar";
 import { useParams } from "react-router-dom";
-import DisplayBoard from "../components/DisplayBoard";
+// import DisplayBoard from "../components/DisplayBoard";
 import { useSocketProvider } from "../context/data/SocketProvider";
 import { Outlet } from "react-router-dom";
 
+import { Button } from "../components/ui/Buttons";
+import { useDarkLightMode } from "../context/data/dataStore";
+import { Inputs } from "../components/ui/Inputs";
+
+import FriendRequests from "../components/FriendRequests";
+
 export default function ChatDashboard() {
   
-  
-
   //globaldata
   const {
     defaultProfile,
@@ -53,12 +59,17 @@ export default function ChatDashboard() {
     });
   }
   if (isError) {
+
     setLogout();
     window.location.reload();
+
     if (isOnline === false) {
-      navigate("/");
+      navigate("/login");
+      setLogout() && toast.success("You are logged out");
     }
   }
+  console.log(userIdDB,userId, role, username, email);
+
 
   //events
   const joinRoom = () => {
@@ -94,34 +105,52 @@ export default function ChatDashboard() {
     }
   };
 
-  return (
-    <div className="App flex justify-between">
 
+  const { lightMode, setDarkMode } = useDarkLightMode();
+
+  return (
+    <div
+      className={`font-orbitron grid grid-cols-1 lg:grid-cols-2 w-screen h-screen sm:bg-cover sm:bg-center  bg-no-repeat lg:bg-contain lg:bg-right ${
+        lightMode ? "dark" : "light"
+      }`}
+    >
+      {/* <ChatSidebar /> */}
+      {/* <DisplayBoard /> */}
       {!showChat ? ( //hier soll für 2. sidebar gedacht sein. wenn der user in navbar klickt, es soll dann angezeigt werden.
-        <div>
-          <h3>Create or Join a Existing ChatRoom</h3>
-          <input
-            type="text"
-            placeholder="John..."
-            onChange={(event) => {
-              setRoomName(event.target.value);
-            }}
-          />
-          <button onClick={joinRoom}>Join A Room</button>
+        <div className=" flex flex-col justify-evenly items-center">
+          <div className="h-3/5 w-96 px-5 flex justify-evenly flex-col items-center border border-slate-400 rounded-md shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-25">
+            <h3 className="text-4xl">Create or Join a Existing ChatRoom</h3>
+            <Inputs
+              className="border border-1"
+              type="text"
+              ph="Create or join a Room"
+              onChangeFn={(event) => {
+                setRoomName(event.target.value);
+              }}
+            />
+            <div className="w-full">
+              <Button onClick={joinRoom}>Join a Room</Button>
+            </div>
+          </div>
         </div>
       ) : (
-        <>
-          {/* {setRooms(roomname)} */}
-          
-          {navigate(`/chat/${roomname}`)}
-           {/* <GroupChat chatName={roomConfig?.chatName} messages={roomConfig} /> */}
-        </>
+        navigate(`/chat/${roomname}`)
+        // <GroupChat />
+
       )}
+
+
+      {/* <button onClick={()=>{setFriendsRequestsList(!friendsRequestsList)}}>
+        Friends Requests
+      </button>
+
+      {friendsRequestsList === true &&
+        <FriendRequests userId = {userData.data._id} />} */}
+
 
     </div>
   );
 }
-
 
 // const groupChatData = {
 //   chatName: "My Group Chat",
@@ -140,4 +169,3 @@ export default function ChatDashboard() {
 //   voices: [], // Hier können Audio-URLs hinzugefügt werden
 //   videos: [], // Hier können Video-URLs hinzugefügt werden
 // };
-

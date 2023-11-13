@@ -1,8 +1,5 @@
 import mongoose from "mongoose";
 
-// const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyz0123456789", 10);
-
-
 
 const ChatRoomSchema = new mongoose.Schema(
   {
@@ -11,6 +8,7 @@ const ChatRoomSchema = new mongoose.Schema(
     chatMessages: [{type: mongoose.Schema.Types.ObjectId, ref :"Message"}],
     participants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // für gruppen nachricht
     chatAdmin: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+
   },
   {
     timestamps: {

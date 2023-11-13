@@ -2,8 +2,12 @@ import { Outlet } from "react-router-dom";
 import { useSocketProvider } from "../context/data/SocketProvider";
 import { HomeComponent } from "../components/HomeComponent";
 import { useProfileStore } from "../context/data/dataStore";
+
 import { refreshRequest } from "../context/api/auth";
 import { useNavigate } from "react-router-dom";
+
+import FriendRequests from "../components/FriendRequests";
+
 
 export default function Home() {
   const socket = useSocketProvider();

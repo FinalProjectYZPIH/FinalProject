@@ -1,22 +1,15 @@
-import { Outlet } from "react-router-dom";
 import ProtectionProvider from "../../context/auth/ProtectionProvider";
 import { useProfileStore } from "../../context/data/dataStore";
-import { Navigate } from "react-router-dom";
-import ChatSidebar from "../../components/ChatSidebar";
-import ContactSidebar from "../../components/ContactSidebar";
 import { Routes, Route } from "react-router-dom";
 import ChatDashboard from "../ChatDashboard";
 import GroupChat from "../../components/GroupChat";
 import App from "../App";
 
+
 export default function RootLayout() {
   const { isOnline } = useProfileStore((state) => state.defaultProfile);
-  // const {resetProfile} = useProfileStore()
   console.log(isOnline);
 
-  // if(isOnline === false) {
-  //   resetProfile()
-  // }
   return (
     <ProtectionProvider isAllowed={isOnline}>
       <Routes>
@@ -26,9 +19,6 @@ export default function RootLayout() {
           <Route path=":chatName" element={<GroupChat />} />
         </Route>
       </Routes>
-      {/* 
-        <Outlet />
-        <ContactSidebar /> */}
     </ProtectionProvider>
   );
 }

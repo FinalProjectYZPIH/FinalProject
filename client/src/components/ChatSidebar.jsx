@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useProfileStore, useRooms } from "../context/data/dataStore";
+import { useProfileStore } from "../context/data/dataStore";
 import { useState } from "react";
 import { useSocketProvider } from "../context/data/SocketProvider";
 
@@ -16,7 +16,6 @@ export default function ChatSidebar() {
   const [select, setSelect] = useState(null)
 
   const navigate = useNavigate()
-
 
 
     const handleClick = (room) => {

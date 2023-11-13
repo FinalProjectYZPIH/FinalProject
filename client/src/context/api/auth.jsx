@@ -25,9 +25,6 @@ export function registerRequest() {
       await axios.post("/api/auth/", loginData),
     onSuccess: () => { toast.success("Erfolgreich... Failed!");}, // hier kann man success error und finally fälle einstellen
     onError: () => {},
-    onSettled: () => {
-      toast.success("Erfolgreich... Failed!");
-    },
   });
   return registerMutation;
 }
@@ -88,8 +85,9 @@ export function googleRequest(...key) {
 export function logoutRequest() {
   const logoutQuery = useMutation({
     mutationFn: async () => await axios.post("/api/auth/logout"),
-    onSuccess: () => {toast.success("Erfolgreich... logout!")}, // hier kann man success error und finally fälle einstellen
-    onError: () => {toast.success("Clear cookie failed!")},
+    onSuccess: () => {toast.success("Sie sind elforgereich abgemeldet");}, // hier kann man success error und finally fälle einstellen
+    onError: () => {},
+
     onSettled: () => {
 
     },

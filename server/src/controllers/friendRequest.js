@@ -1,13 +1,34 @@
 import FriendRequestModel from "../models/friendRequest.model.js";
 import UserModel from "../models/user.model.js";
+import { verifyJwt } from "../helpers/utils/jwt.utils.js";
+
+export const getFriendRequestsForUser = async (req, res) => {
+  try {
+    const recipientId = req.query.recipientId; // Get the recipientId from the query parameters
+
+    // Query the database to find friend requests for the specific recipient
+    const friendRequests = await FriendRequestModel.find({ recipient_id: recipientId });
+
+    res.json(friendRequests);
+  } catch (error) {
+    console.error('Error fetching friend requests:', error);
+    res.status(500).json({ message: 'Error fetching friend requests' });
+  }
+};
 
 export const createFriendRequest = async (req, res) => {
   try {
-    const { senderId, recipientId } = req.body;
+    const {recipientId } = req.body;
+    const { accessJwt } = req?.cookies;
+  if (!accessJwt) {
+    res.status(400);
+    return next("Access token not found in cookies");
+  }
+  const { decoded, valid } = verifyJwt(accessJwt, process.env.ACCESS_TOKEN);
 
     // Check if the request already exists
     const existingRequest = await FriendRequestModel.findOne({
-      sender_id: senderId,
+      sender_id: decoded.UserInfo.id,
       recipient_id: recipientId,
     });
 
@@ -16,7 +37,7 @@ export const createFriendRequest = async (req, res) => {
     }
 
     const newRequest = new FriendRequestModel({
-      sender_id: senderId,
+      sender_id: decoded.UserInfo.id,
       recipient_id: recipientId,
       status: "pending",
     });
@@ -31,10 +52,10 @@ export const createFriendRequest = async (req, res) => {
 
 export const respondToFriendRequest = async (req, res) => {
   try {
-    const { requestId, response } = req.body;
-
+    const {response ,requestId} = req.body;
+   
     // Update the friend request status to "accepted" or "rejected"
-    const updatedRequest = await FriendRequest.findByIdAndUpdate(
+    const updatedRequest = await FriendRequestModel.findByIdAndUpdate(
       requestId,
       { status: response },
       { new: true }
