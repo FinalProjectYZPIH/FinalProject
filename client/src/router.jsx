@@ -3,7 +3,8 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
-
+  BrowserRouter,
+  Routes,
 } from "react-router-dom";
 import AuthLayout from "./pages/layout/AuthLayout";
 import Signup from "./pages/Signup";
@@ -35,20 +36,22 @@ import ChatSidebar from "./components/ChatSidebar";
 export const router = createBrowserRouter(
   //Template für React-router-dom
   createRoutesFromElements(
-    <Route element={<AppWrapper />}>
-      <Route index path="/" element={<Home />}></Route>
-      <Route path="chat" element={<RootLayout />}>
-        <Route path="" element={<ChatDashboard />} />
-        
-        <Route path=":chatName" element={<GroupChat />} />
-        {/* <Route path=":to" element={<SingleChat />} /> */}
+
+      <Route element={<AppWrapper />}>
+        <Route index path="/" element={<Home />}></Route>
+        {/* <Route path="chat" element={<RootLayout />}> */}
+          {/* <Route path="" element={<ChatDashboard />} /> */}
+
+          {/* <Route path=":chatName" element={<GroupChat />} /> */}
+        {/* </Route> */}
+        <Route element={<AuthLayout />}>
+          <Route path="login" element={<Login />} />
+          <Route path="resetPassword" element={<ResetPassword />} />
+          <Route path="signup" element={<Signup />} />
+          <Route path="impressum" element={<Impressum />} />
+        </Route>
+        <Route path="*" element={<RootLayout />} />
       </Route>
-      <Route element={<AuthLayout />}>
-        <Route path="/login" element={<Login />} />
-        <Route path="/resetPassword" element={<ResetPassword />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/impressum" element={<Impressum />} />
-      </Route>
-    </Route>
+
   )
 );

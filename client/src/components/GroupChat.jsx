@@ -2,24 +2,30 @@ import React, { useEffect, useState } from "react";
 import { getTime } from "date-fns";
 import { useSocketProvider } from "../context/data/SocketProvider";
 import { useProfileStore } from "../context/data/dataStore";
+
+import { useNavigate, useParams } from "react-router-dom";
+import { produce } from "immer";
+
 import { useDarkLightMode } from "../context/data/dataStore.jsx";
 import { Inputs } from "./ui/Inputs";
 import ScrollToBottom from "react-scroll-to-bottom";
 import { Button } from "./ui/Buttons";
 
-// {groupRoom :{
-//   chatMessages: [...attachMessages],
-//   participants: [...attachParticipants],
-//   comments: [...attachComments],
-//   chatName: roomName,
-//   groupchat: groupchat,
-//   chatAdmin: userId
-// }}
-// {singleRoom : {
-//   chatMessages: [...attachMessages],
-//   participants: [userId, ...attachParticipants], // hier sollen nur 2 users sein
-//   comments: [...attachComments]
-// }}
+// {
+//   type: 'single',
+//   chatName: 'SingleRoomName',
+//   chatMessages: [{ content: 'Guten Nachmittag!', likes: 5, emojis: [] }],
+//   participants: ['Yan', 'Zoe'],
+//   comments: [{ content: 'sample coments', likes: 5, emojis: [] }],
+// },
+// {
+//   type: 'group',
+//   chatName: 'Room_League',
+//   chatAdmin: 'Zoe',
+//   chatMessages: [{ content: "Welcome to Zoe's Room", likes: 5, emojis: [] }],
+//   participants: ['userid', 'user2', 'user3'],
+//   comments: [{ content: 'sample coments', likes: 5, emojis: [] }],
+// },
 // messageData = {
 //   sender: userId,
 //   content: content,
@@ -34,17 +40,17 @@ import { Button } from "./ui/Buttons";
 //   new Date(Date.now()).getMinutes(),
 // };
 function GroupChat() {
-  const { username } = useProfileStore((state) => state.defaultProfile);
-  const { socket, sendMessage, roomConfig } = useSocketProvider();
-  const { lightMode, setDarkMode } = useDarkLightMode();
+  const { username, chatRooms } = useProfileStore(
+    (state) => state.defaultProfile
+  );
+  const { setChatRooms } = useProfileStore();
+  const { chatName } = useParams();
+  const navigate = useNavigate();
+  console.log(chatName);
 
-  const { username } = useProfileStore(state => state.defaultProfile)
-  const { socket, sendMessage, roomConfig, setRoomConfig} = useSocketProvider()
-  const { setChatRooms } = useProfileStore()
-  const { chatName } = useParams()
-  const navigate = useNavigate()
-console.log(chatName)
-  console.log(roomConfig)
+  const { socket, sendMessage } = useSocketProvider();
+  const { lightMode, setDarkMode } = useDarkLightMode();
+  console.log(chatRooms)
 
   const defaultMessageObj = {
     content: "",
@@ -58,46 +64,54 @@ console.log(chatName)
     ...defaultMessageObj,
     time: getTime(new Date()),
   });
-
-  useEffect(()=> {
-    console.log(chatName)
-  },[chatName])
-
-  const [messageList, setMessageList] = useState(
-    roomConfig.groupRoom.chatMessages
+  const [messageList, setMessageList] = useState([]);
+  const [roomConfig, setRoomConfig] = useState(
+    chatRooms?.find((room) => {
+     if(room.chatName === ""){
+      return "leere String"
+     }
+      room?.chatName === chatName 
+    }) 
   );
 
-  console.log(roomConfig.groupRoom.chatMessages);
-  console.log(roomConfig.groupRoom.chatAdmin);
-  
-  // useEffect(() => {
-  //   setRoomConfig((prev) => produce(() => ({...prev, chatName: chatName})))
-  // },[])
+  console.log(messageList)
+  // const [comments, setComments] = useState(roomConfig?.comments);
+  // const [admin, setAdmin] = useState(roomConfig?.chatAdmin)
+
+  // console.log(roomConfig?.chatMessages);
+  // console.log(roomConfig?.chatAdmin);
+
+  useEffect(() => {
+    setMessageList(roomConfig?.chatMessages);
+  }, [chatName]);
 
   // hier wird die daten aus backend immer mit dazugehörigen room aktualisiert
   useEffect(() => {
-    socket.on("messages_groupRoom", (message,room) => {
+    socket.on("messages_groupRoom", (message, room) => {
       console.log(message);
       setMessageList((list) => [...list, message]);
-      setChatRooms(room)
-  
+      setChatRooms(room);
+      console.log("roomtest", room);
     });
   }, [socket]);
+
+  const storedData = JSON.parse(sessionStorage.getItem("Profile"));
+  console.log("Stored Data:", storedData?.defaultProfile?.chatMessages);
 
   const sendMessages = async () => {
     if (currentMessage.content !== "") {
       const message = sendMessage(currentMessage, (cb) => console.log(cb));
       console.log(message);
-      setCurrentMessage(message);
-
-      setMessageList((list) => [...list, message]);
       setCurrentMessage({
         ...defaultMessageObj,
         time: getTime(new Date()),
       });
+
+      setMessageList((list) => [...list, message]);
     }
   };
   console.log(messageList);
+  console.log(roomConfig?.chatMessages);
   return (
     <div
       className={`chat-window font-orbitron grid grid-cols-1 lg:grid-cols-2 w-screen h-screen sm:bg-cover sm:bg-center  bg-no-repeat lg:bg-contain lg:bg-right ${

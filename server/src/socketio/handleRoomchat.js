@@ -1,16 +1,18 @@
 import logger from "../helpers/middleware/logger.js";
-import { ChatRoomModel, MessageModel } from "../models/chat.model.js";
+import ChatRoomModel from "../models/chatRoom.model.js";
 import UserModel from "../models/user.model.js";
 
 export function handleRoomchat(socket, io, userId = null) {
+  let room;
   socket.on("groupRoom", async (data) => {
-    socket.join(data.groupRoom.chatName);
-    console.log("console.grouproom", data);
-    console.log(
-      `User with ID: ${
-        data.groupRoom.participants[data.groupRoom.participants?.length - 1]
-      } joined room: ${data.groupRoom?.chatName}`
-    );
+    socket.join(data.chatName);
+    room = data;
+    // console.log("console.grouproom", data);
+    // console.log(
+    //   `User with ID: ${
+    //     data.participants[data.participants?.length - 1]
+    //   } joined room: ${data?.chatName}`
+    // );
 
     // try {
       // const currentUser = await UserModel.findById(userId);
@@ -28,8 +30,8 @@ export function handleRoomchat(socket, io, userId = null) {
         
         socket.on("sendMessage", async (message, cb) => {
           cb(`${message} received`);
-          const newRoom = data.groupRoom.chatMessages.push(message);
-          console.log(message);
+           room.chatMessages.push(message);
+          console.log("newRoom",room)
           // try {
             // const newMessage = new MessageModel(message);
             
@@ -39,7 +41,7 @@ export function handleRoomchat(socket, io, userId = null) {
             // await newChatRoom.save();
             // await newMessage.save();
           // } catch (error) {logger.error("sendMessage error")}
-          socket.to(data.groupRoom.chatName).emit("messages_groupRoom", message,newRoom);
+          socket.to(data.chatName).emit("messages_groupRoom", message,room);
         
           // currentUser.chats[newChatRoom._id]
           // await currentUser.save()

@@ -19,7 +19,7 @@ router
   // .get("/socketUpdate", UserController.updateSocketid)
   // .get("/:username", UserController.findFriend)
 
-  .get("/:username", UserController.findOneUser)
+  // .get("/:username", UserController.findOneUser)
   .get("/search",UserController.searchForUser)
 
   // .delete("/deleteAllUsers", UserController.deleteAllUsers);

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const baseURL =
   process.env.NODE_ENV === "production"
@@ -18,4 +19,19 @@ const authApi = axios.create({
 //   return config;
 // });
 
+authApi.interceptors.response.use(
+  (response) => {
+    // Erfolgreiche Antwort verarbeiten
+    return response;
+  },
+  (error) => {
+    const navigate = useNavigate()
+    // Fehler verarbeiten
+    if (error.response && error.response.status === 500) {
+      // Hier weiterleiten, wenn der Status 500 ist
+      navigate("/"); // Stellen Sie sicher, dass "/home" Ihre richtige Home-Seite ist
+    }
+    return Promise.reject(error);
+  }
+);
 export default authApi;

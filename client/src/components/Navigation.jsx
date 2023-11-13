@@ -5,9 +5,6 @@ import { CloudMoon, Sun, User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import ReactSwitch from "react-switch";
 import { Button } from "@mui/material";
-
-import { logoutRequest } from "../context/api/auth";
-
 import FriendRequests from "../components/FriendRequests"
 import Search from "./Search";
 
@@ -23,8 +20,6 @@ export default function Navigation() {
     useProfileStore((state) => state.defaultProfile);
   const navigate = useNavigate();
   const { setLogout } = useProfileStore();
-
-  const clearCookie = logoutRequest();
 
   const UserNav = {
     friends: contacts,
@@ -80,7 +75,7 @@ export default function Navigation() {
       <Search/>
 
       <div className="flex items-center mx-2">
-        {isOnline && <div>{UserNav.friends}</div>}
+
         <img
           className="w-8 h-8 rounded-full ml-2 border border-cyan-400"
           src={UserNav.avatar}

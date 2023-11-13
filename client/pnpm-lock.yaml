@@ -35,6 +35,9 @@ dependencies:
   nanoid:
     specifier: ^5.0.2
     version: 5.0.2
+  ramda:
+    specifier: ^0.29.1
+    version: 0.29.1
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -63,8 +66,8 @@ dependencies:
     specifier: ^3.22.4
     version: 3.22.4
   zustand:
-    specifier: ^4.4.6
-    version: 4.4.6(@types/react@18.2.15)(immer@10.0.3)(react@18.2.0)
+    specifier: ^4.4.1
+    version: 4.4.1(@types/react@18.2.15)(immer@10.0.3)(react@18.2.0)
 
 devDependencies:
   '@types/react':
@@ -2623,6 +2626,10 @@ packages:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
     dev: true
 
+  /ramda@0.29.1:
+    resolution: {integrity: sha512-OfxIeWzd4xdUNxlWhgFazxsA/nl3mS4/jGZI5n00uWOoSSFRhC1b6gl6xvmzUamgmqELraWp0J/qqVlXYPDPyA==}
+    dev: false
+
   /react-dom@18.2.0(react@18.2.0):
     resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
     peerDependencies:
@@ -3263,8 +3270,8 @@ packages:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
 
-  /zustand@4.4.6(@types/react@18.2.15)(immer@10.0.3)(react@18.2.0):
-    resolution: {integrity: sha512-Rb16eW55gqL4W2XZpJh0fnrATxYEG3Apl2gfHTyDSE965x/zxslTikpNch0JgNjJA9zK6gEFW8Fl6d1rTZaqgg==}
+  /zustand@4.4.1(@types/react@18.2.15)(immer@10.0.3)(react@18.2.0):
+    resolution: {integrity: sha512-QCPfstAS4EBiTQzlaGP1gmorkh/UL1Leaj2tdj+zZCZ/9bm0WS7sI2wnfD5lpOszFqWJ1DcPnGoY8RDL61uokw==}
     engines: {node: '>=12.7.0'}
     peerDependencies:
       '@types/react': '>=16.8'

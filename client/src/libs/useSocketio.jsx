@@ -6,7 +6,7 @@ const useSocketIo = (
   namespace = "",
   socketConfig = {
     withCredentials: true, // cookie
-    
+
     // reconnection: true, // erlaubt erneute verbindung
     // reconnectionAttempts: 3, // max. verbindungsversuch
     // query: {
@@ -50,40 +50,42 @@ const useSocketIo = (
   }, []);
 
   const createRoom = (
-    { attachMessages, attachParticipants, attachComments },
+    { attachMessages, attachParticipants, attachComments,type },
+     // single or group  String
     roomName = ""
   ) =>
     //roomObject = { chatMessages: [], participants: [], comments: [] }
     {
-      console.log([socket, roomName, userId].map(value => Boolean(value)))
+      console.log([socket, roomName, userId].map((value) => Boolean(value)));
       let roomData;
-      if (socket && roomName && userId) {
+      if (socket && type === "group" && userId) {
         roomData = {
+          type,
+          chatName: roomName,
           chatMessages: [...attachMessages],
           participants: [...attachParticipants],
           comments: [...attachComments],
-          chatName: roomName,
-          groupchat: true,
           chatAdmin: userId,
         };
 
-        socket.emit("groupRoom", { groupRoom: roomData });
-        return { groupRoom: roomData };
+        socket.emit("groupRoom", roomData);
+        return roomData;
       }
 
-      if (socket && !roomName && !groupchat) {
+      if (socket && type === "single" && userId) {
         roomData = {
+          type,
+          chatName: roomName,
           chatMessages: [...attachMessages],
           participants: [userId, ...attachParticipants], // hier sollen nur 2 users sein
           comments: [...attachComments],
         };
-        socket.emit("singleRoom", { singleRoom: roomData });
-        return { singleRoom: roomData };
-      }
-        
-        console.log(roomData, "useSocketio >createRoom >> something is wrong");
+        socket.emit("singleRoom", roomData);
         return roomData;
-      
+      }
+
+      console.log(roomData, "useSocketio >createRoom >> something is wrong");
+      return roomData;
     };
 
   const sendMessage = (
@@ -122,3 +124,19 @@ const useSocketIo = (
 };
 
 export default useSocketIo;
+
+// {
+//   type: 'single',
+//   chatName: 'SingleRoomName',
+//   chatMessages: [{ content: 'Guten Nachmittag!', likes: 5, emojis: [] }],
+//   participants: ['Yan', 'Zoe'],
+//   comments: [{ content: 'sample coments', likes: 5, emojis: [] }],
+// },
+// {
+//   type: 'group',
+//   chatName: 'Room_League',
+//   chatAdmin: 'Zoe',
+//   chatMessages: [{ content: "Welcome to Zoe's Room", likes: 5, emojis: [] }],
+//   participants: ['userid', 'user2', 'user3'],
+//   comments: [{ content: 'sample coments', likes: 5, emojis: [] }],
+// },

@@ -1,49 +1,55 @@
-import { createContext, useContext } from "react"
+import { createContext, useContext } from "react";
+
 import { useProfileStore } from "./dataStore.jsx";
 import useSocketIo from "../../libs/useSocketio.jsx";
 import { useState } from "react";
 
+const SocketTheme = createContext(null);
 
-
-const SocketTheme = createContext(null)
-
-export function useSocketProvider(){
-  return useContext(SocketTheme)
+export function useSocketProvider() {
+  return useContext(SocketTheme);
 }
 
+export default function SocketProvider({ children }) {
+  // benutze useSocketIo in libs ordner
+  const { isOnline, userId, role, username, email } = useProfileStore(
+    (state) => state.defaultProfile
+  );
+  console.log(userId);
 
-export default function SocketProvider({children}) {
-    // benutze useSocketIo in libs ordner
-    
-    const { isOnline, userId, role, username, email } = useProfileStore(
-      (state) => state.defaultProfile
-    );
-    const [roomConfig, setRoomConfig] = useState({});
+  
 
-    console.log(userId)
-    const [roomConfig, setRoomConfig] = useState({});
-
-
-    const { socket, sendMessage, createRoom } = useSocketIo(username);
+  const { socket, sendMessage, createRoom } = useSocketIo(username);
 
   return (
-    
-    <SocketTheme.Provider value={{socket, sendMessage, createRoom, roomConfig, setRoomConfig}}>
-        {children}
+    <SocketTheme.Provider
+      value={{
+        socket,
+        sendMessage,
+        createRoom,
+      }}
+    >
+      {children}
     </SocketTheme.Provider>
-  )
+  );
 }
 
-
 // daten vorstellungen
-// const groupChatData = {
-//   chatName: "",
-//   isGroupChat: false,
-//   chatMessages: [messageData,...], // Jedes mal wenn einen nachricht gesendet wird, wird einen chatMessages erstellt, und messagData wird reingepushed. paricipants sind required. Die anderen Optionenen sind für raumerstellungen wichtig ansonstens sind alle optional.
-//   participants: [userId1, userId2], // Teilnehmer des Gruppenchats (bei 3 oder mehr leute admin required)
-//   chatAdmin: userid,
-// };
-
+// {
+//   type: 'single',
+//   chatName: 'SingleRoomName',
+//   chatMessages: [{ content: 'Guten Nachmittag!', likes: 5, emojis: [] }],
+//   participants: ['Yan', 'Zoe'],
+//   comments: [{ content: 'sample coments', likes: 5, emojis: [] }],
+// },
+// {
+//   type: 'group',
+//   chatName: 'Room_League',
+//   chatAdmin: 'Zoe',
+//   chatMessages: [{ content: "Welcome to Zoe's Room", likes: 5, emojis: [] }],
+//   participants: ['userid', 'user2', 'user3'],
+//   comments: [{ content: 'sample coments', likes: 5, emojis: [] }],
+// },
 
 // messageData kann bei allen stelle angehängt werden also auch als attachdocument
 // const messageData = {

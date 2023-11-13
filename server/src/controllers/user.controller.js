@@ -107,7 +107,7 @@ export const getProfile = async (req, res, next) => {
     const userId = decoded?.UserInfo.id;
     // console.log("userid", userId);
     const user = await UserService.dbFindOneUserById(userId, next);
-    if (!user) return res.status(400).next("User not found");
+    if (!user) return next("User not found");
     res.status(200).json(user);
   } catch (error) {
     logger.error("getProfile fehler", error);
@@ -298,7 +298,7 @@ export const deleteAccount = async (req, res, next) => {
 export const searchForUser = async (req,res) => {
   const { query } = req.query;
   try {
-    const users = await User.find({
+    const users = await UserModel.find({
       $or: [
         { username: { $regex: query, $options: 'i' } },
         { email: { $regex: query, $options: 'i' } },

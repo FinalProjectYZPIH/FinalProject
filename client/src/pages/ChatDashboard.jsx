@@ -1,4 +1,4 @@
-import { useProfileStore, useRooms } from "../context/data/dataStore";
+import { useProfileStore } from "../context/data/dataStore";
 import { profileRequest } from "../context/api/auth";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -17,40 +17,47 @@ import { Inputs } from "../components/ui/Inputs";
 
 import FriendRequests from "../components/FriendRequests";
 
-
-
-
-
 export default function ChatDashboard() {
+  
+
+
+
+
+
+
+
   //globaldata
   const {
     defaultProfile,
-    setLogout,
-    setProfile,
     resetProfile,
+    setProfile,
     setChatRooms,
-    chatRooms,
+    setLogout,
   } = useProfileStore();
 
-
-  const { isOnline, userId, role, username, email, userIdDB } = useProfileStore(
+  const { isOnline, userId, role, username, email, userIdDB, chatRooms } = useProfileStore(
     (state) => state.defaultProfile
   );
-
-  // const { setRooms } = useRooms();
-
-  //api
-
-  let { roomName } = useParams();
-
-
-  const navigate = useNavigate();
-  const { data: userData, isSuccess, isError} = profileRequest("Yan");
+  console.log(userId, role, username, email, userIdDB);
   // console.log(userData.data);
 
+  //socket
+  const { socket, sendMessage, createRoom } =
+    useSocketProvider();
+
+  // local data
+  const [roomname, setRoomName] = useState("");
+  const [showChat, setShowChat] = useState(false);
+  // const [roomConfig, setRoomConfig] = useState({});
+
+  //api
+  
+  const navigate = useNavigate();
+  const { data: userData, isSuccess, isError } = profileRequest("Yan");
+  
   if (isSuccess) {
     setProfile({
-      userIdDB: userData?.data?._id,
+      userIdDB : userData?.data?._id,
       userId: userData?.data?.userId,
       role: userData?.data?.role,
       username: userData?.data?.username,
@@ -70,14 +77,6 @@ export default function ChatDashboard() {
   }
   console.log(userIdDB,userId, role, username, email);
 
-  //socket
-  const { socket, sendMessage, createRoom, roomConfig, setRoomConfig } =
-    useSocketProvider();
-
-  // local data
-  const [roomname, setRoomName] = useState("");
-  const [showChat, setShowChat] = useState(false);
-
 
   //events
   const joinRoom = () => {
@@ -86,30 +85,28 @@ export default function ChatDashboard() {
       const roomData = createRoom(
         {
           attachMessages: [
-            {
-              sender: username,
-              content: `welcome to ${roomname} Room`,
-              likes: 0,
-              emojis: [],
-              images: [],
-              voices: [],
-              videos: [],
-            },
+            // {
+            //   sender: username,
+            //   content: `welcome to ${roomname} Room`,
+            //   likes: 0,
+            //   emojis: [],
+            //   images: [],
+            //   voices: [],
+            //   videos: [],
+            // },
           ],
           attachParticipants: [
             "6549298316dca878ff3e508d",
             "654929ca16dca878ff3e509c",
           ], //zoe pawel
           attachComments: [{ like: 1 }],
-          groupchat: true,
+          type :"group",
         },
         roomname
       );
-      // roomName = roomname;
       console.log("createRoom>>", roomData);
-      setRoomConfig(roomData);
+      // setRoomConfig(roomData);
       setChatRooms(roomData);
-      // socket.emit("join_room", room);
       setShowChat(true);
       // navigate(`/chat/${roomName}`);
     }

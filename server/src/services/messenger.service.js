@@ -3,7 +3,7 @@ import { verifyJwt } from "../helpers/utils/jwt.utils.js";
 
 //models
 import MessageModel from "../models/messages.model.js";
-import ChatModel from "../models/chat.model.js"
+import ChatRoomModel from "../models/chatRoom.model.js"
 import ImageModel from "../models/image.model.js";
 
 //services
@@ -33,7 +33,7 @@ export async function createChat(res, userId, messageObj, [...participantsId] = 
     // suche bestehender user aus datenbank 
     const foundUser = await Userservice.dbFindOneUserById(res, userId)
     //erstelle erst einen chatmodel
-    const newChat = await ChatModel.create({
+    const newChat = await {ChatRoomModel}.create({
         chatbox: messageObj,
         participants: [userId, messageObj?.sender, ...participantsId]
     })
