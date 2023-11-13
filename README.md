@@ -43,7 +43,7 @@ COMET relies on several key technologies and architectural concepts to provide a
 |:------------                                                       |:------------                                                                               |
 | Vite: The build tool and development server for the frontend.      | Express: A popular web framework for Node.js, used for creating APIs.                      |
 | React: The primary framework for the user interface.               | Node.js: JavaScript runtime environment.                                                   |
-| Socket.io: A library for real-time communication over WebSockets.  | socket.io: A library for real-time communication over WebSockets.                          |
+| Socket.io: A library for real-time communication over WebSockets.  | Socket.io: A library for real-time communication over WebSockets.                          |
 | Axios: HTTP client for server communication.                       | MongoDB:  A scalable, document-oriented NoSQL database used for storing and managing data. |
 | Tailwind CSS: Utility-first CSS framework.                         | Authentication middleware for Node.js.                                                     |
 

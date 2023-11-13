@@ -10,6 +10,7 @@ import { useDarkLightMode } from "../context/data/dataStore.jsx";
 import { Inputs } from "./ui/Inputs";
 import ScrollToBottom from "react-scroll-to-bottom";
 import { Button } from "./ui/Buttons";
+import Navigation from "./Navigation.jsx";
 
 // {
 //   type: 'single',
@@ -114,10 +115,11 @@ function GroupChat() {
   console.log(roomConfig?.chatMessages);
   return (
     <div
-      className={`chat-window font-orbitron grid grid-cols-1 lg:grid-cols-2 w-screen h-screen sm:bg-cover sm:bg-center  bg-no-repeat lg:bg-contain lg:bg-right ${
-        lightMode ? "dark" : "light"
+      className={`chat-window font-orbitron grid grid-cols-1 w-screen h-screen sm:bg-cover mt-2 sm:bg-center  bg-no-repeat lg:bg-contain lg:bg-right ${
+        lightMode ? "dark bg-none" : "light bg-none"
       }`}
     >
+      {/* <Navigation /> */}
       <div className="chat-header border border-cyan-400 rounded-lg p-5 m-5 h-3/4 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-25">
         <p>Live Chat</p>
         <div className="chat-body flex flex-col border border-cyan-800 h-[500px] rounded-lg py-5 px-2">

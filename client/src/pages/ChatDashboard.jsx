@@ -2,7 +2,6 @@ import { useProfileStore } from "../context/data/dataStore";
 import { profileRequest } from "../context/api/auth";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import toast from "react-hot-toast";
 import GroupChat from "../components/GroupChat";
 import ChatSidebar from "../components/ChatSidebar";
@@ -10,12 +9,13 @@ import { useParams } from "react-router-dom";
 // import DisplayBoard from "../components/DisplayBoard";
 import { useSocketProvider } from "../context/data/SocketProvider";
 import { Outlet } from "react-router-dom";
-
-import { Button } from "../components/ui/Buttons";
-import { useDarkLightMode } from "../context/data/dataStore";
-import { Inputs } from "../components/ui/Inputs";
-
 import FriendRequests from "../components/FriendRequests";
+
+import { useDarkLightMode } from "../context/data/dataStore.jsx";
+import { Inputs } from "../components/ui/Inputs.jsx";
+import { Button } from "../components/ui/Buttons.jsx";
+import Navigation from "../components/Navigation.jsx";
+
 
 export default function ChatDashboard() {
   
@@ -58,17 +58,13 @@ export default function ChatDashboard() {
       avatar: "avatar",
     });
   }
-  if (isError) {
 
-    setLogout();
-    window.location.reload();
-
-    if (isOnline === false) {
-      navigate("/login");
-      setLogout() && toast.success("You are logged out");
-    }
+  if (isOnline === false) {
+    navigate("/", { replace: true });
+    toast.error("You are offline");
   }
-  console.log(userIdDB,userId, role, username, email);
+
+  console.log(userId, role, username, email);
 
 
   //events
@@ -105,15 +101,15 @@ export default function ChatDashboard() {
     }
   };
 
-
   const { lightMode, setDarkMode } = useDarkLightMode();
 
   return (
     <div
-      className={`font-orbitron grid grid-cols-1 lg:grid-cols-2 w-screen h-screen sm:bg-cover sm:bg-center  bg-no-repeat lg:bg-contain lg:bg-right ${
+      className={`font-orbitron grid grid-cols-1 lg:grid-cols-2 w-screen h-screen sm:bg-cover sm:bg-center mt-2 bg-no-repeat lg:bg-contain lg:bg-right ${
         lightMode ? "dark" : "light"
       }`}
     >
+      <Navigation />
       {/* <ChatSidebar /> */}
       {/* <DisplayBoard /> */}
       {!showChat ? ( //hier soll für 2. sidebar gedacht sein. wenn der user in navbar klickt, es soll dann angezeigt werden.
@@ -136,7 +132,6 @@ export default function ChatDashboard() {
       ) : (
         navigate(`/chat/${roomname}`)
         // <GroupChat />
-
       )}
 
 
