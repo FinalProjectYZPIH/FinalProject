@@ -80,6 +80,9 @@ export default function Navigation() {
         </div>
       </div>
       <div className="flex items-center mx-2">
+
+
+
         <img
           className="w-8 h-8 rounded-full ml-2 border border-cyan-400"
           src={UserNav.avatar}
