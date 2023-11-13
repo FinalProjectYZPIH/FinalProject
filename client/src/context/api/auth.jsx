@@ -2,7 +2,7 @@ import axios from "../../libs/axiosProtected";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useProfileStore } from "../data/dataStore";
-import { redirect } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 
 // const queryClient = useQueryClient();
 
@@ -11,6 +11,7 @@ import { redirect } from "react-router-dom";
 // })
 
 export function registerRequest() {
+  const navigate = useNavigate();
   // const registerHandler = await axios.post("/api/auth/createUser", { alternative eingabe
   //   firstname,
   //   lastname,
@@ -22,15 +23,18 @@ export function registerRequest() {
   //   passwordConfirmation,
   // });
   const registerMutation = useMutation({
-    mutationFn: async (loginData) => await axios.post("/api/auth/", loginData),
+    mutationFn: async (loginData) => {
+      return await axios.post("/api/user/createUser", loginData);
+    },
     onSuccess: () => {
-      toast.success("Erfolgreich... Failed!");
-    }, // hier kann man success error und finally fälle einstellen
-    onError: () => {},
-    onSettled: () => {
-      toast.success("Erfolgreich... Failed!");
+      navigate("/login", { replace: true });
+      toast.success("Erfolgreich Registriert!");
+    },
+    onError: (error) => {
+      toast.error("Fehler bei der Anmeldung:", error);
     },
   });
+
   return registerMutation;
 }
 
