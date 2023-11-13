@@ -11,11 +11,17 @@ router
   .post("/createUser", UserController.createUser)
   .use(verifyMember)
   .get("/getProfile", UserController.getProfile)
-  .patch("/updateUserById", UserController.updateUserById)
+  .patch("/updateUserpassword", UserController.updateUserpasswordById)
   .delete("/deleteAccount", UserController.deleteAccount)
   .get("/", UserController.findAllUsers)
+
+  // .get("/addFriend", UserController.addFriend)
+  // .get("/socketUpdate", UserController.updateSocketid)
+  // .get("/:username", UserController.findFriend)
+
   .get("/:username", UserController.findOneUser)
   .get("/search",UserController.searchForUser)
+
   // .delete("/deleteAllUsers", UserController.deleteAllUsers);
 
 export default router;

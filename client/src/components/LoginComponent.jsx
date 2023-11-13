@@ -32,7 +32,6 @@ export const LoginComponent = () => {
     //falls erfolgreich eingeloggt ist,  dann setze globale isOnline auf true, erstelle neue profilerequest  und ändere die userdaten
     setLogin();
     navigate("/chat", { replace: true });
-
   }
 
   const { lightMode, setDarkMode } = useDarkLightMode();
@@ -50,7 +49,7 @@ export const LoginComponent = () => {
   };
 
   const google = () => {
-    window.open("http://localhost:3000/auth/google", "_self");
+    window.open("http://localhost:3000/auth/google", "_blank");
 
   };
   const facebook = () => {

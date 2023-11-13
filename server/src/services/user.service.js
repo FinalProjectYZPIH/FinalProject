@@ -96,7 +96,7 @@ export const dbFindUserByUsername = async ( value, next, populateKey = "") => {
   }
 };
 
-export const dbUpdateUser = async (req, res, userIDParams, next) => {
+export const dbUpdateUserPassword = async (req, res, userIDParams, next) => {
   try {
     const { username, oldPassword, newPassword } = req.body;
 
@@ -133,3 +133,45 @@ export const dbUpdateUser = async (req, res, userIDParams, next) => {
     next(error)
   }
 };
+
+
+export const findUserAndaddFriends = async (userId, userInfo) => { // userInfo >> userId, username und isOnline 
+  try {
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      return null;
+    }
+
+    // Füge den Freund zur Liste der Freunde des Benutzers hinzu
+    user.contacts.push(userInfo);
+
+    const updatedUser = await user.save();
+
+    return updatedUser.friends;
+  } catch (error) {
+    logger.error("Error in findUserAndaddFriends:", error);
+    return null;
+  }
+}
+
+export const updateUserSocket = async (userId, socketid) => {
+  try {
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      return null;
+    }
+
+    // Füge den Freund zur Liste der Freunde des Benutzers hinzu
+    user.userId = socketid
+
+    const updatedUser = await user.save();
+
+    return updatedUser.userId;
+  } catch (error) {
+    logger.error("Error in updateUserSocket:", error);
+    return null;
+  }
+
+}

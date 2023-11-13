@@ -5,8 +5,12 @@ import { CloudMoon, Sun, User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import ReactSwitch from "react-switch";
 import { Button } from "@mui/material";
+
+import { logoutRequest } from "../context/api/auth";
+
 import FriendRequests from "../components/FriendRequests"
 import Search from "./Search";
+
 
 // Beipiel
 export default function Navigation() {
@@ -15,10 +19,13 @@ export default function Navigation() {
   const {userIdDB} = useProfileStore(state => state.defaultProfile)
 
   const { lightMode, setDarkMode } = useDarkLightMode();
-  const { isOnline, contacts, notifications, avatar, settings, chatRooms } =
+  const { isOnline, notifications, avatar, settings, chatRooms, contacts } =
     useProfileStore((state) => state.defaultProfile);
   const navigate = useNavigate();
   const { setLogout } = useProfileStore();
+
+  const clearCookie = logoutRequest();
+
   const UserNav = {
     friends: contacts,
     notifications: notifications,
@@ -69,7 +76,9 @@ export default function Navigation() {
           <button onClick={handleLogout}>Logout</button>
         </div>
       </div>
+
       <Search/>
+
       <div className="flex items-center mx-2">
         {isOnline && <div>{UserNav.friends}</div>}
         <img
@@ -78,11 +87,13 @@ export default function Navigation() {
           alt="Profile"
         />
       </div>
+
       <button onClick={()=>{setFriendsRequestsList(!friendsRequestsList)}}>
          Req
       </button>
       {friendsRequestsList === true &&
         <FriendRequests userId = {userIdDB} />}
+
 
       <ReactSwitch
         onChange={setDarkMode}

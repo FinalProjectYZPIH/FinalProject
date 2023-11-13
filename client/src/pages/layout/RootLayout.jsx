@@ -9,10 +9,13 @@ export default function RootLayout() {
   console.log(isOnline);
 
   return (
-    <div>
+    <div className="flex justify-evenly mt-6">
       <ProtectionProvider isAllowed={isOnline}>
         <ChatSidebar />
         <Outlet />
+
+        <ContactSidebar />
+
       </ProtectionProvider>
     </div>
   );

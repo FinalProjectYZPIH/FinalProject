@@ -3,7 +3,7 @@ import { devtools, persist, createJSONStorage } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { shallow } from "zustand/shallow";
 import { ThemeColors } from "./data";
-import {produce } from "immer"
+import { produce } from "immer";
 
 const themeLength = ThemeColors.length;
 
@@ -51,40 +51,134 @@ export const useDarkLightMode = create(
   )
 );
 
+
+
 export const useProfileStore = create(
   persist(
-    immer( produce((set, get) => ({
-      defaultProfile: {
-        userIdDB:null,
-        userId: null,
-        role: null,
-        isOnline: true,
-        username: null,
-        email: null,
-        avatar: null,
-        notifications: 0, //[chatroom].reduce((startvalue,f) => startvalue + f.length   ,0)
-        contacts: [
-          "userids",
-          //friends
-        ],
-        chatRooms: [
+    immer(
+      produce((set, get) => ({
+        defaultProfile: {
+          userId: null,
+          role: null,
+          isOnline: false,
+          username: null,
+          email: null,
+          avatar: null,
+          notifications: 0, //[chatroom].reduce((startvalue,f) => startvalue + f.length   ,0)
+          contacts: [
+            // {socketId, username, Online},
+            {
+              socketId: "add",
+              username: "Yan",
+              Online: true,
+              avatar:
+                "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+              notifications: 0,
+            },
+            {
+              socketId: "add",
+              username: "Pawel",
+              Online: false,
+              avatar: "",
+              notifications: 0,
+            },
 
             {
-            singleroom: {
-              chatMessages: [{ content: "sample chatmessage", likes: 5, emojis: [] }],
-              participants: ["userid", "user2"],
-              comments: [{ content: "sample coments", likes: 5, emojis: [] }],
+              socketId: "add",
+              username: "Imad",
+              Online: true,
+              avatar: "",
+              notifications: 0,
             },
-          },
             {
-            grouproom: {
-              chatName: "Sample Grouproom",
-              groupchat: true,
-              chatAdmin: "TestAdmin",
-              chatMessages: [{ content: "sample chatmessage", likes: 5, emojis: [] }],
-              participants: ["userid", "user2", "user3"],
-              comments: [{ content: "sample coments", likes: 5, emojis: [] }],
+              socketId: "add",
+              username: "Zoe",
+              Online: true,
+              avatar: "",
+              notifications: 0,
             },
+            {
+              socketId: "add",
+              username: "Berat",
+              Online: true,
+              avatar: "",
+              notifications: 0,
+            },
+            {
+              socketId: "add",
+              username: "Quan",
+              Online: false,
+              avatar: "",
+              notifications: 0,
+            },
+
+            //friends
+          ],
+          chatRooms: [
+            //   {            // {
+            //   grouproom: {
+            //     chatName: "SchoolUniverse",
+            //     groupchat: true,
+            //     chatAdmin: "Pawel",
+            //     chatMessages: [
+            //       { content: "Welcome to Pawels'Room", likes: 5, emojis: [] },
+            //     ],
+            //     participants: ["userid", "user2", "user3"],
+            //     comments: [{ content: "sample coments", likes: 5, emojis: [] }],
+            //   },
+            // },
+            // {
+            //   grouproom: {
+            //     chatName: "SilentHIll",
+            //     groupchat: true,
+            //     chatAdmin: "Imad",
+            //     chatMessages: [
+            //       { content: "Welcome to Imads'Room", likes: 5, emojis: [] },
+            //     ],
+            //     participants: ["userid", "user2", "user3"],
+            //     comments: [{ content: "sample coments", likes: 5, emojis: [] }],
+            //   },
+            // },
+          ],
+          settings: {},
+        },
+        setLogin: () =>
+          set((state) => {
+            state.defaultProfile.isOnline = true;
+          }),
+        setLogout: () =>
+          set((state) => {
+            state.defaultProfile.isOnline = false;
+            window.location.reload();
+          }),
+        setProfile: ({ userId, role, username, email, avatar = "" }) =>
+          set((state) => {
+            state.defaultProfile.userId = userId;
+            state.defaultProfile.role = role;
+            state.defaultProfile.username = username;
+            state.defaultProfile.email = email;
+            state.defaultProfile.avatar = avatar;
+          }),
+        resetProfile: () =>
+          set((state) => {
+            state.defaultProfile.userId = null;
+            state.defaultProfile.role = null;
+            state.defaultProfile.username = null;
+            state.defaultProfile.email = null;
+            state.defaultProfile.avatar = null;
+            // state.defaultProfile.contacts = [];
+            // friends
+            // (state.defaultProfile.notifications = 0), //[chatroom].reduce((startvalue,f) => startvalue + f.length   ,0)
+            // (state.defaultProfile.chatRooms = null),
+            // //[chatroom,...].filter(a => a[0] === friendsUserid)
+            // (state.defaultProfile.settings = null);
+          }),
+
+        setChatRooms: (newChatRooms) =>
+//           set((state) => {
+//             const roomIndex = state.defaultProfile.chatRooms.findIndex(
+//               (roomObj) =>{
+
           }
 
 
@@ -128,31 +222,61 @@ export const useProfileStore = create(
           // (state.defaultProfile.settings = null);
         }),
 
-      setChatRoom: ({ chatRooms }) =>
-        set((state) => {
-          state.defaultProfile.chatRooms = [...chatRooms];
-        }),
-      setContacts: ({ contacts }) =>
-        set((state) => {
-          state.defaultProfile.contacts = [...contacts];
-        }),
-      setConfigs: ({ configs }) =>
-        set((state) => {
-          state.defaultProfile.configs = [...configs];
-        }),
-      plusNotifications: () =>
-        set((state) => {
-          state.defaultProfile.notifications++;
-        }),
-      minusNotifications: () =>
-        set((state) => {
-          state.defaultProfile.notifications--;
-        }),
-    }))),
+
+//                 roomObj.groupRoom.roomName === newChatRooms.groupRoom.roomName
+//                 console.log(roomObj.groupRoom.roomName)
+//                 console.log(newChatRooms.groupRoom.roomName)
+//               }
+//             );
+// console.log(roomIndex)
+//             if (roomIndex === -1) {
+//               // Wenn der Raum nicht gefunden wurde, hinzufügen
+//                state.defaultProfile.chatRooms.push(newChatRooms);
+//             } else if(roomIndex === 0 || roomIndex> 0) {
+//               // Wenn der Raum gefunden wurde, ersetzen
+//                (state.defaultProfile.chatRooms[roomIndex] =
+//                 newChatRooms);
+//             }
+            set((state) => {
+              // if(newChatRooms.groupRoom.roomName === state.defaultProfile.chatRooms.groupRoom.chatName)
+              state.defaultProfile.chatRooms.push(newChatRooms);
+          }),
+        setContacts: (contacts) =>
+          set((state) => {
+            state.defaultProfile.contacts.push(contacts);
+          }),
+        setConfigs: ({ configs }) =>
+          set((state) => {
+            state.defaultProfile.configs = [...configs];
+          }),
+        plusNotifications: () =>
+          set((state) => {
+            state.defaultProfile.notifications++;
+          }),
+        minusNotifications: () =>
+          set((state) => {
+            state.defaultProfile.notifications--;
+          }),
+      }))
+    ),
     {
       name: "Profile",
-      onRehydrateStorage:(state) => immer(() => state),
 
+      onRehydrateStorage: (state) => immer(() => state),
+      // {
+      //   console.log("hydration starts");
+      //   const storedData = JSON.parse(sessionStorage.getItem("Profile"));
+      //   // optional
+      //   if (storedData && typeof storedData === "object") {
+      //     // return deepRead(defaultProfile);
+
+
+      //     console.log("hydration finished");
+      //     return immer(() => state);
+      //   } else {
+      //     console.log("No valid data found in sessionStorage");
+      //   }
+      // },
       storage: createJSONStorage(() => sessionStorage),
     }
   )

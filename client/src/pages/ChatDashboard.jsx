@@ -1,7 +1,8 @@
-import { useProfileStore } from "../context/data/dataStore";
+import { useProfileStore, useRooms } from "../context/data/dataStore";
 import { profileRequest } from "../context/api/auth";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import toast from "react-hot-toast";
 import GroupChat from "../components/GroupChat";
 import ChatSidebar from "../components/ChatSidebar";
@@ -9,20 +10,39 @@ import { useParams } from "react-router-dom";
 // import DisplayBoard from "../components/DisplayBoard";
 import { useSocketProvider } from "../context/data/SocketProvider";
 import { Outlet } from "react-router-dom";
+
+import { Button } from "../components/ui/Buttons";
 import { useDarkLightMode } from "../context/data/dataStore";
 import { Inputs } from "../components/ui/Inputs";
-import { Button } from "../components/ui/Buttons";
+
 import FriendRequests from "../components/FriendRequests";
 
 
+
+
+
 export default function ChatDashboard() {
-  const { defaultProfile, setLogout,resetProfile,setProfile } = useProfileStore();
+  //globaldata
+  const {
+    defaultProfile,
+    setLogout,
+    setProfile,
+    resetProfile,
+    setChatRooms,
+    chatRooms,
+  } = useProfileStore();
+
 
   const { isOnline, userId, role, username, email, userIdDB } = useProfileStore(
     (state) => state.defaultProfile
   );
+
+  // const { setRooms } = useRooms();
+
   //api
+
   let { roomName } = useParams();
+
 
   const navigate = useNavigate();
   const { data: userData, isSuccess, isError} = profileRequest("Yan");
@@ -39,6 +59,10 @@ export default function ChatDashboard() {
     });
   }
   if (isError) {
+
+    setLogout();
+    window.location.reload();
+
     if (isOnline === false) {
       navigate("/login");
       setLogout() && toast.success("You are logged out");
@@ -72,64 +96,59 @@ export default function ChatDashboard() {
               videos: [],
             },
           ],
-          attachParticipants: ["user1", "user2"],
+          attachParticipants: [
+            "6549298316dca878ff3e508d",
+            "654929ca16dca878ff3e509c",
+          ], //zoe pawel
           attachComments: [{ like: 1 }],
           groupchat: true,
         },
         roomname
       );
       // roomName = roomname;
-      console.log(roomData);
+      console.log("createRoom>>", roomData);
       setRoomConfig(roomData);
+      setChatRooms(roomData);
       // socket.emit("join_room", room);
       setShowChat(true);
       // navigate(`/chat/${roomName}`);
     }
   };
 
+
   const { lightMode, setDarkMode } = useDarkLightMode();
 
   return (
-    <div className="App">
-      {!showChat ? (
-        <div className="joinChatContainer">
-          <div className="flex items-center flex-col ">
-            <div className="w-1/2 h-1/2 bg-slate-200 flex justify-center ">
-              Anzeigebildschirm
+    <div
+      className={`font-orbitron grid grid-cols-1 lg:grid-cols-2 w-screen h-screen sm:bg-cover sm:bg-center  bg-no-repeat lg:bg-contain lg:bg-right ${
+        lightMode ? "dark" : "light"
+      }`}
+    >
+      {/* <ChatSidebar /> */}
+      {/* <DisplayBoard /> */}
+      {!showChat ? ( //hier soll für 2. sidebar gedacht sein. wenn der user in navbar klickt, es soll dann angezeigt werden.
+        <div className=" flex flex-col justify-evenly items-center">
+          <div className="h-3/5 w-96 px-5 flex justify-evenly flex-col items-center border border-slate-400 rounded-md shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-25">
+            <h3 className="text-4xl">Create or Join a Existing ChatRoom</h3>
+            <Inputs
+              className="border border-1"
+              type="text"
+              ph="Create or join a Room"
+              onChangeFn={(event) => {
+                setRoomName(event.target.value);
+              }}
+            />
+            <div className="w-full">
+              <Button onClick={joinRoom}>Join a Room</Button>
             </div>
-
-            {isOnline && isSuccess ? (
-              <div>{`${userData.data.username}`}</div>
-            ) : (
-              "failed to fetching userdata"
-            )}
-
           </div>
-          <h3>Join A Chat</h3>
-          <input
-            type="text"
-            placeholder="John..."
-            onChange={(event) => {
-              setUsername(event.target.value);
-            }}
-          />
-          <input
-            type="text"
-            placeholder="Room ID..."
-            onChange={(event) => {
-              setRoom(event.target.value);
-            }}
-          />
-          <button onClick={joinRoom}>Join A Room</button>
         </div>
       ) : (
-        <>
-          <Chat socket={socket} username={username} room={room} />
-          <button className="border border-1 p-1" onClick={handleLogout}>
-            logout
-          </button>
-        </>
+        navigate(`/chat/${roomname}`)
+        // <GroupChat />
+
       )}
+
 
       {/* <button onClick={()=>{setFriendsRequestsList(!friendsRequestsList)}}>
         Friends Requests
@@ -137,6 +156,7 @@ export default function ChatDashboard() {
 
       {friendsRequestsList === true &&
         <FriendRequests userId = {userData.data._id} />} */}
+
 
     </div>
   );

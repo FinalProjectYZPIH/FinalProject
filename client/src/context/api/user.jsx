@@ -15,7 +15,7 @@ export function findAllUserRequest(...key) {
 
 }
 
-export function updateUserRequest() {
+export function updateUserpassword() {
   // {  logoinData schema
   //   username,
   //   oldPassword,
@@ -23,7 +23,7 @@ export function updateUserRequest() {
   //   newPasswordConfirmation,
   // }
   const updateMutation = useMutation({
-    mutationFn: async (loginData) =>await axios.patch("/api/user/updateUserById", loginData),
+    mutationFn: async (loginData) =>await axios.patch("/api/user/updateUserpassword", loginData),
     onSuccess: () => {}, // hier kann man success error und finally fälle einstellen
     onError: () => {},
     onSettled: () => {
