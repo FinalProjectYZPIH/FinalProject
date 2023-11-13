@@ -7,7 +7,7 @@ import z from "zod";
 export const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 export const passwordRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d){8,}$/;
-const birthdayRegex = /^\d{2}-\d{2}-\d{4}$/;
+const birthdayRegex = /^\d{4}.\d{2}.\d{2}$/;
 //ZodValidierung
 
 export const registerFormSchema = z
@@ -34,7 +34,7 @@ export const registerFormSchema = z
       }),
     birthday: z
       .string({ message: "Datetime Nur String erlaubt" })
-      .regex(birthdayRegex, { message: "TT-MM-JJJJ dateformat" }), // genaue Info >>https://zod.dev/?id=basic-usage  datetime Key eingeben
+      .regex(birthdayRegex, { message: "TT.MM.JJJJ dateformat" }), // genaue Info >>https://zod.dev/?id=basic-usage  datetime Key eingeben
     email: z
       .string({ message: "Email Nur String erlaubt" })
       .trim()

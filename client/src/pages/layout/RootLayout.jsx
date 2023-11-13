@@ -1,13 +1,17 @@
-import { Outlet } from "react-router-dom";
 import ProtectionProvider from "../../context/auth/ProtectionProvider";
 import { useProfileStore } from "../../context/data/dataStore";
+
 import { Navigate } from "react-router-dom";
 import ChatSidebar from "../../components/ChatSidebar";
 import ContactSidebar from "../../components/ContactSidebar";
+
 import { Routes, Route } from "react-router-dom";
 import ChatDashboard from "../ChatDashboard";
 import GroupChat from "../../components/GroupChat";
 import App from "../App";
+
+import Navigation from "../../components/Navigation";
+
 
 
 export default function RootLayout() {
@@ -15,7 +19,11 @@ export default function RootLayout() {
   console.log(isOnline);
 
   return (
+
+    // <>
     <ProtectionProvider isAllowed={isOnline}>
+
+<Navigation />
       <Routes>
         {/* <Route path="" element={<Navigate to="/chat" />} /> */}
         <Route path="chat" element={<App />}>
@@ -23,9 +31,9 @@ export default function RootLayout() {
           <Route path=":chatName" element={<GroupChat />} />
         </Route>
       </Routes>
-      {/* 
-        <Outlet />
-        <ContactSidebar /> */}
+
     </ProtectionProvider>
+    // </>
+
   );
 }

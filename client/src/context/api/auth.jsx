@@ -2,14 +2,16 @@ import axios from "../../libs/axiosProtected";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useProfileStore } from "../data/dataStore";
+import { redirect, useNavigate } from "react-router-dom";
 
 // const queryClient = useQueryClient();
 
 // queryClient.invalidateQueries({
-//   queryKey: [],  //bestimme welchen der queries sollen nicht gespeichert werden 
+//   queryKey: [],  //bestimme welchen der queries sollen nicht gespeichert werden
 // })
 
 export function registerRequest() {
+  const navigate = useNavigate();
   // const registerHandler = await axios.post("/api/auth/createUser", { alternative eingabe
   //   firstname,
   //   lastname,
@@ -21,11 +23,20 @@ export function registerRequest() {
   //   passwordConfirmation,
   // });
   const registerMutation = useMutation({
-    mutationFn: async (loginData) =>
-      await axios.post("/api/auth/", loginData),
-    onSuccess: () => { toast.success("Erfolgreich... Failed!");}, // hier kann man success error und finally fälle einstellen
-    onError: () => {},
+
+    mutationFn: async (loginData) => {
+      return await axios.post("/api/user/createUser", loginData);
+    },
+    onSuccess: () => {
+      navigate("/login", { replace: true });
+      toast.success("Erfolgreich Registriert!");
+    },
+    onError: (error) => {
+      toast.error("Fehler bei der Anmeldung:", error);
+    },
+
   });
+
   return registerMutation;
 }
 
@@ -35,85 +46,89 @@ export function loginRequest() {
     mutationFn: async (loginData) =>
       await axios.post("/api/auth/login", loginData),
     onSuccess: () => {
-      
-      toast.success("Willkommen zurück!");}, // hier kann man success error und finally fälle einstellen
-    onError: () => {toast.error("Fail to  sign in...")},
-    onSettled: () => {
+      toast.success("Willkommen zurück!");
+    }, // hier kann man success error und finally fälle einstellen
+    onError: () => {
+      toast.error("Fail to  sign in...");
     },
+    onSettled: () => {},
   });
 
   return loginMutation;
 }
 
 export function refreshRequest(...key) {
-   return useQuery(
+  return useQuery(
     key,
     async () => {
       const response = await axios.get("/api/auth/tokenRefresh");
-      return response
+      return response;
     },
     {
-      onSuccess: () => {toast.success("Erfolgreich...");}, // hier kann man success error und finally fälle einstellen
-      onError: () => {toast.success("Failed!");},
+      onSuccess: () => {
+        toast.success("Erfolgreich...");
+      }, // hier kann man success error und finally fälle einstellen
+      onError: () => {
+        toast.success("Failed!");
+      },
       onSettled: () => {
         toast.success("Erfolgreich... Failed!");
       },
     }
   );
-
 }
-
 
 export function googleRequest(...key) {
   return useQuery(
-   key,
-   async () => {
-     const response = await axios.get("/auth/google/callback");
-     return response
-   },
-   {
-     onSuccess: () => {toast.success("Erfolgreich... Failed!");}, // hier kann man success error und finally fälle einstellen
-     onError: () => {},
-     onSettled: () => {
-      toast.success("google fetching...");
-     },
-   }
- );
-
+    key,
+    async () => {
+      const response = await axios.get("/auth/google/callback");
+      return response;
+    },
+    {
+      onSuccess: () => {
+        toast.success("Erfolgreich... Failed!");
+      }, // hier kann man success error und finally fälle einstellen
+      onError: () => {},
+      onSettled: () => {
+        toast.success("google fetching...");
+      },
+    }
+  );
 }
 
 export function logoutRequest() {
   const logoutQuery = useMutation({
     mutationFn: async () => await axios.post("/api/auth/logout"),
-    onSuccess: () => {toast.success("Sie sind elforgereich abgemeldet");}, // hier kann man success error und finally fälle einstellen
-    onError: () => {},
-
-    onSettled: () => {
-
+    onSuccess: () => {
+      toast.success("Erfolgreich... logout!");
+      redirect("/");
+    }, // hier kann man success error und finally fälle einstellen
+    onError: () => {
+      toast.success("Clear cookie failed!");
     },
+    onSettled: () => {},
   });
   return logoutQuery;
 }
 
 export function profileRequest(...key) {
-  const {isOnline} = useProfileStore(state => state.defaultProfile)
+  const { isOnline } = useProfileStore((state) => state.defaultProfile);
 
   // key ist gleich ["test",test1,"test2"] >> test/test1/test2    es kann auch object etc übergeben werden
   return useQuery({
-    queryKey:key, 
+    queryKey: key,
     queryFn: async () => await axios.get("/api/user/getProfile"),
     enabled: !!isOnline, // kann nur gefetched werden, wenn isOnline sich auf true verändert
     onSuccess: () => {
       toast.success("Erfolgreich... fetched User");
     }, // hier kann man success error und finally fälle einstellen
     onError: () => {},
-    onSettled: () => {
-    },
+    onSettled: () => {},
 
     // refetchInterval: 60000*10, // 10minute,
     staleTime: 60000 * 60, //daten bleiben 60sek lang gültig,
     // retry: 3,
     // retryDelay: 30000
   });
-  
 }
