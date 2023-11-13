@@ -52,18 +52,7 @@ export const useDarkLightMode = create(
   )
 );
 
-export const useRooms = create(
-  persist(
-    (set, get) => ({
-      rooms: [],
-      setRooms: (room) => set((state) => ({ rooms: [...state.rooms, room] })),
-    }),
-    {
-      name: "Rooms",
-      storage: createJSONStorage(() => localStorage),
-    }
-  )
-);
+
 
 export const useProfileStore = create( 
   persist(

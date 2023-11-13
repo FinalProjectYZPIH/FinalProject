@@ -9,14 +9,11 @@ import ChatDashboard from "../ChatDashboard";
 import GroupChat from "../../components/GroupChat";
 import App from "../App";
 
+
 export default function RootLayout() {
   const { isOnline } = useProfileStore((state) => state.defaultProfile);
-  // const {resetProfile} = useProfileStore()
   console.log(isOnline);
 
-  // if(isOnline === false) {
-  //   resetProfile()
-  // }
   return (
     <ProtectionProvider isAllowed={isOnline}>
       <Routes>
