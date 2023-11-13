@@ -2,32 +2,35 @@ import { useProfileStore } from "../context/data/dataStore";
 import { profileRequest } from "../context/api/auth";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-
+import toast from "react-hot-toast";
 import GroupChat from "../components/GroupChat";
 import ChatSidebar from "../components/ChatSidebar";
 import { useParams } from "react-router-dom";
-import DisplayBoard from "../components/DisplayBoard";
+// import DisplayBoard from "../components/DisplayBoard";
 import { useSocketProvider } from "../context/data/SocketProvider";
 import { Outlet } from "react-router-dom";
 import { useDarkLightMode } from "../context/data/dataStore";
-import { Button } from "../components/ui/Buttons"
+import { Inputs } from "../components/ui/Inputs";
+import { Button } from "../components/ui/Buttons";
+import FriendRequests from "../components/FriendRequests";
+
 
 export default function ChatDashboard() {
   const { defaultProfile, setLogout,resetProfile,setProfile } = useProfileStore();
 
-  const { isOnline, userId, role, username, email } = useProfileStore(
+  const { isOnline, userId, role, username, email, userIdDB } = useProfileStore(
     (state) => state.defaultProfile
   );
   //api
   let { roomName } = useParams();
 
   const navigate = useNavigate();
-  const { data: userData, isSuccess, isError } = profileRequest("Yan");
+  const { data: userData, isSuccess, isError} = profileRequest("Yan");
   // console.log(userData.data);
 
   if (isSuccess) {
     setProfile({
+      userIdDB: userData?.data?._id,
       userId: userData?.data?.userId,
       role: userData?.data?.role,
       username: userData?.data?.username,
@@ -36,19 +39,21 @@ export default function ChatDashboard() {
     });
   }
   if (isError) {
-    window.location.reload();
     if (isOnline === false) {
       navigate("/login");
+      setLogout() && toast.success("You are logged out");
     }
   }
-  console.log(userId, role, username, email);
+  console.log(userIdDB,userId, role, username, email);
 
   //socket
-  const { socket, sendMessage, createRoom, roomConfig, setRoomConfig } = useSocketProvider()
+  const { socket, sendMessage, createRoom, roomConfig, setRoomConfig } =
+    useSocketProvider();
 
   // local data
   const [roomname, setRoomName] = useState("");
   const [showChat, setShowChat] = useState(false);
+
 
   //events
   const joinRoom = () => {
@@ -126,10 +131,16 @@ export default function ChatDashboard() {
         </>
       )}
 
+      {/* <button onClick={()=>{setFriendsRequestsList(!friendsRequestsList)}}>
+        Friends Requests
+      </button>
+
+      {friendsRequestsList === true &&
+        <FriendRequests userId = {userData.data._id} />} */}
+
     </div>
   );
 }
-
 
 // const groupChatData = {
 //   chatName: "My Group Chat",
@@ -148,4 +159,3 @@ export default function ChatDashboard() {
 //   voices: [], // Hier können Audio-URLs hinzugefügt werden
 //   videos: [], // Hier können Video-URLs hinzugefügt werden
 // };
-

@@ -15,6 +15,7 @@ router
   .delete("/deleteAccount", UserController.deleteAccount)
   .get("/", UserController.findAllUsers)
   .get("/:username", UserController.findOneUser)
+  .get("/search",UserController.searchForUser)
   // .delete("/deleteAllUsers", UserController.deleteAllUsers);
 
 export default router;
