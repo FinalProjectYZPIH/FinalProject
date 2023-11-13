@@ -84,7 +84,7 @@ dependencies:
     specifier: ^3.22.3
     version: 3.22.3
   zustand:
-    specifier: ^4.4.6
+    specifier: ^4.4.1
     version: 4.4.6(react@18.2.0)
 
 devDependencies:
