@@ -9,9 +9,11 @@ import { redirect, Link } from "react-router-dom";
 // const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyz0123456789", 5);
 
 export default function ChatSidebar() {
+
   const { lightMode, setDarkMode } = useDarkLightMode();
 
   const { chatRooms, isOnline } = useProfileStore(
+
     (state) => state.defaultProfile
   );
 
@@ -21,9 +23,11 @@ export default function ChatSidebar() {
 
   const handleClick = (room) => {
     if (room?.type === "single") {
+
       setSelect(room?.participants[1]);
       select === room?.participants[1] &&
         redirect(`/chat/${room?.participants[1]}`);
+
     }
     if (room?.type === "group") {
       setSelect(room?.chatName);
@@ -41,10 +45,12 @@ export default function ChatSidebar() {
     >
       <div className="h-4/5 mt-5 mx-2  overflow-x-hidden shadow-lg  rounded-xl border border-cyan-400 flex flex-col items-center ">
         Chats
+        {/* <h3>{username}</h3> */}
         {console.log(chatRooms)}
         {chatRooms?.map((room) => {
           if (room?.type === "single") {
             return (
+
               <div
                 className={`${
                   select === room?.participants[1] ? "bg-slate-600" : ""
@@ -53,6 +59,7 @@ export default function ChatSidebar() {
                 key={room?.participants[1]}
               >
                 {room?.participants[1]}
+
               </div>
             );
           } else if (room?.type === "group") {

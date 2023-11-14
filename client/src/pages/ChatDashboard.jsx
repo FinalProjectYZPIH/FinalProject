@@ -53,6 +53,14 @@ export default function ChatDashboard() {
   if (isOnline === false) {
     navigate("/", { replace: true });
     toast.error("You are offline");
+
+    // setLogout();
+    // window.location.reload();
+
+    // if (isOnline === false) {
+    //   navigate("/login");
+    //   setLogout() && toast.success("You are logged out");
+    // }
   }
 
   console.log(userId, role, username, email);

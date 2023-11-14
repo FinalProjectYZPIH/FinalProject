@@ -27,11 +27,11 @@ export default function Home() {
     resetProfile();
     console.log("Nach resetProfile:", useProfileStore.getState());
   }
-  const { isSuccess } = refreshRequest("validUser");
-  console.log(isSuccess);
-  if (isSuccess) return setLogin();
+  // const { isSuccess } = refreshRequest("validUser");
+  // console.log(isSuccess);
+  // if (isSuccess) return setLogin();
 
-  if (isOnline === true) return navigate("/chat");
+  // if (isOnline === true) return navigate("/chat");
 
   return (
     <div className="">
