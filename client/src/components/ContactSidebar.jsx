@@ -1,30 +1,24 @@
 import { useProfileStore } from "../context/data/dataStore";
 
 export default function ContactSidebar() {
-  const { contacts } = useProfileStore((state) => state.defaultProfile);  // diese daten werden vom backend beim login empfangen
+  const { contacts } = useProfileStore((state) => state.defaultProfile);
 
-  console.log(contacts);
   return (
-    <div>
-      Contacts
-      {contacts.map(contact => (<div key={contact.username}>
-          {contact.username} (Online: {contact.Online ? 'Yes' : 'No'})
-        </div>
-      ))}
+    <div className="h-screen w-80 font-orbitron">
+      <div className="w-60 h-3/4 overflow-y-scroll rounded-xl m-5 border border-cyan-400 p-2 flex flex-col items-center">
+        Contacts
+        {contacts.map((contact) => (
+          <div
+            className={`w-3/4 border border-cyan-400 p-2 m-1 rounded-lg text-left hover:bg-cyan-400 hover:bg-opacity-50 ${
+              contact.Online ? 'text-green-500' : 'text-red-500'
+            }`}
+            key={contact.username}
+          >
+            {contact.username.toUpperCase()} 
+            {/* ( {contact.Online ? '✅️' : '❌️'}) */}
+          </div>
+        ))}
+      </div>
     </div>
   );
-      }
-      
-//   (
-//     <div>
-//       Contacts
-//       {contacts.map((contact, i) => (
-//         <div key={contact[1]}>
-//           {contact[0] && <>{"socketid"}</>}  {/**socketid */}
-//           {contact[1] && <>{contact[1]}</>}  {/**username */}
-//           {contact[2] && <>{`${contact[2]}`}</>}  {/**isonline */}
-//         </div>
-//       ))}
-//     </div>
-//   );
-// }
+}

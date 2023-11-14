@@ -26,7 +26,7 @@ export const LoginComponent = () => {
   const navigate = useNavigate();
 
   const loginHandler = loginRequest(); //loginhandler ist einen object der fast alle bedingungensfälle enthält
-  const { isSuccess, isError, isIdle} = loginHandler;
+  const { isSuccess, isError, isIdle } = loginHandler;
 
   if (isSuccess) {
     //falls erfolgreich eingeloggt ist,  dann setze globale isOnline auf true, erstelle neue profilerequest  und ändere die userdaten
@@ -44,13 +44,10 @@ export const LoginComponent = () => {
     });
 
     console.log(e.target[0].value, e.target[1].value);
-    
-
   };
 
   const google = () => {
-    window.open("http://localhost:3000/auth/google", "_blank");
-
+    window.open("http://localhost:3000/auth/google", "_self");
   };
   const facebook = () => {
     window.open("http://localhost:3000/auth/facebook", "_self");
@@ -63,8 +60,9 @@ export const LoginComponent = () => {
   };
   return (
     <div
-      className={`font-orbitron grid grid-cols-1 lg:grid-cols-2  w-screen h-screen sm:bg-cover sm:bg-center bg-no-repeat lg:bg-contain lg:bg-right ${lightMode ? "dark" : "light"
-        }`}
+      className={`font-orbitron grid grid-cols-1 lg:grid-cols-2  w-screen h-screen sm:bg-cover sm:bg-center bg-no-repeat lg:bg-contain lg:bg-right ${
+        lightMode ? "dark" : "light"
+      }`}
     >
       <div className="flex items-center justify-center bg-cover">
         <div className=" flex flex-col justify-evenly items-center">
@@ -72,10 +70,12 @@ export const LoginComponent = () => {
             <h1 className="text-4xl text-cyan-400 text-center mb-6">LOGIN</h1>
 
             <MediaButtons window={google}>
-              <GoogleIcons />sign in with google
+              <GoogleIcons />
+              sign in with google
             </MediaButtons>
             <MediaButtons window={facebook}>
-              <FacebookIcons />sign in with facebook
+              <FacebookIcons />
+              sign in with facebook
             </MediaButtons>
             <form onSubmit={handleSubmit}>
               <Inputs
@@ -122,7 +122,8 @@ export const LoginComponent = () => {
         </div>
       </div>
     </div>
-  );}
+  );
+};
 // // };
 // import { useState } from "react";
 // import { useNavigate, useSearchParams } from "react-router-dom";
