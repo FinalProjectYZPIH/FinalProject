@@ -57,24 +57,28 @@ export function loginRequest() {
   return loginMutation;
 }
 
-export function refreshRequest(...key) {
+export async function refreshRequest(...key) {
+  const { setLogin } = useProfileStore()
   return useQuery(
     key,
     async () => {
       const response = await axios.get("/api/auth/tokenRefresh");
       return response;
     },
-    {
-      onSuccess: () => {
-        toast.success("Erfolgreich...");
-      }, // hier kann man success error und finally fälle einstellen
-      onError: () => {
-        toast.success("Failed!");
-      },
-      onSettled: () => {
-        toast.success("Erfolgreich... Failed!");
-      },
-    }
+    // {
+    //   onSuccess: () => {
+
+    //     toast.success("Erfolgreich ausgelesen");
+    //   }, // hier kann man success error und finally fälle einstellen
+    //   onError: () => {
+    //     toast.error("User nicht gefunden.");
+    //   },
+    //   onSettled: () => {
+    //     console.log("hi")
+    //     toast.success("Am Einlogen");
+    //   },
+
+    // }
   );
 }
 

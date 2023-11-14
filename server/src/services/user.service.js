@@ -72,11 +72,11 @@ export const dbFindAllUsers = async (res,next) => {
 
 export const dbFindOneUserById = async ( cookie, next,  populateKey = "") => {
   try {
-    
     const user = await UserModel.findOne({_id:cookie})
       .select("-password -birthday")
       .populate(populateKey);
 
+      if(!user) return new Error("User by id not found")
     return user;
   } catch (error) {
     next(error)

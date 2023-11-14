@@ -7,6 +7,7 @@ import { refreshRequest } from "../context/api/auth";
 import { useNavigate } from "react-router-dom";
 
 import FriendRequests from "../components/FriendRequests";
+import { toast } from "react-hot-toast";
 
 
 export default function Home() {
@@ -22,16 +23,26 @@ export default function Home() {
     socket.emit("message", { message: "hello" });
   }
 
-  if (isOnline === false) {
-    console.log("Vor resetProfile:", useProfileStore.getState());
-    resetProfile();
-    console.log("Nach resetProfile:", useProfileStore.getState());
-  }
-  // const { isSuccess } = refreshRequest("validUser");
-  // console.log(isSuccess);
-  // if (isSuccess) return setLogin();
+  // if (isOnline === false) {
+  //   console.log("Vor resetProfile:", useProfileStore.getState());
+  //   resetProfile();
+  //   console.log("Nach resetProfile:", useProfileStore.getState());
+  // }
 
-  // if (isOnline === true) return navigate("/chat");
+
+    // Hier wird die useQuery-Hook innerhalb der React-Komponente verwendet
+    const { data: userData, isSuccess, isError } = refreshRequest("validUser");
+    console.log(userData)
+    if (isError) {
+      console.log("hi")
+      toast.error("Fehler beim Aktualisieren des Tokens");
+    } else if (isSuccess) {
+      setLogin();
+      toast.success("Erfolgreich ausgelesen");
+      if (isOnline === true) navigate("/chat");
+    }
+
+
 
   return (
     <div className="">
