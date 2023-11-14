@@ -13,7 +13,7 @@ import { cookieSessionSchema } from "../models/validierungsSchema/session.schema
 import UserModel from "../models/user.model.js";
 
 // services
-import { compareDBPassword } from "../services/user.service.js";
+import { compareDBPassword, dbFindOneUserById } from "../services/user.service.js";
 import {
   acceptCookie,
   findSessions,
@@ -127,7 +127,9 @@ export const sessionRefreshHandler = async (req, res, next) => {
         return next("Session Refresh Request Failed");
       }
 
-      res.status(200).json({ message: "session refreshed" });
+      const user = dbFindOneUserById(decoded?.UserInfo.id, next)
+
+      res.status(200).json(user);
     }
   } catch (error) {
     // next(error)
@@ -152,14 +154,17 @@ export const logout = async (req, res, next) => {
       httpOnly: false,
       sameSite: "lax",
       secure: false,
+      
     });
-
+    res.cookie("accessJwt","",{expires: new Date(0)})
+    
     res
-      .clearCookie("refreshJwt", {
-        httpOnly: false,
-        sameSite: "lax",
-        secure: false,
-      })
+    .clearCookie("refreshJwt", {
+      httpOnly: false,
+      sameSite: "lax",
+      secure: false,
+    })
+    res.cookie("refreshJwt","",{expires: new Date(0)})
       .status(200)
       .json({ message: "user success logged out" });
   } catch (error) {

@@ -22,6 +22,7 @@ const useSocketIo = (
     // timeout: 15000, // verbindungsabruch nach 15sek
     timestampRequests: true, // zeitstempel bei jeden request hinzufügen
     timestampParam: "zeitstempel",
+    // reconnection:true,
     // transports: ["websocket", "polling"], //verbindungsart nach partial
   }
 ) => {
@@ -44,9 +45,13 @@ const useSocketIo = (
       // Füge hier die Fehlerbehandlung hinzu, z.B. Anzeigen einer Fehlermeldung im UI.
     });
 
-    // return () => {
-    //   newSocket.disconnect();
-    // };
+    // newSocket.on("disconnect", () => {
+    //   newSocket.connect()
+    // })
+
+    return () => {
+      newSocket.disconnect();
+    };
   }, []);
 
   const createRoom = (
@@ -68,7 +73,7 @@ const useSocketIo = (
           chatAdmin: userId,
         };
 
-        socket.emit("groupRoom", roomData);
+        socket.emit("groupRoom", roomData, roomName);
         return roomData;
       }
 
@@ -90,9 +95,10 @@ const useSocketIo = (
 
   const sendMessage = (
     { content, likes, emojis, images, voices, videos },
+    roomName,
     option = undefined
   ) => {
-    if (socket) {
+    if (!socket) { return null, console.log("socket is not connected")}
       if (
         typeof content !== "undefined" ||
         typeof likes !== "undefined" ||
@@ -114,11 +120,12 @@ const useSocketIo = (
             ":" +
             new Date(Date.now()).getMinutes(),
         };
-        socket.emit("sendMessage", messageData, option);
+        socket.emit("sendMessage", messageData, roomName ,option);
 
         return messageData;
       }
-    }
+    
+    
   };
   return { socket, createRoom, sendMessage };
 };

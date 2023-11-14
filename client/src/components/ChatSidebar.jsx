@@ -10,12 +10,14 @@ import { redirect, Link } from "react-router-dom";
 
 export default function ChatSidebar() {
 
-  const { lightMode, setDarkMode } = useDarkLightMode();
-
-  const { chatRooms, isOnline } = useProfileStore(
-
+  const { chatRooms, isOnline, username } = useProfileStore(
     (state) => state.defaultProfile
   );
+
+
+  const { lightMode, setDarkMode } = useDarkLightMode();
+
+
 
   const [select, setSelect] = useState(null);
 
@@ -24,9 +26,9 @@ export default function ChatSidebar() {
   const handleClick = (room) => {
     if (room?.type === "single") {
 
-      setSelect(room?.participants[1]);
-      select === room?.participants[1] &&
-        redirect(`/chat/${room?.participants[1]}`);
+      setSelect(room?.participants[1])
+      
+
 
     }
     if (room?.type === "group") {
@@ -51,14 +53,8 @@ export default function ChatSidebar() {
           if (room?.type === "single") {
             return (
 
-              <div
-                className={`${
-                  select === room?.participants[1] ? "bg-slate-600" : ""
-                } cursor-pointer`}
-                onClick={() => handleClick(room)}
-                key={room?.participants[1]}
-              >
-                {room?.participants[1]}
+              <div className={`${select === room?.participants[1] ? "bg-slate-600" : ""} cursor-pointer`} onClick={() => handleClick(room)} key={room?.participants[1]}>
+                {select === room?.participants[1] ? <Link to={`/chat/${room?.participants[1]}`}>{room.participants[1]}</Link> : room?.participants[1]}
 
               </div>
             );

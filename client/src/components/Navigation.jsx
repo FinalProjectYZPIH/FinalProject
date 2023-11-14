@@ -13,7 +13,7 @@ import Search from "./Search";
 export default function Navigation() {
   const [friendsRequestsList, setFriendsRequestsList] = useState(false)
 
-  const {userIdDB} = useProfileStore(state => state.defaultProfile)
+  const {userIdDB, username} = useProfileStore(state => state.defaultProfile)
 
   const { lightMode, setDarkMode } = useDarkLightMode();
   const { isOnline, notifications, avatar, settings, chatRooms, contacts } =
@@ -44,6 +44,7 @@ export default function Navigation() {
   const handleLogout = async (e) => {
     e.preventDefault();
     setLogout() && toast.success("You are logged out");
+    clearCookies.mutate();
     // if (isOnline === false) {
     //   clearCookies.mutate();
     //   setLogout();
@@ -80,16 +81,13 @@ export default function Navigation() {
         </div>
       </div>
       <div className="flex items-center mx-2">
-
-
-
         <img
           className="w-8 h-8 rounded-full ml-2 border border-cyan-400"
           src={UserNav.avatar}
           alt="Profile"
         />
       </div>
-
+      <p className={`${lightMode ? " text-white" : " bg-white"}`}>{username}</p>
       <Button onClick={()=>{setFriendsRequestsList(!friendsRequestsList)}}>
       <UserPlus2 color="#22d3ee" />
       </Button>
