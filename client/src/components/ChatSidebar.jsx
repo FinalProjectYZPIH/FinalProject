@@ -11,13 +11,13 @@ import { redirect, Link } from "react-router-dom";
 export default function ChatSidebar() {
 
   const { chatRooms, isOnline, username } = useProfileStore(
+    (state) => state.defaultProfile
+  );
 
 
   const { lightMode, setDarkMode } = useDarkLightMode();
 
 
-    (state) => state.defaultProfile
-  );
 
   const [select, setSelect] = useState(null);
 
