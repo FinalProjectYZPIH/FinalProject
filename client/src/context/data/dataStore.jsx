@@ -123,16 +123,28 @@ export const useProfileStore = create(
             //   participants: ["Yan", "Zoe"],
             //   comments: [],
             // },
-            // {
-            //   type: "group",
-            //   chatName: "",
-            //   chatAdmin: "Zoe",
-            //   chatMessages: [
-               
-            //   ],
-            //   participants: ["userid", "user2", "user3"],
-            //   comments: [],
-            // },
+            {
+              type: "group",
+              chatName: "FirstRoom",
+              chatAdmin: "Test",
+              chatMessages: [
+                {
+                    sender: "",
+                    content: "Welcome",
+                    likes :0,
+                    emojis :[],
+                    images : "",
+                    voices : "",
+                    videos: "",
+                    time:
+                    new Date(Date.now()).getHours() +
+                    ":" +
+                    new Date(Date.now()).getMinutes(),
+                  }
+              ],
+              participants: ["userid", "user2", "user3"],
+              comments: [],
+            },
             //   {
             //   singleroom: {
             //     chatMessages: [{ content: "Guten Tag!", likes: 5, emojis: [] }],

@@ -9,7 +9,7 @@ import { redirect, Link } from "react-router-dom";
 // const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyz0123456789", 5);
 
 export default function ChatSidebar() {
-  const { chatRooms, isOnline } = useProfileStore(
+  const { chatRooms, isOnline, username } = useProfileStore(
     (state) => state.defaultProfile
   );
 
@@ -21,7 +21,7 @@ export default function ChatSidebar() {
   const handleClick = (room) => {
     if (room?.type === "single") {
       setSelect(room?.participants[1])
-      select === room?.participants[1] && redirect(`/chat/${room?.participants[1]}`)
+      
 
     }
     if (room?.type === "group") {
@@ -36,6 +36,7 @@ export default function ChatSidebar() {
     <div className="h-screen w-80 font-orbitron ">
       <div className="w-60 h-3/4  overflow-y-scroll  rounded-xl m-5  border border-cyan-400  p-2  flex flex-col items-center ">
         Chats
+        {/* <h3>{username}</h3> */}
         {console.log(chatRooms)}
 
         {chatRooms?.map((room) => {
@@ -43,7 +44,7 @@ export default function ChatSidebar() {
           if (room?.type === "single") {
             return (
               <div className={`${select === room?.participants[1] ? "bg-slate-600" : ""} cursor-pointer`} onClick={() => handleClick(room)} key={room?.participants[1]}>
-                {room?.participants[1]}
+                {select === room?.participants[1] ? <Link to={`/chat/${room?.participants[1]}`}>{room.participants[1]}</Link> : room?.participants[1]}
               </div>
             );
           } else if (room?.type === "group") {

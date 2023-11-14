@@ -69,9 +69,10 @@ function GroupChat() {
   const [roomConfig, setRoomConfig] = useState(
     chatRooms?.find((room) => {
      if(room.chatName === ""){
-      return "leere String"
+      return "Private_Chat"
+     }else{
+       return room?.chatName === chatName 
      }
-      room?.chatName === chatName 
     }) 
   );
 
@@ -83,17 +84,19 @@ function GroupChat() {
   // console.log(roomConfig?.chatAdmin);
 
   useEffect(() => {
-    setMessageList(roomConfig?.chatMessages);
+    setMessageList(roomConfig?.chatMessages || []);
   }, [chatName]);
 
   // hier wird die daten aus backend immer mit dazugehörigen room aktualisiert
   useEffect(() => {
-    socket.on("messages_groupRoom", (message, room) => {
-      console.log(message);
-      setMessageList((list) => [...list, message]);
-      setChatRooms(room);
-      console.log("roomtest", room);
-    });
+    if(socket && socket.on){
+      socket.on("messages_groupRoom", (message, room) => {
+        console.log(message);
+        setMessageList((list) => [...list, message]);
+        setChatRooms(room);
+        console.log("roomtest", room);
+      });
+    }
   }, [socket]);
 
   const storedData = JSON.parse(sessionStorage.getItem("Profile"));
