@@ -126,7 +126,7 @@ export const useProfileStore = create(
             {
               type: "group",
               chatName: "",
-              chatAdmin: "Zoe",
+              chatAdmin: "",
               chatMessages: [
                
               ],

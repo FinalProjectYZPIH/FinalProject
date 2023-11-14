@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDarkLightMode, useProfileStore } from "../context/data/dataStore";
 import { logoutRequest } from "../context/api/auth";
-import { CloudMoon, Sun, User } from "lucide-react";
+import { CloudMoon, Sun, User, UserPlus2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import ReactSwitch from "react-switch";
 import { Button } from "@mui/material";
@@ -52,7 +52,7 @@ export default function Navigation() {
 
   return (
     <div
-      className={`fixed top-0 left-0 z-10 bg-white flex justify-between items-center w-full h-9 shadow-lg`}
+      className={`fixed top-0 left-0 z-10 flex justify-between items-center w-full h-10 shadow-lg ${lightMode ? " bg-neutral-900" : " bg-white"}`}
     >
       <div className="flex justify-between w-2/3 h-full rounded-lg sm:pl-0">
         {PageNav.map((navObj) =>
@@ -91,7 +91,7 @@ export default function Navigation() {
       </div>
 
       <Button onClick={()=>{setFriendsRequestsList(!friendsRequestsList)}}>
-         Req
+      <UserPlus2 color="#22d3ee" />
       </Button>
       {friendsRequestsList === true &&
         <FriendRequests userId = {userIdDB} />}
@@ -100,8 +100,8 @@ export default function Navigation() {
       <ReactSwitch
         onChange={setDarkMode}
         checked={lightMode}
-        offColor={"#3b82f6"}
-        onColor={"#D0D0D0"}
+        offColor={"#22d3ee"}
+        onColor={"#22d3ee"}
         checkedIcon={<CloudMoon />}
         uncheckedIcon={<Sun />}
       />
