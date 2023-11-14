@@ -115,20 +115,32 @@ export const useProfileStore = create(
             //friends
           ],
           chatRooms: [
-            {
-              type: "single",
-              chatName: "",
-              chatMessages: [
-              ],
-              participants: ["Yan", "Zoe"],
-              comments: [],
-            },
+            // {
+            //   type: "single",
+            //   chatName: "",
+            //   chatMessages: [
+            //   ],
+            //   participants: ["Yan", "Zoe"],
+            //   comments: [],
+            // },
             {
               type: "group",
-              chatName: "",
-              chatAdmin: "Zoe",
+              chatName: "FirstRoom",
+              chatAdmin: "Test",
               chatMessages: [
-               
+                {
+                    sender: "",
+                    content: "Welcome",
+                    likes :0,
+                    emojis :[],
+                    images : "",
+                    voices : "",
+                    videos: "",
+                    time:
+                    new Date(Date.now()).getHours() +
+                    ":" +
+                    new Date(Date.now()).getMinutes(),
+                  }
               ],
               participants: ["userid", "user2", "user3"],
               comments: [],

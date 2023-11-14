@@ -69,10 +69,11 @@ function GroupChat() {
   const [roomConfig, setRoomConfig] = useState(
     chatRooms?.find((room) => {
      if(room.chatName === ""){
-      return "leere String"
+      return "Private_Chat"
+     }else{
+       return room?.chatName === chatName 
      }
-      room?.chatName === chatName 
-    }) 
+    }) ?? []
   );
 
   console.log(messageList)
@@ -83,7 +84,7 @@ function GroupChat() {
   // console.log(roomConfig?.chatAdmin);
 
   useEffect(() => {
-    setMessageList(roomConfig?.chatMessages);
+    setMessageList(roomConfig?.chatMessages || []);
   }, [chatName]);
 
   // hier wird die daten aus backend immer mit dazugehörigen room aktualisiert
