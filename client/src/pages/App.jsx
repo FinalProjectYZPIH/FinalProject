@@ -5,7 +5,7 @@ import ContactSidebar from "../components/ContactSidebar";
 
 export default function App() {
   return (
-    <div className='flex justify-evenly mt-6'>
+    <div className='flex justify-evenly mt-10'>
       <ChatSidebar />
       <Outlet />
       <ContactSidebar />
