@@ -90,9 +90,9 @@ export default function Navigation() {
         />
       </div>
 
-      <button onClick={()=>{setFriendsRequestsList(!friendsRequestsList)}}>
+      <Button onClick={()=>{setFriendsRequestsList(!friendsRequestsList)}}>
          Req
-      </button>
+      </Button>
       {friendsRequestsList === true &&
         <FriendRequests userId = {userIdDB} />}
 

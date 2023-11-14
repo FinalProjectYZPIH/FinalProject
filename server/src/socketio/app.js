@@ -21,43 +21,44 @@ export function createSocket(app) {
       origin: corsOptions, // Hier können Sie die gewünschten Ursprünge festlegen oder "*" verwenden, um alle Ursprünge zuzulassen
       methods: ["GET", "POST", "PATCH", "PUT", "DELETE"], // Erlaubte HTTP-Methoden
       credentials: true,
-      cookie: true,
+      // cookie: false,
     },
   });
   return { httpServer, io };
 }
 
-let currentUserId = null ;
+let currentUserId = null;
 export function socketInitiation() {
-  io.use(async (socket, next) => {
-    const token = socket.handshake.headers["cookie"];
-    const { accessJwt } = parse(token);
-    //  console.log( accessJwt)
-    const { decoded, valid } = verifyJwt(accessJwt, process.env.ACCESS_TOKEN);
+  //   io.use(async (socket, next) => {
+  //     const token = socket.handshake.headers["cookie"];
+  //     const { accessJwt } = parse(token);
+  //     //  console.log( accessJwt)
+  //     const { decoded, valid } = verifyJwt(accessJwt, process.env.ACCESS_TOKEN);
 
 
-    try {
-      if (valid) {
-        const updatedUser = await updateUserSocket(decoded.UserInfo.id, socket.id);
-        if (!updatedUser) {
-            logger.error("Update Socketid failed");
-            return next("updateSocketid Failed");
-        }
-        
-        currentUserId = decoded.UserInfo.id;
-        next()
-        
-      }
-      if(!token) {
-        next()
-      }
-    } catch (error) {
-      logger.error(error);
-      next(error);
-    }
-    
-    // console.log(decoded?.UserInfo);
-  });
+  //     try {
+  //       if (valid) {
+  //         const updatedUser = await updateUserSocket(decoded.UserInfo.id, socket.id);
+  //         if (!updatedUser) {
+  //             logger.error("Update Socketid failed");
+  //             // return next("updateSocketid Failed");
+  //             return;
+  //         }
+
+  //         currentUserId = decoded.UserInfo.id;
+  //         next()
+
+  //       }
+  //       if(!token) {
+  //         next()
+  //       }
+  //     } catch (error) {
+  //       logger.error(error);
+  //       next(error);
+  //     }
+
+  //     // console.log(decoded?.UserInfo);
+  //   });
 
 
   const onConnection = (socket, io) => {
