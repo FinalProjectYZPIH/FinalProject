@@ -11,36 +11,23 @@ import { useSocketProvider } from "../context/data/SocketProvider";
 import { Outlet } from "react-router-dom";
 import FriendRequests from "../components/FriendRequests";
 
-
 import { useDarkLightMode } from "../context/data/dataStore.jsx";
 import { Inputs } from "../components/ui/Inputs.jsx";
 import { Button } from "../components/ui/Buttons.jsx";
 import Navigation from "../components/Navigation.jsx";
 
-
-
-  
-
 export default function ChatDashboard() {
-  
   //globaldata
-  const {
-    defaultProfile,
-    resetProfile,
-    setProfile,
-    setChatRooms,
-    setLogout,
-  } = useProfileStore();
+  const { defaultProfile, resetProfile, setProfile, setChatRooms, setLogout } =
+    useProfileStore();
 
-  const { isOnline, userId, role, username, email, userIdDB, chatRooms } = useProfileStore(
-    (state) => state.defaultProfile
-  );
+  const { isOnline, userId, role, username, email, userIdDB, chatRooms } =
+    useProfileStore((state) => state.defaultProfile);
   console.log(userId, role, username, email, userIdDB);
   // console.log(userData.data);
 
   //socket
-  const { socket, sendMessage, createRoom } =
-    useSocketProvider();
+  const { socket, sendMessage, createRoom } = useSocketProvider();
 
   // local data
   const [roomname, setRoomName] = useState("");
@@ -48,13 +35,13 @@ export default function ChatDashboard() {
   // const [roomConfig, setRoomConfig] = useState({});
 
   //api
-  
+
   const navigate = useNavigate();
   const { data: userData, isSuccess, isError } = profileRequest("Yan");
-  
+
   if (isSuccess) {
     setProfile({
-      userIdDB : userData?.data?._id,
+      userIdDB: userData?.data?._id,
       userId: userData?.data?.userId,
       role: userData?.data?.role,
       username: userData?.data?.username,
@@ -78,8 +65,6 @@ export default function ChatDashboard() {
 
   console.log(userId, role, username, email);
 
-
-
   //events
   const joinRoom = () => {
     if (username !== "" && roomname !== "") {
@@ -102,7 +87,7 @@ export default function ChatDashboard() {
             "654929ca16dca878ff3e509c",
           ], //zoe pawel
           attachComments: [{ like: 1 }],
-          type :"group",
+          type: "group",
         },
         roomname
       );
@@ -118,17 +103,17 @@ export default function ChatDashboard() {
 
   return (
     <div
-      className={`font-orbitron grid grid-cols-1 lg:grid-cols-2 w-screen h-screen sm:bg-cover sm:bg-center mt-2 bg-no-repeat lg:bg-contain lg:bg-right ${
-        lightMode ? "dark" : "light"
+      className={`font-orbitron w-screen h-screen ${
+        lightMode ? "dark bg-none" : "light bg-none"
       }`}
     >
       <Navigation />
       {/* <ChatSidebar /> */}
       {/* <DisplayBoard /> */}
       {!showChat ? ( //hier soll für 2. sidebar gedacht sein. wenn der user in navbar klickt, es soll dann angezeigt werden.
-        <div className=" flex flex-col justify-evenly items-center">
-          <div className="h-3/5 w-96 px-5 flex justify-evenly flex-col items-center border border-slate-400 rounded-md shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-25">
-            <h3 className="text-4xl">Create or Join a Existing ChatRoom</h3>
+        <div className=" flex flex-col mt-5 h-4/5 items-center">
+          <div className="h-full w-full px-5 flex justify-evenly flex-col items-center border border-cyan-400 rounded-lg shadow-lg">
+            <h3 className="text-4xl">Create or join a existing ChatRoom</h3>
             <Inputs
               className="border border-1"
               type="text"
@@ -147,15 +132,12 @@ export default function ChatDashboard() {
         // <GroupChat />
       )}
 
-
       {/* <button onClick={()=>{setFriendsRequestsList(!friendsRequestsList)}}>
         Friends Requests
       </button>
 
       {friendsRequestsList === true &&
         <FriendRequests userId = {userData.data._id} />} */}
-
-
     </div>
   );
 }

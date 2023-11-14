@@ -125,8 +125,10 @@ export const useProfileStore = create(
             // },
             {
               type: "group",
-              chatName: "FirstRoom",
-              chatAdmin: "Test",
+
+              chatName: "",
+              chatAdmin: "",
+
               chatMessages: [
                 {
                     sender: "",
