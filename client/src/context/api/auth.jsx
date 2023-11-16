@@ -25,7 +25,25 @@ export function registerRequest() {
   const registerMutation = useMutation({
 
     mutationFn: async (loginData) => {
-      return await axios.post("/api/user/createUser", loginData);
+      // Erstelle zuerst den Benutzer
+      const createUserResponse = await axios.post(
+        "/api/user/createUser",
+        loginData
+      );
+
+      // Dann sende die Verifizierungs-E-Mail
+      const verificationEmailResponse = await axios.post(
+        "/api/auth/sendMailVerify",
+        {
+          recipient: loginData.email,
+        }
+      );
+
+      return {
+        createUserResponse,
+        verificationEmailResponse
+        // verificationResponse,
+      };
     },
     onSuccess: () => {
       navigate("/login", { replace: true });
@@ -34,7 +52,6 @@ export function registerRequest() {
     onError: (error) => {
       toast.error("Fehler bei der Anmeldung:", error);
     },
-
   });
 
   return registerMutation;

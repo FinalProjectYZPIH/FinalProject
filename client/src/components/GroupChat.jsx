@@ -51,7 +51,7 @@ function GroupChat() {
 
   const { socket, sendMessage } = useSocketProvider();
   const { lightMode, setDarkMode } = useDarkLightMode();
-  console.log(chatRooms)
+  console.log(chatRooms);
 
   const defaultMessageObj = {
     content: "",
@@ -68,14 +68,14 @@ function GroupChat() {
   const [messageList, setMessageList] = useState([]);
   const [roomConfig, setRoomConfig] = useState(
     chatRooms?.find((room) => {
-     if(room.chatName === ""){
-      return "leere String"
-     }
-      room?.chatName === chatName 
-    }) 
+      if (room.chatName === "") {
+        return "leere String";
+      }
+      room?.chatName === chatName;
+    })
   );
 
-  console.log(messageList)
+  console.log(messageList);
   // const [comments, setComments] = useState(roomConfig?.comments);
   // const [admin, setAdmin] = useState(roomConfig?.chatAdmin)
 
