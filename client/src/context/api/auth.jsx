@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useProfileStore } from "../data/dataStore";
 import { redirect, useNavigate } from "react-router-dom";
+import { Toast } from "../../components/ui/Toasts";
 
 // const queryClient = useQueryClient();
 
@@ -29,10 +30,10 @@ export function registerRequest() {
     },
     onSuccess: () => {
       navigate("/login", { replace: true });
-      toast.success("Erfolgreich Registriert!");
+      toast.custom(<div className="font-orbitron ring-2 flex justify-center items-center  border border-cyan-400 rounded-lg m-6 h-10 w-30 text-2xl text-cyan-300 p-8 text-center lg:flex   ">successfully registered</div>);
     },
     onError: (error) => {
-      toast.error("Fehler bei der Anmeldung:", error);
+       toast.custom(<div className="font-orbitron ring-2 flex justify-center items-center  border border-cyan-400 rounded-lg m-6 h-10 w-30 text-2xl text-cyan-300 p-8 text-center">Failed to Sign In</div>);
     },
 
   });
@@ -46,12 +47,12 @@ export function loginRequest() {
     mutationFn: async (loginData) =>
       await axios.post("/api/auth/login", loginData),
     onSuccess: () => {
-      toast.success("Willkommen zurück!");
+      // toast.custom(<Toast>Welcome back!</Toast>)
     }, // hier kann man success error und finally fälle einstellen
     onError: () => {
-      toast.error("Fail to  sign in...");
+      toast.custom(<Toast> Failed to Login</Toast>)
     },
-    onSettled: () => {},
+    onSettled: () => { },
   });
 
   return loginMutation;
@@ -65,20 +66,6 @@ export async function refreshRequest(...key) {
       const response = await axios.get("/api/auth/tokenRefresh");
       return response;
     },
-    // {
-    //   onSuccess: () => {
-
-    //     toast.success("Erfolgreich ausgelesen");
-    //   }, // hier kann man success error und finally fälle einstellen
-    //   onError: () => {
-    //     toast.error("User nicht gefunden.");
-    //   },
-    //   onSettled: () => {
-    //     console.log("hi")
-    //     toast.success("Am Einlogen");
-    //   },
-
-    // }
   );
 }
 
@@ -93,7 +80,7 @@ export function googleRequest(...key) {
       onSuccess: () => {
         toast.success("Erfolgreich... Failed!");
       }, // hier kann man success error und finally fälle einstellen
-      onError: () => {},
+      onError: () => { },
       onSettled: () => {
         toast.success("google fetching...");
       },
@@ -105,13 +92,15 @@ export function logoutRequest() {
   const logoutQuery = useMutation({
     mutationFn: async () => await axios.post("/api/auth/logout"),
     onSuccess: () => {
-      toast.success("Erfolgreich... logout!");
+      toast.custom(<Toast>you have been logged out</Toast>)
+      
+     
       redirect("/");
     }, // hier kann man success error und finally fälle einstellen
     onError: () => {
-      toast.success("Clear cookie failed!");
+      toast.custom(<div className="font-orbitron ring-2 flex justify-center items-center  border border-cyan-400 rounded-lg m-6 h-10 w-30 text-2xl text-cyan-300 p-8 text-center lg:flex   ">clear cookie failed</div>);
     },
-    onSettled: () => {},
+    onSettled: () => { },
   });
   return logoutQuery;
 }
@@ -125,10 +114,10 @@ export function profileRequest(...key) {
     queryFn: async () => await axios.get("/api/user/getProfile"),
     enabled: !!isOnline, // kann nur gefetched werden, wenn isOnline sich auf true verändert
     onSuccess: () => {
-      toast.success("Erfolgreich... fetched User");
+      toast.custom(<div className="font-orbitron ring-2 flex justify-center items-center  border border-cyan-400 rounded-lg m-6 mt-20 h-10 w-30 text-2xl text-cyan-300 p-8 text-center">welcome!</div>);
     }, // hier kann man success error und finally fälle einstellen
-    onError: () => {},
-    onSettled: () => {},
+    onError: () => { },
+    onSettled: () => { },
 
     // refetchInterval: 60000*10, // 10minute,
     staleTime: 60000 * 60, //daten bleiben 60sek lang gültig,
