@@ -114,6 +114,14 @@ app.use("/auth/facebook", facebookAuthRoute);
 
 app.use(deserializeUser) || app.use(passport.session());
 
+// Ignore Favicon Requests:
+// app.use((req, res, next) => {
+//   if (req.originalUrl === '/favicon.ico') {
+//     return res.status(204).end();
+//   }
+//   next();
+// });
+
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
 app.use("/api/test", messengerTestRoute);
