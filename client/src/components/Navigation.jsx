@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDarkLightMode, useProfileStore } from "../context/data/dataStore";
+import { useDarkLightMode, useProfileStore, useColorStore } from "../context/data/dataStore";
 import { logoutRequest } from "../context/api/auth";
 import { CloudMoon, Sun, User, UserPlus2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -7,15 +7,19 @@ import ReactSwitch from "react-switch";
 import { Button } from "@mui/material";
 import FriendRequests from "../components/FriendRequests"
 import Search from "./Search";
+import { ColorTheme } from "./ui/ColorTheme";
 
 
 // Beipiel
 export default function Navigation() {
   const [friendsRequestsList, setFriendsRequestsList] = useState(false)
 
-  const {userIdDB} = useProfileStore(state => state.defaultProfile)
+  const { userIdDB } = useProfileStore(state => state.defaultProfile)
 
   const { lightMode, setDarkMode } = useDarkLightMode();
+  const { colorPosition, setColorPosition, setSpecificColor, color } =
+    useColorStore();
+
   const { isOnline, notifications, avatar, settings, chatRooms, contacts } =
     useProfileStore((state) => state.defaultProfile);
   const navigate = useNavigate();
@@ -54,7 +58,7 @@ export default function Navigation() {
     <div
       className={`fixed top-0 left-0 z-10 flex justify-between items-center w-full h-10 shadow-lg ${lightMode ? " bg-neutral-900" : " bg-white"}`}
     >
-      <div className="flex justify-between w-2/3 h-full rounded-lg sm:pl-0">
+      <div className={`flex justify-between w-2/3 h-full rounded-lg sm:pl-0 ${color}`} >
         {PageNav.map((navObj) =>
           !navObj.isMember || isOnline ? (
             <div
@@ -90,12 +94,12 @@ export default function Navigation() {
         />
       </div>
 
-      <Button onClick={()=>{setFriendsRequestsList(!friendsRequestsList)}}>
-      <UserPlus2 color="#22d3ee" />
+      <Button onClick={() => { setFriendsRequestsList(!friendsRequestsList) }}>
+        <UserPlus2 color="#22d3ee" />
       </Button>
       {friendsRequestsList === true &&
-        <FriendRequests userId = {userIdDB} />}
-
+        <FriendRequests userId={userIdDB} />}
+      <ColorTheme />
 
       <ReactSwitch
         onChange={setDarkMode}

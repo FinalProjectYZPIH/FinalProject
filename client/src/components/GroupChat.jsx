@@ -6,11 +6,12 @@ import { useProfileStore } from "../context/data/dataStore";
 import { useNavigate, useParams } from "react-router-dom";
 import { produce } from "immer";
 
-import { useDarkLightMode } from "../context/data/dataStore.jsx";
-import { Inputs } from "./ui/Inputs";
+import { useDarkLightMode, useColorStore } from "../context/data/dataStore.jsx";
+import { ColorInputs, Inputs } from "./ui/Inputs";
 import ScrollToBottom from "react-scroll-to-bottom";
-import { Button } from "./ui/Buttons";
+import { Button, ColorButton } from "./ui/Buttons";
 import Navigation from "./Navigation.jsx";
+import { ColorTheme } from "./ui/ColorTheme.jsx";
 
 // {
 //   type: 'single',
@@ -51,7 +52,9 @@ function GroupChat() {
 
   const { socket, sendMessage } = useSocketProvider();
   const { lightMode, setDarkMode } = useDarkLightMode();
-  console.log(chatRooms);
+  const { colorPosition, setColorPosition, setSpecificColor, color } =
+    useColorStore();
+
 
   const defaultMessageObj = {
     content: "",
@@ -70,22 +73,18 @@ function GroupChat() {
     chatRooms?.find((room) => {
 
 
-     if(room.chatName === ""){
-      return "Private_Chat"
-     }else{
-       return room?.chatName === chatName 
-     }
-    }) 
+      if (room.chatName === "") {
+        return "Private_Chat"
+      } else {
+        return room?.chatName === chatName
+      }
+    })
 
 
   );
 
   console.log(messageList);
-  // const [comments, setComments] = useState(roomConfig?.comments);
-  // const [admin, setAdmin] = useState(roomConfig?.chatAdmin)
 
-  // console.log(roomConfig?.chatMessages);
-  // console.log(roomConfig?.chatAdmin);
 
   useEffect(() => {
     setMessageList(roomConfig?.chatMessages || []);
@@ -93,7 +92,7 @@ function GroupChat() {
 
   // hier wird die daten aus backend immer mit dazugehörigen room aktualisiert
   useEffect(() => {
-    if(socket && socket.on){
+    if (socket && socket.on) {
       socket.on("messages_groupRoom", (message, room) => {
         console.log(message);
         setMessageList((list) => [...list, message]);
@@ -107,6 +106,7 @@ function GroupChat() {
   console.log("Stored Data:", storedData?.defaultProfile?.chatMessages);
 
   const sendMessages = async () => {
+    console.log('button clicked!')
     if (currentMessage.content !== "") {
       const message = sendMessage(currentMessage, (cb) => console.log(cb));
       console.log(message);
@@ -122,13 +122,15 @@ function GroupChat() {
   console.log(roomConfig?.chatMessages);
   return (
     <div
-      className={`chat-window font-orbitron w-screen h-screen ${
-        lightMode ? "dark bg-none" : "light bg-none"
-      }`}
+      className={`chat-window font-orbitron w-screen h-screen ${lightMode ? "dark bg-none" : "light bg-none"
+        }`
+      }
     >
-      <div className="chat-header border mt-5 border-cyan-400 rounded-lg p-5 h-4/5 w-auto shadow-lg backdrop-blur">
+
+   
+      <div className={`chat-header border mt-5 border-cyan-400 rounded-lg p-5 h-4/5 w-auto shadow-lg backdrop-blur ${color}`}>
         <p>Live Chat</p>
-        <div className="chat-body flex flex-col border border-cyan-800 h-[500px] rounded-lg py-5 px-1">
+        <div className={`chat-body flex flex-col border border-cyan-800 h-[500px] rounded-lg py-5 px-1 ${color}`}>
           <ScrollToBottom className="overflow-x-hidden">
             {(messageList ?? []).map((messageContent, index) => {
               return (
@@ -136,13 +138,13 @@ function GroupChat() {
                   key={index}
                   className={
                     username === messageContent.author ||
-                    username === messageContent.sender
+                      username === messageContent.sender
                       ? "self-message flex justify-end rounded-lg break-words"
                       : "other-message flex justify-start rounded-lg break-words  "
                   }
                 >
                   <div>
-                    <div className="message-content w-60 border border-cyan-400 p-2 m-1 rounded-lg ">
+                    <div className={`message-content w-60 border border-cyan-400 p-2 m-1 rounded-lg ${color}`}>
                       <p>{messageContent.content}</p>
                       <div className="message-meta flex justify-end text-xs p-2">
                         <p id="author">{messageContent.sender}</p>
@@ -157,10 +159,11 @@ function GroupChat() {
             })}
           </ScrollToBottom>
         </div>
-        <div className="chat-footer flex fixed bottom-2 left-0">
-          <form>
+        <div className={`chat-footer flex fixed bottom-2 left-0 ml-5`}>
+          <form> 
+            <label className="flex" >message</label>
             <input
-              className="bg-blue-950 bg-opacity-5 block w-full px-10 py-1 text-lg text-cyan-400 focus:ring-2 focus:ring-offset-2 focus:ring-sky-300 border-b-2 rounded-lg border-grey-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:text-white focus:bg-sky-600 focus:bg-opacity-25 focus:border-blue-600 hover:border-b-cyan-400"
+            className={`${color} rounded-lg block bg-transparent `}
               type="text"
               value={currentMessage.content}
               placeholder="Hey..."
@@ -177,7 +180,8 @@ function GroupChat() {
           </form>
 
           <div className="fixed bottom-1 right-0 w-32">
-            <Button onClick={sendMessages}>GO</Button>
+            {/* <ColorButton onClick={sendMessages}>GO</ColorButton> */}
+            <ColorButton onClick={sendMessages}>GO</ColorButton>
           </div>
         </div>
       </div>

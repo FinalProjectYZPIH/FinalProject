@@ -1,9 +1,10 @@
 import axios from "../../libs/axiosProtected";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { useProfileStore } from "../data/dataStore";
+import { useProfileStore, useColorStore } from "../data/dataStore";
 import { redirect, useNavigate } from "react-router-dom";
-import { Toast } from "../../components/ui/Toasts";
+import { Toast, ColorToast } from "../../components/ui/Toasts";
+
 
 // const queryClient = useQueryClient();
 
@@ -134,7 +135,7 @@ export function profileRequest(...key) {
     queryFn: async () => await axios.get("/api/user/getProfile"),
     enabled: !!isOnline, // kann nur gefetched werden, wenn isOnline sich auf true verändert
     onSuccess: () => {
-      toast.custom(<Toast>WELCOME!</Toast>)
+      toast.custom(<ColorToast>WELCOME!</ColorToast>)
     }, 
     onError: () => { },
     onSettled: () => { },
