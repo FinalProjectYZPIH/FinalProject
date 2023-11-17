@@ -158,14 +158,17 @@ export const logout = async (req, res, next) => {
       httpOnly: false,
       sameSite: "lax",
       secure: false,
+      
     });
-
+    res.cookie("accessJwt","",{expires: new Date(0)})
+    
     res
-      .clearCookie("refreshJwt", {
-        httpOnly: false,
-        sameSite: "lax",
-        secure: false,
-      })
+    .clearCookie("refreshJwt", {
+      httpOnly: false,
+      sameSite: "lax",
+      secure: false,
+    })
+    res.cookie("refreshJwt","",{expires: new Date(0)})
       .status(200)
       .json({ message: "user success logged out" });
   } catch (error) {

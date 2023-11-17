@@ -26,16 +26,16 @@ export default function Home() {
 
 
     // Hier wird die useQuery-Hook innerhalb der React-Komponente verwendet
-    const { data: userData, isSuccess, isError } = refreshRequest("validUser");
-    console.log(userData)
-    if (isError) {
-      console.log("hi")
-      toast.error("Fehler beim Aktualisieren des Tokens");
-    } else if (isSuccess) {
-      setLogin();
-      toast.success("Erfolgreich ausgelesen");
-      if (isOnline === true) navigate("/chat");
-    }
+    // const { data: userData, isSuccess, isError } = refreshRequest("validUser");
+    // console.log(userData)
+    // if (isError) {
+    //   console.log("hi")
+    //   toast.error("Fehler beim Aktualisieren des Tokens");
+    // } else if (isSuccess) {
+    //   setLogin();
+    //   toast.success("Erfolgreich ausgelesen");
+    //   if (isOnline === true) navigate("/chat");
+    // }
 
 
 
@@ -44,12 +44,6 @@ export default function Home() {
     <div className="">
       <Outlet />
       <HomeComponent />
-      {/* <form action="">
-        <input type="text" placeholder="Write messages" />
-        <button type="submit" onClick={sendMessage}>
-          Send Message
-        </button>
-      </form> */}
     </div>
   );
 }
