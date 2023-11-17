@@ -69,12 +69,14 @@ function GroupChat() {
   const [roomConfig, setRoomConfig] = useState(
     chatRooms?.find((room) => {
 
+
      if(room.chatName === ""){
       return "Private_Chat"
      }else{
        return room?.chatName === chatName 
      }
     }) 
+
 
   );
 

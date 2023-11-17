@@ -23,11 +23,6 @@ export default function Home() {
     socket.emit("message", { message: "hello" });
   }
 
-  // if (isOnline === false) {
-  //   console.log("Vor resetProfile:", useProfileStore.getState());
-  //   resetProfile();
-  //   console.log("Nach resetProfile:", useProfileStore.getState());
-  // }
 
 
     // Hier wird die useQuery-Hook innerhalb der React-Komponente verwendet
@@ -41,6 +36,7 @@ export default function Home() {
       toast.success("Erfolgreich ausgelesen");
       if (isOnline === true) navigate("/chat");
     }
+
 
 
 
