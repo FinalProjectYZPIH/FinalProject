@@ -15,7 +15,7 @@ import UserModel from "../models/user.model.js";
 import nodemailer from "nodemailer";
 
 // services
-import { compareDBPassword } from "../services/user.service.js";
+import { compareDBPassword, dbFindOneUserById } from "../services/user.service.js";
 import {
   acceptCookie,
   findSessions,
@@ -128,7 +128,9 @@ export const sessionRefreshHandler = async (req, res, next) => {
         return next("Session Refresh Request Failed");
       }
 
-      res.status(200).json({ message: "session refreshed" });
+      const user = dbFindOneUserById(decoded?.UserInfo.id, next)
+
+      res.status(200).json(user);
     }
   } catch (error) {
     // next(error)

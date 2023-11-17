@@ -22,6 +22,7 @@ const useSocketIo = (
     // timeout: 15000, // verbindungsabruch nach 15sek
     timestampRequests: true, // zeitstempel bei jeden request hinzufügen
     timestampParam: "zeitstempel",
+    reconnection:true,
     // transports: ["websocket", "polling"], //verbindungsart nach partial
   }
 ) => {
@@ -43,6 +44,10 @@ const useSocketIo = (
       console.error("Socketio Verbindungsfehler:", error);
       // Füge hier die Fehlerbehandlung hinzu, z.B. Anzeigen einer Fehlermeldung im UI.
     });
+
+    // newSocket.on("disconnect", () => {
+    //   newSocket.connect()
+    // })
 
     // return () => {
     //   newSocket.disconnect();

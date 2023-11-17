@@ -68,11 +68,16 @@ function GroupChat() {
   const [messageList, setMessageList] = useState([]);
   const [roomConfig, setRoomConfig] = useState(
     chatRooms?.find((room) => {
-      if (room.chatName === "") {
-        return "leere String";
-      }
-      room?.chatName === chatName;
-    })
+
+
+     if(room.chatName === ""){
+      return "Private_Chat"
+     }else{
+       return room?.chatName === chatName 
+     }
+    }) 
+
+
   );
 
   console.log(messageList);
@@ -83,17 +88,19 @@ function GroupChat() {
   // console.log(roomConfig?.chatAdmin);
 
   useEffect(() => {
-    setMessageList(roomConfig?.chatMessages);
+    setMessageList(roomConfig?.chatMessages || []);
   }, [chatName]);
 
   // hier wird die daten aus backend immer mit dazugehörigen room aktualisiert
   useEffect(() => {
-    socket.on("messages_groupRoom", (message, room) => {
-      console.log(message);
-      setMessageList((list) => [...list, message]);
-      setChatRooms(room);
-      console.log("roomtest", room);
-    });
+    if(socket && socket.on){
+      socket.on("messages_groupRoom", (message, room) => {
+        console.log(message);
+        setMessageList((list) => [...list, message]);
+        setChatRooms(room);
+        console.log("roomtest", room);
+      });
+    }
   }, [socket]);
 
   const storedData = JSON.parse(sessionStorage.getItem("Profile"));
@@ -115,16 +122,15 @@ function GroupChat() {
   console.log(roomConfig?.chatMessages);
   return (
     <div
-      className={`chat-window font-orbitron grid grid-cols-1 w-screen h-screen sm:bg-cover mt-2 sm:bg-center  bg-no-repeat lg:bg-contain lg:bg-right ${
+      className={`chat-window font-orbitron w-screen h-screen ${
         lightMode ? "dark bg-none" : "light bg-none"
       }`}
     >
-      {/* <Navigation /> */}
-      <div className="chat-header border border-cyan-400 rounded-lg p-5 m-5 h-3/4 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-25">
+      <div className="chat-header border mt-5 border-cyan-400 rounded-lg p-5 h-4/5 w-auto shadow-lg backdrop-blur">
         <p>Live Chat</p>
-        <div className="chat-body flex flex-col border border-cyan-800 h-[500px] rounded-lg py-5 px-2">
+        <div className="chat-body flex flex-col border border-cyan-800 h-[500px] rounded-lg py-5 px-1">
           <ScrollToBottom className="overflow-x-hidden">
-            {messageList.map((messageContent, index) => {
+            {(messageList ?? []).map((messageContent, index) => {
               return (
                 <div
                   key={index}
@@ -151,22 +157,26 @@ function GroupChat() {
             })}
           </ScrollToBottom>
         </div>
-        <div className="chat-footer flex fixed bottom-1">
-          <Inputs
-            type="text"
-            value={currentMessage.content}
-            placeholder="Hey..."
-            onChangeFn={(event) => {
-              setCurrentMessage({
-                ...currentMessage,
-                content: event.target.value,
-              });
-            }}
-            onKeyPress={(event) => {
-              event.key === "Enter" && sendMessages();
-            }}
-          />
-          <div className="mt-4 py-1 w-36">
+        <div className="chat-footer flex fixed bottom-2 left-0">
+          <form>
+            <input
+              className="bg-blue-950 bg-opacity-5 block w-full px-10 py-1 text-lg text-cyan-400 focus:ring-2 focus:ring-offset-2 focus:ring-sky-300 border-b-2 rounded-lg border-grey-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:text-white focus:bg-sky-600 focus:bg-opacity-25 focus:border-blue-600 hover:border-b-cyan-400"
+              type="text"
+              value={currentMessage.content}
+              placeholder="Hey..."
+              onChange={(event) => {
+                setCurrentMessage({
+                  ...currentMessage,
+                  content: event.target.value,
+                });
+              }}
+              onKeyPress={(event) => {
+                event.key === "Enter" && sendMessages();
+              }}
+            />
+          </form>
+
+          <div className="fixed bottom-1 right-0 w-32">
             <Button onClick={sendMessages}>GO</Button>
           </div>
         </div>

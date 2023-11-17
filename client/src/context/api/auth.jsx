@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useProfileStore } from "../data/dataStore";
 import { redirect, useNavigate } from "react-router-dom";
+import { Toast } from "../../components/ui/Toasts";
 
 // const queryClient = useQueryClient();
 
@@ -47,51 +48,41 @@ export function registerRequest() {
     },
     onSuccess: () => {
       navigate("/login", { replace: true });
-      toast.success("Erfolgreich Registriert!");
+      toast.custom(<Toast>successfully registered</Toast>)
     },
     onError: (error) => {
-      toast.error("Fehler bei der Anmeldung:", error);
+      toast.custom(<Toast> Failed to Sign In</Toast>)
     },
   });
-
   return registerMutation;
 }
 
+
+
 export function loginRequest() {
-  //tested
   const loginMutation = useMutation({
     mutationFn: async (loginData) =>
       await axios.post("/api/auth/login", loginData),
     onSuccess: () => {
-      toast.success("Willkommen zurück!");
-    }, // hier kann man success error und finally fälle einstellen
+      // toast.custom(<Toast>Welcome back!</Toast>)
+    }, 
     onError: () => {
-      toast.error("Fail to  sign in...");
+      toast.custom(<Toast> Failed to Login</Toast>)
     },
-    onSettled: () => {},
+    onSettled: () => { },
   });
 
   return loginMutation;
 }
 
-export function refreshRequest(...key) {
+export async function refreshRequest(...key) {
+  const { setLogin } = useProfileStore()
   return useQuery(
     key,
     async () => {
       const response = await axios.get("/api/auth/tokenRefresh");
       return response;
     },
-    {
-      onSuccess: () => {
-        toast.success("Erfolgreich...");
-      }, // hier kann man success error und finally fälle einstellen
-      onError: () => {
-        toast.success("Failed!");
-      },
-      onSettled: () => {
-        toast.success("Erfolgreich... Failed!");
-      },
-    }
   );
 }
 
@@ -104,11 +95,12 @@ export function googleRequest(...key) {
     },
     {
       onSuccess: () => {
-        toast.success("Erfolgreich... Failed!");
-      }, // hier kann man success error und finally fälle einstellen
-      onError: () => {},
+       
+       
+      }, 
+      onError: () => { },
       onSettled: () => {
-        toast.success("google fetching...");
+      //  toast.success("google fetching...");
       },
     }
   );
@@ -118,16 +110,20 @@ export function logoutRequest() {
   const logoutQuery = useMutation({
     mutationFn: async () => await axios.post("/api/auth/logout"),
     onSuccess: () => {
-      toast.success("Erfolgreich... logout!");
+      toast.custom(<Toast>you have been logged out</Toast>)
+
       redirect("/");
     }, // hier kann man success error und finally fälle einstellen
     onError: () => {
-      toast.success("Clear cookie failed!");
+      toast.custom(<Toast> Failed to clear Cookie</Toast>)
+
     },
-    onSettled: () => {},
+    onSettled: () => { },
   });
   return logoutQuery;
 }
+
+
 
 export function profileRequest(...key) {
   const { isOnline } = useProfileStore((state) => state.defaultProfile);
@@ -138,10 +134,10 @@ export function profileRequest(...key) {
     queryFn: async () => await axios.get("/api/user/getProfile"),
     enabled: !!isOnline, // kann nur gefetched werden, wenn isOnline sich auf true verändert
     onSuccess: () => {
-      toast.success("Erfolgreich... fetched User");
-    }, // hier kann man success error und finally fälle einstellen
-    onError: () => {},
-    onSettled: () => {},
+      toast.custom(<Toast>WELCOME!</Toast>)
+    }, 
+    onError: () => { },
+    onSettled: () => { },
 
     // refetchInterval: 60000*10, // 10minute,
     staleTime: 60000 * 60, //daten bleiben 60sek lang gültig,
