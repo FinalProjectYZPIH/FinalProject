@@ -1,19 +1,23 @@
 import React, { useState } from "react";
 import { useDarkLightMode, useProfileStore } from "../context/data/dataStore";
 import { logoutRequest } from "../context/api/auth";
-import { CloudMoon, Sun, User, UserPlus2 } from "lucide-react";
+import { AlignJustify, CloudMoon, Sun, User, UserPlus2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import ReactSwitch from "react-switch";
 import { Button } from "@mui/material";
-import FriendRequests from "../components/FriendRequests"
+import FriendRequests from "../components/FriendRequests";
 import Search from "./Search";
-
 
 // Beipiel
 export default function Navigation() {
-  const [friendsRequestsList, setFriendsRequestsList] = useState(false)
+  const [friendsRequestsList, setFriendsRequestsList] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const {userIdDB} = useProfileStore(state => state.defaultProfile)
+  const toggleNavbar = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const { userIdDB } = useProfileStore((state) => state.defaultProfile);
 
   const { lightMode, setDarkMode } = useDarkLightMode();
   const { isOnline, notifications, avatar, settings, chatRooms, contacts } =
@@ -52,59 +56,70 @@ export default function Navigation() {
 
   return (
     <div
-      className={`fixed top-0 left-0 z-10 flex justify-between items-center w-full h-10 shadow-lg ${lightMode ? " bg-neutral-900" : " bg-white"}`}
+      className={`fixed top-0 left-0 z-10 flex justify-between items-center w-full h-10 shadow-lg ${
+        lightMode ? " bg-neutral-900" : " bg-white"
+      }`}
     >
-      <div className="flex justify-between w-2/3 h-full rounded-lg sm:pl-0">
-        {PageNav.map((navObj) =>
-          !navObj.isMember || isOnline ? (
-            <div
-              className="flex items-center justify-center bg-transparent hover:border-y-teal-400 hover:bg-cyan-400 text-sky-400 hover:text-white hover:bg-opacity-1 hover:border-transparent w-20 rounded-lg mx-0.5"
-              key={navObj.path}
-            >
-              <Link to={navObj.path}>{navObj.name}</Link>
-            </div>
-          ) : null
-        )}
-        <div className="flex items-center justify-center bg-transparent hover:border-y-teal-400 hover:bg-cyan-400 text-sky-400 hover:text-white hover:bg-opacity-1 hover:border-transparent w-20 rounded-lg mx-0.5">
-          <button onClick={handleLogout}>Logout</button>
+      <div className={`flex w-3/5`}>
+        <button className={`md:hidden`} onClick={toggleNavbar}>
+          <AlignJustify size={32} color="#22d3ee" />
+        </button>
+        <div
+          className={`md:flex md:justify-between h-8 ${
+            isOpen ? "sm:flex-col" : "hidden"
+          }`}
+        >
+          {PageNav.map((navObj) =>
+            !navObj.isMember || isOnline ? (
+              <div
+                className="flex items-center justify-center bg-transparent hover:border-y-teal-400 hover:bg-cyan-400 text-sky-400 hover:text-white hover:bg-opacity-1 hover:border-transparent w-20 rounded-lg mx-0.5"
+                key={navObj.path}
+              >
+                <Link to={navObj.path}>{navObj.name}</Link>
+              </div>
+            ) : null
+          )}
+          <div className="flex items-center justify-center bg-transparent hover:border-y-teal-400 hover:bg-cyan-400 text-sky-400 hover:text-white hover:bg-opacity-1 hover:border-transparent w-20 rounded-lg mx-0.5">
+            <button onClick={handleLogout}>Logout</button>
+          </div>
         </div>
+      </div>
+      <div className="flex items-center justify-between w-96">
         <div className="w-52">
           <form>
             <input
-              className="w-32 focus:w-52 h-8 pl-4 mt-0.5 pr-8 text-gray-900 rounded-full border border-cyan-400 outline-cyan-400"
+              className="w-32 focus:w-52 h-8 pl-4 pr-8 text-gray-900 rounded-full border border-cyan-400 outline-cyan-400"
               id="search"
               type="search"
               placeholder="Search..."
             />
           </form>
         </div>
-      </div>
-      <div className="flex items-center mx-2">
-
-
-
         <img
-          className="w-8 h-8 rounded-full ml-2 border border-cyan-400"
+          className="w-8 h-8 rounded-full border border-cyan-400"
           src={UserNav.avatar}
           alt="Profile"
         />
+        <div className="h-8 w-12">
+          <Button
+            onClick={() => {
+              setFriendsRequestsList(!friendsRequestsList);
+            }}
+          >
+            <UserPlus2 color="#22d3ee" />
+          </Button>
+          {friendsRequestsList === true && <FriendRequests userId={userIdDB} />}
+        </div>
+
+        <ReactSwitch
+          onChange={setDarkMode}
+          checked={lightMode}
+          offColor={"#22d3ee"}
+          onColor={"#22d3ee"}
+          checkedIcon={<CloudMoon />}
+          uncheckedIcon={<Sun />}
+        />
       </div>
-
-      <Button onClick={()=>{setFriendsRequestsList(!friendsRequestsList)}}>
-      <UserPlus2 color="#22d3ee" />
-      </Button>
-      {friendsRequestsList === true &&
-        <FriendRequests userId = {userIdDB} />}
-
-
-      <ReactSwitch
-        onChange={setDarkMode}
-        checked={lightMode}
-        offColor={"#22d3ee"}
-        onColor={"#22d3ee"}
-        checkedIcon={<CloudMoon />}
-        uncheckedIcon={<Sun />}
-      />
     </div>
   );
 }

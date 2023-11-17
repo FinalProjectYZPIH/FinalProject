@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useDarkLightMode } from "../context/data/dataStore";
+import toast from "react-hot-toast";
+import { Toast } from "./ui/Toasts";
 
 const FriendRequests = (userId) => {
+  const { lightMode, setDarkMode } = useDarkLightMode();
   const [friendRequests, setFriendRequests] = useState([]);
 
   useEffect(() => {
@@ -34,25 +38,27 @@ const FriendRequests = (userId) => {
   };
 
   return (
-    <div>
+    <div className="text-cyan-400">
       {friendRequests.length === 0 ? (
-        <h2>No Friend Requests yet </h2>
+        <div className="border text-sm border-cyan-400 rounded-lg w-40">
+          No Friend Requests
+        </div>
       ) : (
         <div>
-        <ul>
-          {friendRequests.map((request) => (
-            <li key={request._id}>
-              <p> {request.senderName}</p>
-              <p> {request.status}</p>
-              <button onClick={() => handleResponse(request._id, "accepted")}>
-                Accept
-              </button>
-              <button onClick={() => handleResponse(request._id, "rejected")}>
-                Reject
-              </button>
-            </li>
-          ))}
-        </ul>
+          <ul>
+            {friendRequests.map((request) => (
+              <li key={request._id}>
+                <p> {request.senderName}</p>
+                <p> {request.status}</p>
+                <button onClick={() => handleResponse(request._id, "accepted")}>
+                  Accept
+                </button>
+                <button onClick={() => handleResponse(request._id, "rejected")}>
+                  Reject
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>
