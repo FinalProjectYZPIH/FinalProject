@@ -38,6 +38,10 @@ const userSchema = new mongoose.Schema(
       type:String,
       unique: true,
     },
+    isVerified:{
+      type:Boolean,
+      default:false
+    },
     email: {
       type: String,
       unique: true,

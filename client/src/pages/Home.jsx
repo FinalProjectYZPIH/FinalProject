@@ -23,11 +23,6 @@ export default function Home() {
     socket.emit("message", { message: "hello" });
   }
 
-  // if (isOnline === false) {
-  //   console.log("Vor resetProfile:", useProfileStore.getState());
-  //   resetProfile();
-  //   console.log("Nach resetProfile:", useProfileStore.getState());
-  // }
 
 
     // Hier wird die useQuery-Hook innerhalb der React-Komponente verwendet
@@ -44,16 +39,11 @@ export default function Home() {
 
 
 
+
   return (
     <div className="">
       <Outlet />
       <HomeComponent />
-      {/* <form action="">
-        <input type="text" placeholder="Write messages" />
-        <button type="submit" onClick={sendMessage}>
-          Send Message
-        </button>
-      </form> */}
     </div>
   );
 }

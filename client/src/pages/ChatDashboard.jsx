@@ -90,14 +90,6 @@ export default function ChatDashboard() {
   );
 }
 
-// const groupChatData = {
-//   chatName: "My Group Chat",
-//   isGroupChat: true,
-//   chatMessages: [], // Hier werden Nachrichten hinzugefügt
-//   participants: [userId1, userId2], // Teilnehmer des Gruppenchats
-//   chatAdmin: chatAdminUserId,
-// };
-
 // const messageData = {
 //   sender: userId,
 //   content: "Hello, this is a message!",
