@@ -19,19 +19,19 @@ const authApi = axios.create({
 //   return config;
 // });
 
-authApi.interceptors.response.use(
-  (response) => {
-    // Erfolgreiche Antwort verarbeiten
-    return response;
-  },
-  (error) => {
-    const navigate = useNavigate()
-    // Fehler verarbeiten
-    if (error.response && error.response.status === 500) {
-      // Hier weiterleiten, wenn der Status 500 ist
-      navigate("/"); // Stellen Sie sicher, dass "/home" Ihre richtige Home-Seite ist
-    }
-    return Promise.reject(error);
-  }
-);
+// authApi.interceptors.response.use( // need to be fixed if needed 
+//   (response) => {
+//     // Erfolgreiche Antwort verarbeiten
+//     return response;
+//   },
+//   (error) => {
+//     const navigate = useNavigate()
+//     // Fehler verarbeiten
+//     if (error.response && error.response.status === 500) {
+//       // Hier weiterleiten, wenn der Status 500 ist
+//       navigate("/"); // Stellen Sie sicher, dass "/home" Ihre richtige Home-Seite ist
+//     }
+//     return Promise.reject(error);
+//   }
+// );
 export default authApi;

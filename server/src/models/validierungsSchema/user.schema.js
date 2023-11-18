@@ -34,7 +34,7 @@ export const registerFormSchema = z
       }),
     birthday: z
       .string({ message: "Datetime Nur String erlaubt" })
-      .regex(birthdayRegex, { message: "TT.MM.JJJJ dateformat" }), // genaue Info >>https://zod.dev/?id=basic-usage  datetime Key eingeben
+      .regex(birthdayRegex, { message: "JJJJ.TT.MM dateformat" }), // genaue Info >>https://zod.dev/?id=basic-usage  datetime Key eingeben
     email: z
       .string({ message: "Email Nur String erlaubt" })
       .trim()

@@ -2,8 +2,6 @@ import ProtectionProvider from "../../context/auth/ProtectionProvider";
 import { useProfileStore } from "../../context/data/dataStore";
 
 import { Navigate } from "react-router-dom";
-import ChatSidebar from "../../components/ChatSidebar";
-import ContactSidebar from "../../components/ContactSidebar";
 
 import { Routes, Route } from "react-router-dom";
 import ChatDashboard from "../ChatDashboard";
@@ -12,20 +10,19 @@ import App from "../App";
 
 import Navigation from "../../components/Navigation";
 import { profileRequest } from "../../context/api/auth";
-
-
+import toast from "react-hot-toast";
+import { ColorToast } from "../../components/ui/Toasts";
 
 export default function RootLayout() {
   // const { isOnline } = useProfileStore((state) => state.defaultProfile);
   // console.log(isOnline);
   const { defaultProfile, resetProfile, setProfile, setChatRooms, setLogout } =
-  useProfileStore();
+    useProfileStore();
 
-const { isOnline, userId, role, username, email, userIdDB, chatRooms } =
-  useProfileStore((state) => state.defaultProfile);
-console.log(userId, role, username, email, userIdDB);
+  const { isOnline, userId, role, username, email, userIdDB, chatRooms } =
+    useProfileStore((state) => state.defaultProfile);
+  console.log(userId, role, username, email, userIdDB);
   const { data: userData, isSuccess, isError } = profileRequest("Yan");
-
 
   if (isSuccess) {
     setProfile({
@@ -34,31 +31,30 @@ console.log(userId, role, username, email, userIdDB);
       role: userData?.data?.role,
       username: userData?.data?.username,
       email: userData?.data?.email,
-      avatar: "avatar",
+      avatar: userData?.data.avatarImage,
+
     });
+
   }
+  console.log(isSuccess)
+  console.log(isOnline)
+
   if (isOnline === false) {
-    return <Navigate to="/" />;
+    return <Navigate to="/login" />;
   }
-
-
 
   return (
-
     <>
-    <ProtectionProvider isAllowed={isOnline}>
-
-<Navigation />
-      <Routes>
-        {/* <Route path="" element={<Navigate to="/chat" />} /> */}
-        <Route path="chat" element={<App />}>
-          <Route path="" element={<ChatDashboard />} />
-          <Route path=":chatName" element={<GroupChat />} />
-        </Route>
-      </Routes>
-
-    </ProtectionProvider>
+      <ProtectionProvider isAllowed={isOnline}>
+        <Navigation />
+        <Routes>
+          {/* <Route path="" element={<Navigate to="/chat" />} /> */}
+          <Route path="chat" element={<App />}>
+            <Route path="" element={<ChatDashboard />} />
+            <Route path=":chatName" element={<GroupChat />} />
+          </Route>
+        </Routes>
+      </ProtectionProvider>
     </>
-
   );
 }

@@ -51,9 +51,7 @@ export const useDarkLightMode = create(
   )
 );
 
-
-
-export const useProfileStore = create( 
+export const useProfileStore = create(
   persist(
     immer(
       produce((set, get) => ({
@@ -124,10 +122,8 @@ export const useProfileStore = create(
             // },
             // {
             //   type: "group",
-
             //   chatName: "FirstRoom",
             //   chatAdmin: "Test",
-
             //   chatMessages: [
             //     {
             //         sender: "",
@@ -153,7 +149,6 @@ export const useProfileStore = create(
             //     comments: [{ content: "sample coments", likes: 5, emojis: [] }],
             //   },
             // },
-
           ],
           settings: {},
         },
@@ -219,6 +214,11 @@ export const useProfileStore = create(
               }
             });
           }),
+        deleteChatRooms: (roomName) => set((state) => {
+          return produce(state, (draftState) => {
+            draftState.defaultProfile.chatRooms = draftState.defaultProfile.chatRooms.filter((room) => room?.chatName !== roomName);
+          })
+        }),
         setContacts: (contacts) =>
           set((state) => {
             state.defaultProfile.contacts.push(contacts);
@@ -239,9 +239,9 @@ export const useProfileStore = create(
     ),
     {
       name: "Profile",
-      onRehydrateStorage: (state) => {
+      onRehydrateStorage: async (state) => {
         console.log("Rehydration successful");
-        return produce(state, (draftState) => {
+        return await produce(state, (draftState) => {
           draftState.defaultProfile.chatRooms.forEach((room) => {
             if (room && room.chatMessages) {
               // Initialisiere chatMessages, wenn es nicht vorhanden ist
@@ -256,7 +256,6 @@ export const useProfileStore = create(
       //   mergeDeepLeft(persistedState, currentState)
       // },
 
-
       storage: createJSONStorage(() => {
         console.log("Persisting state to sessionStorage");
         return sessionStorage;
@@ -266,7 +265,6 @@ export const useProfileStore = create(
 );
 
 // Chatliste werden in Localstorage gepeichert messageLIste: [{ participants: [userId1, userId2]}, ...]  2 teilnehmer= direkter chat  >2 teinehmer = groupchat
-
 
 // hier sind chatdaten für die speicherung im localstorage damit der chat effizienter läuft
 //export const useChatStore = create(
@@ -282,7 +280,6 @@ export const useProfileStore = create(
 //    })
 //  )
 // );
-
 
 // messageData kann bei allen stelle angehängt werden also auch als attachdocument
 // const messageData = {

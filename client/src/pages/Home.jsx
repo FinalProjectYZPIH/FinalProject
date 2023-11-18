@@ -2,12 +2,9 @@ import { Outlet } from "react-router-dom";
 import { useSocketProvider } from "../context/data/SocketProvider";
 import { HomeComponent } from "../components/HomeComponent";
 import { useProfileStore } from "../context/data/dataStore";
-
-import { refreshRequest } from "../context/api/auth";
 import { useNavigate } from "react-router-dom";
 
-import FriendRequests from "../components/FriendRequests";
-import { toast } from "react-hot-toast";
+
 
 
 export default function Home() {
@@ -42,6 +39,7 @@ export default function Home() {
 
   return (
     <div className="">
+         
       <Outlet />
       <HomeComponent />
     </div>

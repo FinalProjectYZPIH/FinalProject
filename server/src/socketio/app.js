@@ -33,11 +33,9 @@ let currentUserId = null;
 export function socketInitiation() {
     io.use(async (socket, next) => {
       const token = socket.handshake.headers["cookie"];
-      const { accessJwt } = parse(token);
+      const { accessJwt } = parse(`${token}`);
       //  console.log( accessJwt)
       const { decoded, valid } = verifyJwt(accessJwt, process.env.ACCESS_TOKEN);
-
-
       try {
         if (valid) {
           const updatedUser = await updateUserSocket(decoded.UserInfo.id, socket.id);
