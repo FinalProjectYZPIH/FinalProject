@@ -40,7 +40,9 @@ const FriendRequests = (userId) => {
   return (
     <div className="text-cyan-400">
       {friendRequests.length === 0 ? (
-        <div className="border text-sm border-cyan-400 rounded-lg w-40">
+        <div className={`${
+          lightMode ? " bg-neutral-900" : " bg-white"
+        } fixed right-2 border border-cyan-400 rounded-lg sm:w-32 md:w-52 text-center pt-2 my-6 h-1/6`}>
           No Friend Requests
         </div>
       ) : (

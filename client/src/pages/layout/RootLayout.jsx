@@ -11,16 +11,41 @@ import GroupChat from "../../components/GroupChat";
 import App from "../App";
 
 import Navigation from "../../components/Navigation";
+import { profileRequest } from "../../context/api/auth";
 
 
 
 export default function RootLayout() {
-  const { isOnline } = useProfileStore((state) => state.defaultProfile);
-  console.log(isOnline);
+  // const { isOnline } = useProfileStore((state) => state.defaultProfile);
+  // console.log(isOnline);
+  const { defaultProfile, resetProfile, setProfile, setChatRooms, setLogout } =
+  useProfileStore();
+
+const { isOnline, userId, role, username, email, userIdDB, chatRooms } =
+  useProfileStore((state) => state.defaultProfile);
+console.log(userId, role, username, email, userIdDB);
+  const { data: userData, isSuccess, isError } = profileRequest("Yan");
+
+
+  if (isSuccess) {
+    setProfile({
+      userIdDB: userData?.data?._id,
+      userId: userData?.data?.userId,
+      role: userData?.data?.role,
+      username: userData?.data?.username,
+      email: userData?.data?.email,
+      avatar: "avatar",
+    });
+  }
+  if (isOnline === false) {
+    return <Navigate to="/" />;
+  }
+
+
 
   return (
 
-    // <>
+    <>
     <ProtectionProvider isAllowed={isOnline}>
 
 <Navigation />
@@ -33,7 +58,7 @@ export default function RootLayout() {
       </Routes>
 
     </ProtectionProvider>
-    // </>
+    </>
 
   );
 }

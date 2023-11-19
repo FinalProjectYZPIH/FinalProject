@@ -26,29 +26,46 @@ export function registerRequest() {
   const registerMutation = useMutation({
 
     mutationFn: async (loginData) => {
-      return await axios.post("/api/user/createUser", loginData);
+      // Erstelle zuerst den Benutzer
+      const createUserResponse = await axios.post(
+        "/api/user/createUser",
+        loginData
+      );
+
+      // Dann sende die Verifizierungs-E-Mail
+      const verificationEmailResponse = await axios.post(
+        "/api/auth/sendMailVerify",
+        {
+          recipient: loginData.email,
+        }
+      );
+
+      return {
+        createUserResponse,
+        verificationEmailResponse
+        // verificationResponse,
+      };
     },
     onSuccess: () => {
       navigate("/login", { replace: true });
-      toast.custom(<div className="font-orbitron ring-2 flex justify-center items-center  border border-cyan-400 rounded-lg m-6 h-10 w-30 text-2xl text-cyan-300 p-8 text-center lg:flex   ">successfully registered</div>);
+      toast.custom(<Toast>successfully registered</Toast>)
     },
     onError: (error) => {
-       toast.custom(<div className="font-orbitron ring-2 flex justify-center items-center  border border-cyan-400 rounded-lg m-6 h-10 w-30 text-2xl text-cyan-300 p-8 text-center">Failed to Sign In</div>);
+      toast.custom(<Toast> Failed to Sign In</Toast>)
     },
-
   });
-
   return registerMutation;
 }
 
+
+
 export function loginRequest() {
-  //tested
   const loginMutation = useMutation({
     mutationFn: async (loginData) =>
       await axios.post("/api/auth/login", loginData),
     onSuccess: () => {
       // toast.custom(<Toast>Welcome back!</Toast>)
-    }, // hier kann man success error und finally fälle einstellen
+    }, 
     onError: () => {
       toast.custom(<Toast> Failed to Login</Toast>)
     },
@@ -78,11 +95,12 @@ export function googleRequest(...key) {
     },
     {
       onSuccess: () => {
-        toast.success("Erfolgreich... Failed!");
-      }, // hier kann man success error und finally fälle einstellen
+       
+       
+      }, 
       onError: () => { },
       onSettled: () => {
-        toast.success("google fetching...");
+      //  toast.success("google fetching...");
       },
     }
   );
@@ -93,17 +111,19 @@ export function logoutRequest() {
     mutationFn: async () => await axios.post("/api/auth/logout"),
     onSuccess: () => {
       toast.custom(<Toast>you have been logged out</Toast>)
-      
-     
+
       redirect("/");
     }, // hier kann man success error und finally fälle einstellen
     onError: () => {
-      toast.custom(<div className="font-orbitron ring-2 flex justify-center items-center  border border-cyan-400 rounded-lg m-6 h-10 w-30 text-2xl text-cyan-300 p-8 text-center lg:flex   ">clear cookie failed</div>);
+      toast.custom(<Toast> Failed to clear Cookie</Toast>)
+
     },
     onSettled: () => { },
   });
   return logoutQuery;
 }
+
+
 
 export function profileRequest(...key) {
   const { isOnline } = useProfileStore((state) => state.defaultProfile);
@@ -114,13 +134,15 @@ export function profileRequest(...key) {
     queryFn: async () => await axios.get("/api/user/getProfile"),
     enabled: !!isOnline, // kann nur gefetched werden, wenn isOnline sich auf true verändert
     onSuccess: () => {
-      toast.custom(<div className="font-orbitron ring-2 flex justify-center items-center  border border-cyan-400 rounded-lg m-6 mt-20 h-10 w-30 text-2xl text-cyan-300 p-8 text-center">welcome!</div>);
-    }, // hier kann man success error und finally fälle einstellen
+      toast.custom(<Toast>WELCOME!</Toast>)
+    }, 
     onError: () => { },
     onSettled: () => { },
 
     // refetchInterval: 60000*10, // 10minute,
     staleTime: 60000 * 60, //daten bleiben 60sek lang gültig,
+    refetchOnReconnect:false,
+    refetchIntervalInBackground:false,
     // retry: 3,
     // retryDelay: 30000
   });

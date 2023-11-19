@@ -6,7 +6,6 @@ import { Link, useNavigate } from "react-router-dom";
 import ReactSwitch from "react-switch";
 import { Button } from "@mui/material";
 import FriendRequests from "../components/FriendRequests";
-import Search from "./Search";
 
 // Beipiel
 export default function Navigation() {
@@ -48,6 +47,7 @@ export default function Navigation() {
   const handleLogout = async (e) => {
     e.preventDefault();
     setLogout() && toast.success("You are logged out");
+    clearCookies.mutate();
     // if (isOnline === false) {
     //   clearCookies.mutate();
     //   setLogout();
@@ -65,14 +65,16 @@ export default function Navigation() {
           <AlignJustify size={32} color="#22d3ee" />
         </button>
         <div
-          className={`md:flex md:justify-between h-8 ${
-            isOpen ? "sm:flex-col" : "hidden"
+          className={` md:flex md:justify-between h-8 ${
+            isOpen ? `${
+              lightMode ? " bg-neutral-900" : " bg-white"
+            } sm:flex-col sm:index-10 sm:px-5 sm:fixed sm:top-10 my-5 sm:left-2 sm:h-1/6 sm:w-32 sm:border sm:border-cyan-400 sm:rounded-lg` : "hidden"
           }`}
         >
           {PageNav.map((navObj) =>
             !navObj.isMember || isOnline ? (
               <div
-                className="flex items-center justify-center bg-transparent hover:border-y-teal-400 hover:bg-cyan-400 text-sky-400 hover:text-white hover:bg-opacity-1 hover:border-transparent w-20 rounded-lg mx-0.5"
+                className="flex items-center justify-center bg-transparent hover:border-y-teal-400 hover:bg-cyan-400 text-sky-400 hover:text-white hover:bg-opacity-1 hover:border-transparent w-20 rounded-lg mx-0.5 sm:mb-5 md:mb-0"
                 key={navObj.path}
               >
                 <Link to={navObj.path}>{navObj.name}</Link>
@@ -95,6 +97,8 @@ export default function Navigation() {
             />
           </form>
         </div>
+      </div>
+      <div className="flex items-center mx-2">
         <img
           className="w-8 h-8 rounded-full border border-cyan-400"
           src={UserNav.avatar}
