@@ -45,6 +45,9 @@ router.get("/callback", async (req, res, next) => {
           },
         });
 
+        user.isOnline = true;
+        await user.save();
+
         const accessValid = cookieInfo.success
           ? acceptCookie(cookieInfo.data, res)
           : null;
@@ -78,6 +81,9 @@ router.get("/callback", async (req, res, next) => {
           session: `${session._id}` || "",
         },
       });
+
+      user.isOnline = true;
+      await user.save();
 
       const accessValid = cookieInfo.success
         ? acceptCookie(cookieInfo.data, res)

@@ -19,9 +19,9 @@ import { Facebook } from "lucide-react";
 
 export const LoginComponent = () => {
   const [input, setInput] = useSearchParams({ i: "" });
-  const inputParam = input.get("i");
-
-  const { setLogin, setLogout, resetProfile } = useProfileStore(); //benutze die globale variable um login und userobjekte einzusetzen und um zuverteilen
+  const inputParam = input.get("i");  
+  const {data: userData, isSuccess: googleSuccess } =  profileRequest("google")
+  const { setLogin, setLogout, resetProfile, setProfile } = useProfileStore(); //benutze die globale variable um login und userobjekte einzusetzen und um zuverteilen
   const { isOnline } = useProfileStore((state) => state.defaultProfile);
   const navigate = useNavigate();
 
@@ -32,6 +32,12 @@ export const LoginComponent = () => {
     //falls erfolgreich eingeloggt ist,  dann setze globale isOnline auf true, erstelle neue profilerequest  und ändere die userdaten
     setLogin();
     navigate("/chat", { replace: true });
+  }
+
+  if (googleSuccess) {
+   if(userData.data.isOnline) {
+    setProfile()
+   }
   }
 
   const { lightMode, setDarkMode } = useDarkLightMode();
