@@ -23,50 +23,52 @@ export function createSocket(app) {
       credentials: true,
       // cookie: false,
     },
+    // pingTimeout: 60000 * 5, // 5 Minuten werden gewartet, bis der Benutzer getrennt wird (id etc werden gelöscht)
+    // pingInterval: 25000, // alle 25 Sekunden wird ein Ping gesendet
   });
   return { httpServer, io };
 }
 
 let currentUserId = null;
 export function socketInitiation() {
-  //   io.use(async (socket, next) => {
-  //     const token = socket.handshake.headers["cookie"];
-  //     const { accessJwt } = parse(token);
-  //     //  console.log( accessJwt)
-  //     const { decoded, valid } = verifyJwt(accessJwt, process.env.ACCESS_TOKEN);
+    io.use(async (socket, next) => {
+      const token = socket.handshake.headers["cookie"];
+      const { accessJwt } = parse(token);
+      //  console.log( accessJwt)
+      const { decoded, valid } = verifyJwt(accessJwt, process.env.ACCESS_TOKEN);
 
 
-  //     try {
-  //       if (valid) {
-  //         const updatedUser = await updateUserSocket(decoded.UserInfo.id, socket.id);
-  //         if (!updatedUser) {
-  //             logger.error("Update Socketid failed");
-  //             // return next("updateSocketid Failed");
-  //             return;
-  //         }
+      try {
+        if (valid) {
+          const updatedUser = await updateUserSocket(decoded.UserInfo.id, socket.id);
+          if (!updatedUser) {
+              logger.error("Update Socketid failed");
+              // return next("updateSocketid Failed");
+              return;
+          }
 
-  //         currentUserId = decoded.UserInfo.id;
-  //         next()
+          currentUserId = decoded.UserInfo.id;
+          next()
 
-  //       }
-  //       if(!token) {
-  //         next()
-  //       }
-  //     } catch (error) {
-  //       logger.error(error);
-  //       next(error);
-  //     }
+        }
+        if(!token) {
+          next()
+        }
+      } catch (error) {
+        logger.error(error);
+        next(error);
+      }
 
-  //     // console.log(decoded?.UserInfo);
-  //   });
+      // console.log(decoded?.UserInfo);
+    });
 
 
-  const onConnection = (socket, io) => {
-    handlePrivateChat(socket, io);
+  const onConnection = async (socket, io) => {
     handleRoomchat(socket, io, currentUserId);
+    handlePrivateChat(socket, io);
     localTest(socket, io)
   };
-  io.on("connection", onConnection);
+  io.on("connection", (socket) => onConnection(socket, io));
 }
 
 function handlePrivateChat(socket, io) {

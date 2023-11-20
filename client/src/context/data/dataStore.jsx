@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { devtools, persist, createJSONStorage } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import { shallow } from "zustand/shallow";
 import { ThemeColors } from "./data";
 import { produce } from "immer";
 // import { mergeDeepLeft } from "ramda";
@@ -123,30 +122,30 @@ export const useProfileStore = create(
             //   participants: ["Yan", "Zoe"],
             //   comments: [],
             // },
-            {
-              type: "group",
+            // {
+            //   type: "group",
 
-              chatName: "FirstRoom",
-              chatAdmin: "Test",
+            //   chatName: "FirstRoom",
+            //   chatAdmin: "Test",
 
-              chatMessages: [
-                {
-                    sender: "",
-                    content: "Welcome",
-                    likes :0,
-                    emojis :[],
-                    images : "",
-                    voices : "",
-                    videos: "",
-                    time:
-                    new Date(Date.now()).getHours() +
-                    ":" +
-                    new Date(Date.now()).getMinutes(),
-                  }
-              ],
-              participants: ["userid", "user2", "user3"],
-              comments: [],
-            },
+            //   chatMessages: [
+            //     {
+            //         sender: "",
+            //         content: "Welcome",
+            //         likes :0,
+            //         emojis :[],
+            //         images : "",
+            //         voices : "",
+            //         videos: "",
+            //         time:
+            //         new Date(Date.now()).getHours() +
+            //         ":" +
+            //         new Date(Date.now()).getMinutes(),
+            //       }
+            //   ],
+            //   participants: ["userid", "user2", "user3"],
+            //   comments: [],
+            // },
             //   {
             //   singleroom: {
             //     chatMessages: [{ content: "Guten Tag!", likes: 5, emojis: [] }],
