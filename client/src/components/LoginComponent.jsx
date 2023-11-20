@@ -6,7 +6,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Button, MediaButtons } from "./ui/Buttons.jsx";
 import { FacebookIcons, GoogleIcons } from "../assets/Icons.jsx";
-import { Inputs } from "./ui/Inputs.jsx";
+import { Inputs, InputPW } from "./ui/Inputs.jsx";
 import { useDarkLightMode } from "../context/data/dataStore.jsx";
 
 //api
@@ -101,7 +101,7 @@ export const LoginComponent = () => {
               >
                 your email
               </Inputs>
-              <Inputs {...inputProps}>your password</Inputs>
+              <InputPW {...inputProps}>your password</InputPW>
               <div>
                 <div>
                   <input type="checkbox" name="checkbox" id="checkbox" />
