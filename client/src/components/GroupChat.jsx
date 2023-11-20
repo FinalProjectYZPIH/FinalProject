@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { getTime } from "date-fns";
 import { useSocketProvider } from "../context/data/SocketProvider";
 import { useProfileStore } from "../context/data/dataStore";
-
 import { useNavigate, useParams } from "react-router-dom";
+
 import { produce } from "immer";
 
 import { useDarkLightMode, useColorStore } from "../context/data/dataStore.jsx";
@@ -13,35 +13,9 @@ import { Button, ColorButton } from "./ui/Buttons";
 import Navigation from "./Navigation.jsx";
 import { ColorTheme } from "./ui/ColorTheme.jsx";
 
-// {
-//   type: 'single',
-//   chatName: 'SingleRoomName',
-//   chatMessages: [{ content: 'Guten Nachmittag!', likes: 5, emojis: [] }],
-//   participants: ['Yan', 'Zoe'],
-//   comments: [{ content: 'sample coments', likes: 5, emojis: [] }],
-// },
-// {
-//   type: 'group',
-//   chatName: 'Room_League',
-//   chatAdmin: 'Zoe',
-//   chatMessages: [{ content: "Welcome to Zoe's Room", likes: 5, emojis: [] }],
-//   participants: ['userid', 'user2', 'user3'],
-//   comments: [{ content: 'sample coments', likes: 5, emojis: [] }],
-// },
-// messageData = {
-//   sender: userId,
-//   content: content,
-//   likes,
-//   emojis,
-//   images,
-//   voices,
-//   videos,
-//   time:
-//   new Date(Date.now()).getHours() +
-//   ":" +
-//   new Date(Date.now()).getMinutes(),
-// };
+
 function GroupChat() {
+  //globale data
   const { username, chatRooms } = useProfileStore(
     (state) => state.defaultProfile
   );
@@ -50,12 +24,13 @@ function GroupChat() {
   const navigate = useNavigate();
   console.log(chatName);
 
-  const { socket, sendMessage } = useSocketProvider();
+  const { socket, sendMessage, createRoom } = useSocketProvider();
   const { lightMode, setDarkMode } = useDarkLightMode();
   const { colorPosition, setColorPosition, setSpecificColor, color } =
     useColorStore();
 
 
+  //localdata
   const defaultMessageObj = {
     content: "",
     likes: 0,
@@ -69,8 +44,8 @@ function GroupChat() {
     time: getTime(new Date()),
   });
   const [messageList, setMessageList] = useState([]);
-  const [roomConfig, setRoomConfig] = useState(
-    chatRooms?.find((room) => {
+  const [currentRoom, setCurrentRoom] = useState(null);
+
 
 
       if (room.chatName === "") {
@@ -86,40 +61,62 @@ function GroupChat() {
   console.log(messageList);
 
 
+  console.log(chatRooms);
+
+
   useEffect(() => {
-    setMessageList(roomConfig?.chatMessages || []);
+    const foundRoom = chatRooms?.find((room) => {
+      return room?.chatName === chatName;
+    });
+    setMessageList([]);
+    setMessageList(foundRoom.chatMessages);
+    socket.emit("updateRoom", chatName);
   }, [chatName]);
 
   // hier wird die daten aus backend immer mit dazugehörigen room aktualisiert
   useEffect(() => {
-    if (socket && socket.on) {
+
+    if (socket && socket.connected) {
+
       socket.on("messages_groupRoom", (message, room) => {
         console.log(message);
-        setMessageList((list) => [...list, message]);
+        setMessageList((prev) => [...prev, message]);
         setChatRooms(room);
         console.log("roomtest", room);
+        setCurrentRoom(room);
+      });
+
+      socket.on("joinRoom", (newParticipantRoom) => {
+        setChatRooms(newParticipantRoom?.currentRoom);
       });
     }
+    return () => {
+      if (socket) {
+        socket.off("messages_groupRoom");
+        socket.off("joinRoom");
+      }
+    };
   }, [socket]);
 
   const storedData = JSON.parse(sessionStorage.getItem("Profile"));
   console.log("Stored Data:", storedData?.defaultProfile?.chatMessages);
 
-  const sendMessages = async () => {
-    console.log('button clicked!')
+
+  const sendMessages = async (e) => {
+    e.preventDefault();
+
     if (currentMessage.content !== "") {
-      const message = sendMessage(currentMessage, (cb) => console.log(cb));
-      console.log(message);
+      sendMessage(currentMessage, chatName, (cb) => console.log(cb));
+
       setCurrentMessage({
         ...defaultMessageObj,
         time: getTime(new Date()),
       });
-
-      setMessageList((list) => [...list, message]);
     }
   };
-  console.log(messageList);
-  console.log(roomConfig?.chatMessages);
+  console.log(currentRoom);
+
+  useKeyPress(() => sendMessages(), ["Enter"]);
   return (
     <div
       className={`chat-window font-orbitron w-screen h-screen ${lightMode ? "dark bg-none" : "light bg-none"
@@ -127,18 +124,22 @@ function GroupChat() {
       }
     >
 
+
    
       <div className={`chat-header border mt-5 border-cyan-400 rounded-lg p-5 h-4/5 w-auto shadow-lg backdrop-blur ${color}`}>
         <p>Live Chat</p>
         <div className={`chat-body flex flex-col border border-cyan-800 h-[500px] rounded-lg py-5 px-1 ${color}`}>
+
           <ScrollToBottom className="overflow-x-hidden">
-            {(messageList ?? []).map((messageContent, index) => {
+            {messageList?.map((messageContent, index) => {
               return (
                 <div
                   key={index}
                   className={
+
                     username === messageContent.author ||
                       username === messageContent.sender
+
                       ? "self-message flex justify-end rounded-lg break-words"
                       : "other-message flex justify-start rounded-lg break-words  "
                   }
@@ -173,16 +174,14 @@ function GroupChat() {
                   content: event.target.value,
                 });
               }}
-              onKeyPress={(event) => {
-                event.key === "Enter" && sendMessages();
-              }}
             />
-          </form>
+
 
           <div className="fixed bottom-1 right-0 w-32">
             {/* <ColorButton onClick={sendMessages}>GO</ColorButton> */}
             <ColorButton onClick={sendMessages}>GO</ColorButton>
           </div>
+
         </div>
       </div>
     </div>
@@ -191,79 +190,31 @@ function GroupChat() {
 
 export default GroupChat;
 
-// import React, { useEffect, useState } from "react";
-// // import ScrollToBottom from "react-scroll-to-bottom";
-
-// function Chat({ socket, username, room }) {
-//   const [currentMessage, setCurrentMessage] = useState("");
-//   const [messageList, setMessageList] = useState([]);
-
-//   const sendMessage = async () => {
-//     if (currentMessage !== "") {
-//       const messageData = {
-//         room: room,
-//         author: username,
-//         message: currentMessage,
-//         time:
-//           new Date(Date.now()).getHours() +
-//           ":" +
-//           new Date(Date.now()).getMinutes(),
-//       };
-//       await socket.emit("send_message", messageData);
-//       setMessageList((list) => [...list, messageData]);
-//       setCurrentMessage("");
-//     }
-//   };
-
-//   useEffect(() => {
-//     socket.on("receive_message", (data) => {
-//       setMessageList((list) => [...list, data]);
-//     });
-//   }, [socket]);
-
-//   return (
-//     <div className="chat-window">
-//       <div className="chat-header">
-//         <p>Live Chat</p>
-//       </div>
-//       <div className="chat-body">
-//         {/* <ScrollToBottom className="message-container"> */}
-//           {messageList.map((messageContent) => {
-//             return (
-//               <div
-//                 className="message"
-//                 id={username === messageContent.author ? "you" : "other"}
-//               >
-//                 <div>
-//                   <div className="message-content">
-//                     <p>{messageContent.message}</p>
-//                   </div>
-//                   <div className="message-meta">
-//                     <p id="time">{messageContent.time}</p>
-//                     <p id="author">{messageContent.author}</p>
-//                   </div>
-//                 </div>
-//               </div>
-//             );
-//           })}
-//         {/* </ScrollToBottom> */}
-//       </div>
-//       <div className="chat-footer">
-//         <input
-//           type="text"
-//           value={currentMessage}
-//           placeholder="Hey..."
-//           onChange={(event) => {
-//             setCurrentMessage(event.target.value);
-//           }}
-//           onKeyPress={(event) => {
-//             event.key === "Enter" && sendMessage();
-//           }}
-//         />
-//         <button onClick={sendMessage}>&#9658;</button>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default Chat;
+// {
+//   type: 'single',
+//   chatName: 'SingleRoomName',
+//   chatMessages: [{ content: 'Guten Nachmittag!', likes: 5, emojis: [] }],
+//   participants: ['Yan', 'Zoe'],
+//   comments: [{ content: 'sample coments', likes: 5, emojis: [] }],
+// },
+// {
+//   type: 'group',
+//   chatName: 'Room_League',
+//   chatAdmin: 'Zoe',
+//   chatMessages: [{ content: "Welcome to Zoe's Room", likes: 5, emojis: [] }],
+//   participants: ['userid', 'user2', 'user3'],
+//   comments: [{ content: 'sample coments', likes: 5, emojis: [] }],
+// },
+// messageData = {
+//   sender: userId,
+//   content: content,
+//   likes,
+//   emojis,
+//   images,
+//   voices,
+//   videos,
+//   time:
+//   new Date(Date.now()).getHours() +
+//   ":" +
+//   new Date(Date.now()).getMinutes(),
+// };
