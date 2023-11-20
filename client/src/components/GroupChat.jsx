@@ -3,7 +3,6 @@ import { getTime } from "date-fns";
 import { useSocketProvider } from "../context/data/SocketProvider";
 import { useProfileStore } from "../context/data/dataStore";
 import { useNavigate, useParams } from "react-router-dom";
-import ScrollToBottom from "react-scroll-to-bottom";
 import { Button, ColorButton } from "./ui/Buttons";
 import { useKeyPress } from "../utils/keyEvent";
 import { produce } from "immer";

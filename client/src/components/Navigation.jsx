@@ -1,16 +1,18 @@
 import React, { useState } from "react";
-import { useDarkLightMode, useProfileStore, useColorStore } from "../context/data/dataStore";
+import {
+  useDarkLightMode,
+  useProfileStore,
+  useColorStore,
+} from "../context/data/dataStore";
 import { logoutRequest } from "../context/api/auth";
 import { AlignJustify, CloudMoon, Sun, User, UserPlus2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import ReactSwitch from "react-switch";
 import { Button } from "@mui/material";
-import FriendRequests from "../components/FriendRequests"
+import FriendRequests from "../components/FriendRequests";
 import Search from "./Search";
 import { ColorTheme } from "./ui/ColorTheme";
 import DropdownColor from "./ui/DropdownColor";
-
-
 
 // Beipiel
 export default function Navigation() {
@@ -74,9 +76,11 @@ export default function Navigation() {
         </button>
         <div
           className={` md:flex md:justify-between h-8 ${
-            isOpen ? `${
-              lightMode ? " bg-neutral-900" : " bg-white"
-            } sm:flex-col sm:index-10 sm:px-5 sm:fixed sm:top-10 my-5 sm:left-2 sm:h-1/6 sm:w-32 sm:border sm:border-cyan-400 sm:rounded-lg` : "hidden"
+            isOpen
+              ? `${
+                  lightMode ? " bg-neutral-900" : " bg-white"
+                } sm:flex-col sm:index-10 sm:px-5 sm:fixed sm:top-10 my-5 sm:left-2 sm:h-48 sm:w-32 sm:border sm:border-cyan-400 sm:rounded-lg`
+              : "hidden"
           }`}
         >
           {PageNav.map((navObj) =>
@@ -123,6 +127,7 @@ export default function Navigation() {
           {friendsRequestsList === true && <FriendRequests userId={userIdDB} />}
         </div>
 
+        <DropdownColor />
         <ReactSwitch
           onChange={setDarkMode}
           checked={lightMode}
@@ -132,23 +137,6 @@ export default function Navigation() {
           uncheckedIcon={<Sun />}
         />
       </div>
-
-      <Button onClick={() => { setFriendsRequestsList(!friendsRequestsList) }}>
-        <UserPlus2 color="#22d3ee" />
-      </Button>
-      {friendsRequestsList === true &&
-        <FriendRequests userId={userIdDB} />}
-
-
-      <DropdownColor />
-      <ReactSwitch
-        onChange={setDarkMode}
-        checked={lightMode}
-        offColor={"#22d3ee"}
-        onColor={"#22d3ee"}
-        checkedIcon={<CloudMoon />}
-        uncheckedIcon={<Sun />}
-      />
     </div>
   );
 }
