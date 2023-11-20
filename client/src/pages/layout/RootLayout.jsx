@@ -13,19 +13,16 @@ import App from "../App";
 import Navigation from "../../components/Navigation";
 import { profileRequest } from "../../context/api/auth";
 
-
-
 export default function RootLayout() {
   // const { isOnline } = useProfileStore((state) => state.defaultProfile);
   // console.log(isOnline);
   const { defaultProfile, resetProfile, setProfile, setChatRooms, setLogout } =
-  useProfileStore();
+    useProfileStore();
 
-const { isOnline, userId, role, username, email, userIdDB, chatRooms } =
-  useProfileStore((state) => state.defaultProfile);
-console.log(userId, role, username, email, userIdDB);
+  const { isOnline, userId, role, username, email, userIdDB, chatRooms } =
+    useProfileStore((state) => state.defaultProfile);
+  console.log(userId, role, username, email, userIdDB);
   const { data: userData, isSuccess, isError } = profileRequest("Yan");
-
 
   if (isSuccess) {
     setProfile({
@@ -34,8 +31,9 @@ console.log(userId, role, username, email, userIdDB);
       role: userData?.data?.role,
       username: userData?.data?.username,
       email: userData?.data?.email,
-      isOnline:userData?.data?.isOnline,
-      avatar: "avatar",
+
+      avatar: userData?.data.avatarImage,
+
     });
   }
   console.log(isSuccess)
@@ -45,23 +43,18 @@ console.log(userId, role, username, email, userIdDB);
     return <Navigate to="/login" />;
   }
 
-
   return (
-
     <>
-    <ProtectionProvider isAllowed={isOnline}>
-
-<Navigation />
-      <Routes>
-        {/* <Route path="" element={<Navigate to="/chat" />} /> */}
-        <Route path="chat" element={<App />}>
-          <Route path="" element={<ChatDashboard />} />
-          <Route path=":chatName" element={<GroupChat />} />
-        </Route>
-      </Routes>
-
-    </ProtectionProvider>
+      <ProtectionProvider isAllowed={isOnline}>
+        <Navigation />
+        <Routes>
+          {/* <Route path="" element={<Navigate to="/chat" />} /> */}
+          <Route path="chat" element={<App />}>
+            <Route path="" element={<ChatDashboard />} />
+            <Route path=":chatName" element={<GroupChat />} />
+          </Route>
+        </Routes>
+      </ProtectionProvider>
     </>
-
   );
 }

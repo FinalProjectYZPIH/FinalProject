@@ -22,6 +22,7 @@ export const Inputs = ({ type, label, ph, onChangeFn, value, onKeyPress }) => {
 
 
 
+
 export const InputPW = ({ type, label, ph, onChangeFn, value, onKeyPress }) => {
   const [showPassword, setShowPassword] = useState(false);
 
