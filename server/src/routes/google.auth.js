@@ -57,7 +57,9 @@ router.get("/callback", async (req, res, next) => {
         }
 
         logger.info("User already exists");
-        return res.status(200).json({ message: "Success logging in without a cookie" });
+        return res
+          .status(200)
+          .json({ message: "Success logging in without a cookie" });
       }
 
       let session;
@@ -93,11 +95,15 @@ router.get("/callback", async (req, res, next) => {
         return res.status(200).redirect(`http://localhost:5173/chat`);
       }
 
-      return res.status(200).json({ message: "Success logging in without a cookie" });
+      return res
+        .status(200)
+        .json({ message: "Success logging in without a cookie" });
     })(req, res, next);
   } catch (error) {
     logger.error("An error occurred during callback: " + error);
-    res.status(500).json({ message: "An error occurred during authentication" });
+    res
+      .status(500)
+      .json({ message: "An error occurred during authentication" });
   }
 });
 

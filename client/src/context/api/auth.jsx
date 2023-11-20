@@ -129,7 +129,7 @@ export function profileRequest(...key) {
   return useQuery({
     queryKey: key,
     queryFn: async () => await axios.get("/api/user/getProfile"),
-    enabled: !!isOnline, // kann nur gefetched werden, wenn isOnline sich auf true verändert
+    // enabled: !!isOnline, // kann nur gefetched werden, wenn isOnline sich auf true verändert
     onSuccess: () => {
       toast.custom(<Toast>WELCOME!</Toast>)
     }, 
