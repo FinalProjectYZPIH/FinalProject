@@ -7,6 +7,7 @@ export async function handleRoomchat(socket, io, userId = null) {
   let rooms = [];
   ///////////////////////////////////////////////////////////////////////////////////////
   socket.on("groupRoom", async (data) => {
+
     const foundRoom = rooms.find((room) => {
       return (
         room?.chatName === data?.chatName && room?.chatAdmin === data?.chatAdmin
@@ -16,6 +17,7 @@ export async function handleRoomchat(socket, io, userId = null) {
     if (!foundRoom) {
       rooms.push(data);
       console.log("room not found", Boolean(foundRoom));
+
       socket.join(data.chatName);
     }
     const members = io.sockets.adapter.rooms.get(data.chatName);
@@ -27,17 +29,21 @@ export async function handleRoomchat(socket, io, userId = null) {
 
   ///////////////////////////////////////////////////////////////////////////////////////
 
+
   socket.on("updateRoom", async (roomName, updateExistingRoom) => {
     console.log("updateRoom", roomName);
+
     io.to(roomName).emit("joinRoom", () => {
       const currentMembers = io.sockets.adapter.rooms.get(roomName);
       rooms = rooms.map((room) => {
         if (room?.chatName === roomName) {
+
           updateExistingRoom.participants.forEach((participant) => {
             if (!currentMembers.has(participant)) {
               socket.join(roomName);
             }
           });
+
           return {
             ...room,
             participants: [...currentMembers].filter(
@@ -48,6 +54,7 @@ export async function handleRoomchat(socket, io, userId = null) {
           return room;
         }
       });
+
       const currentRoom = rooms.find(
         (room) =>
           room?.chatName === roomName &&
@@ -57,6 +64,7 @@ export async function handleRoomchat(socket, io, userId = null) {
       return {
         currentRoom: currentRoom,
         participants: [...(currentMembers || "")],
+
       };
     });
   });
@@ -77,6 +85,7 @@ export async function handleRoomchat(socket, io, userId = null) {
     const foundRoom = rooms.find((room) => {
       return room?.chatName === roomName;
     });
+
 
     console.log("newRoom and message", foundRoom, message);
     //
@@ -102,6 +111,7 @@ export async function handleRoomchat(socket, io, userId = null) {
       )} left room: ${foundRoom?.chatName}`
     );
     io.to(chatName).emit("leavedRoom", foundRoom);
+
   });
   ///////////////////////////////////////////////////////////////////////////////////////
   socket.on("disconnect", () => {

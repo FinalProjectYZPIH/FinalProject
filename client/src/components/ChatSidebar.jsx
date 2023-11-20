@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
+
 import { useEffect, useState } from "react";
 import { useSocketProvider } from "../context/data/SocketProvider";
 import { toast } from "react-hot-toast";
@@ -11,6 +12,7 @@ import {
 } from "../context/data/dataStore";
 
 import { ColorTheme } from "./ui/ColorTheme.jsx";
+
 
 import { redirect, Link } from "react-router-dom";
 // import { customAlphabet } from "nanoid";
@@ -24,6 +26,7 @@ export default function ChatSidebar() {
   const { deleteChatRooms } = useProfileStore();
   const { socket } = useSocketProvider();
   const { lightMode, setDarkMode } = useDarkLightMode();
+
 
   const [select, setSelect] = useState(null);
   const navigate = useNavigate();
@@ -75,9 +78,11 @@ export default function ChatSidebar() {
         lightMode ? "dark bg-none" : "light bg-none"
       }`}
     >
+
       <div
         className={` h-4/5 mt-5 mx-2  overflow-x-hidden shadow-lg  rounded-xl border border-cyan-400 flex flex-col items-center ${color}`}
       >
+
         Chats
         {/* <h3>{username}</h3> */}
         {console.log(chatRooms)}

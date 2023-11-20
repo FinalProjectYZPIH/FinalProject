@@ -3,10 +3,12 @@ import { getTime } from "date-fns";
 import { useSocketProvider } from "../context/data/SocketProvider";
 import { useColorStore, useProfileStore } from "../context/data/dataStore";
 import { useNavigate, useParams } from "react-router-dom";
+
 import { useDarkLightMode } from "../context/data/dataStore.jsx";
 import ScrollToBottom from "react-scroll-to-bottom";
 import { ColorButton } from "./ui/Buttons";
 import { useKeyPress } from "../utils/keyEvent";
+
 
 function GroupChat() {
   //globale data
@@ -20,9 +22,11 @@ function GroupChat() {
 
   const { socket, sendMessage, createRoom } = useSocketProvider();
   const { lightMode, setDarkMode } = useDarkLightMode();
+
     const { color } = useColorStore();
 
   console.log(chatRooms);
+
 
   //localdata
   const defaultMessageObj = {
@@ -38,9 +42,12 @@ function GroupChat() {
     time: getTime(new Date()),
   });
   const [messageList, setMessageList] = useState([]);
+
   const [currentMember, setCurrentMember] = useState([]);
 
+
   console.log(chatRooms);
+
 
   useEffect(() => {
     const foundRoom = chatRooms?.find((room) => {
@@ -55,7 +62,9 @@ function GroupChat() {
 
   // hier wird die daten aus backend immer mit dazugehörigen room aktualisiert
   useEffect(() => {
+
     if (socket && socket?.on) {
+
       socket.on("messages_groupRoom", (message, room) => {
         console.log(message);
         setChatRooms(room);
@@ -102,11 +111,17 @@ function GroupChat() {
         lightMode ? "dark bg-none" : "light bg-none"
       }`}
     >
-      <div className="chat-header border mt-5 border-cyan-400 rounded-lg p-5 h-4/5 w-auto shadow-lg backdrop-blur">
-        <p>
-          Live Chat {currentMember?.participants?.length || 0} Users are Online
-        </p>
-        <div className="chat-body flex flex-col border border-cyan-800 h-[500px] rounded-lg py-5 px-1">
+
+
+      <div
+        className={`chat-header border mt-5 border-cyan-400 rounded-lg p-5 h-4/5 w-auto shadow-lg backdrop-blur ${color}`}
+      >
+        <p>Live Chat</p>
+        <div
+          className={`chat-body flex flex-col border border-cyan-800 h-[500px] rounded-lg py-5 px-1 ${color}`}
+        >
+
+
           <ScrollToBottom className="overflow-x-hidden">
             {messageList?.map((messageContent, index) => {
               return (
@@ -118,10 +133,11 @@ function GroupChat() {
                       : "other-message flex justify-start rounded-lg break-words  "
                   }
                 >
-                  <div>
+
                       <p>{messageContent.content}</p>                    <div
                       className={`message-content w-60 border border-cyan-400 p-2 m-1 rounded-lg ${color}`}
                     >
+
                       <div className="message-meta flex justify-end text-xs p-2">
                         <p id="author">{messageContent.sender}</p>
                         <p className="pl-2" id="time">
@@ -135,11 +151,13 @@ function GroupChat() {
             })}
           </ScrollToBottom>
         </div>
-        <div className="chat-footer flex fixed bottom-2 left-0">
+        <div className={`chat-footer flex fixed bottom-2 left-0 ml-5`}>
           <form>
+
           <label className="flex">message</label>
             <input
               type="text" className={`${color} rounded-lg block bg-transparent `}
+
               value={currentMessage.content}
               placeholder="Hey..."
               onChange={(event) => {
@@ -150,10 +168,12 @@ function GroupChat() {
               }}
             />
 
+
             <div className="fixed bottom-1 right-0 w-32">
             <ColorButton onClick={sendMessages}>GO</ColorButton>
             </div>
           </form>
+
         </div>
       </div>
     </div>

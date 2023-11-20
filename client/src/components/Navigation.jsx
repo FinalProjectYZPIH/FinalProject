@@ -1,4 +1,6 @@
+
 import React, { useEffect, useState } from "react";
+
 
 import {
   useDarkLightMode,
@@ -15,12 +17,15 @@ import FriendRequests from "../components/FriendRequests";
 import Search from "./Search";
 import { ColorTheme } from "./ui/ColorTheme";
 import DropdownColor from "./ui/DropdownColor";
+
 import { is } from "date-fns/locale";
+
 
 // Beipiel
 export default function Navigation() {
   const [friendsRequestsList, setFriendsRequestsList] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+
 
   const toggleNavbar = () => {
     setIsOpen(!isOpen);
@@ -32,6 +37,7 @@ export default function Navigation() {
 
   const { lightMode, setDarkMode } = useDarkLightMode();
   const { color } =
+
     useColorStore();
 
   const { isOnline, notifications, avatar, settings, chatRooms, contacts } =
@@ -61,10 +67,12 @@ export default function Navigation() {
 
   const handleLogout = async (e) => {
     e.preventDefault();
+
     setLogout();
     clearCookies.mutate();
     resetProfile();
     
+
     // if (isOnline === false) {
     //   clearCookies.mutate();
     //   setLogout();
@@ -77,6 +85,7 @@ export default function Navigation() {
         lightMode ? " bg-neutral-900" : " bg-white"
       }`}
     >
+
       <div className={`flex w-3/5`}>
         <button className={`md:hidden`} onClick={toggleNavbar}>
           <AlignJustify size={32} color="#22d3ee" />
@@ -106,6 +115,7 @@ export default function Navigation() {
         </div>
       </div>
       <div className="flex items-center justify-between w-96">
+
         <div className="w-52">
           <form>
             <input
@@ -123,7 +133,9 @@ export default function Navigation() {
           src={UserNav.avatar}
           alt="Profile"
         />
+
           <p className={`${lightMode ? "text-white" : `${color}`}`}>{username}</p>
+
 
         <div className="h-8 w-12">
           <Button
@@ -132,10 +144,12 @@ export default function Navigation() {
             }}
           >
             <UserPlus2 color="#22d3ee" />
+
             
           </Button>
           {friendsRequestsList === true && <FriendRequests userId={userIdDB} />}
         </div>
+
         <DropdownColor />
         <ReactSwitch
           onChange={setDarkMode}
@@ -146,6 +160,7 @@ export default function Navigation() {
           uncheckedIcon={<Sun />}
         />
       </div>
+
     </div>
   );
 }

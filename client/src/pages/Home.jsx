@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 
 
 
-
 export default function Home() {
   const socket = useSocketProvider();
   const { isOnline, setLogin } = useProfileStore(
@@ -42,6 +41,7 @@ export default function Home() {
          
       <Outlet />
       <HomeComponent />
+
     </div>
   );
 }

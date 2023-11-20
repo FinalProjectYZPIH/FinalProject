@@ -18,11 +18,15 @@ import { useProfileStore } from "../context/data/dataStore.jsx";
 
 
 
+
+
 export const LoginComponent = () => {
   const [input, setInput] = useSearchParams({ i: "" });
   const inputParam = input.get("i");  
   
+
   const { setLogin } = useProfileStore(); //benutze die globale variable um login und userobjekte einzusetzen und um zuverteilen
+
   const { isOnline } = useProfileStore((state) => state.defaultProfile);
   const navigate = useNavigate();
 
