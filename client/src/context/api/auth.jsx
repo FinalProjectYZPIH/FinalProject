@@ -66,7 +66,7 @@ export function loginRequest() {
       await axios.post("/api/auth/login", loginData),
     onSuccess: () => {
       // toast.custom(<Toast>Welcome back!</Toast>)
-    }, 
+    },
     onError: () => {
       toast.custom(<Toast> Failed to Login</Toast>)
     },
@@ -96,12 +96,12 @@ export function googleRequest(...key) {
     },
     {
       onSuccess: () => {
-       
-       
-      }, 
+
+
+      },
       onError: () => { },
       onSettled: () => {
-      //  toast.success("google fetching...");
+        //  toast.success("google fetching...");
       },
     }
   );
@@ -136,7 +136,7 @@ export function profileRequest(...key) {
     enabled: !!isOnline, // kann nur gefetched werden, wenn isOnline sich auf true verändert
     onSuccess: () => {
       toast.custom(<ColorToast>WELCOME!</ColorToast>)
-    }, 
+    },
     onError: () => { },
     onSettled: () => { },
 

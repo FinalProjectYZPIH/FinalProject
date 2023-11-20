@@ -11,12 +11,8 @@ export const ColorTheme = () => {
 
     return (
         <div className="">
-            {/* <div>
-            {ThemeColors[colorPosition]}
-            {color}
-        </div> */}
-  
-            <button
+        
+        <button
                 className={`${color} rounded-lg p-1 `}
                 onClick={() => setColorPosition()}
             >

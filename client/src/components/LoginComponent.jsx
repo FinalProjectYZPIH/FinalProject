@@ -17,6 +17,8 @@ import { useProfileStore } from "../context/data/dataStore.jsx";
 import { useEffect } from "react";
 import { Facebook } from "lucide-react";
 
+
+
 export const LoginComponent = () => {
   const [input, setInput] = useSearchParams({ i: "" });
   const inputParam = input.get("i");

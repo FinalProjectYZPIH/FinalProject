@@ -8,6 +8,8 @@ import { Button } from "@mui/material";
 import FriendRequests from "../components/FriendRequests"
 import Search from "./Search";
 import { ColorTheme } from "./ui/ColorTheme";
+import DropdownColor from "./ui/DropdownColor";
+
 
 
 // Beipiel
@@ -72,6 +74,7 @@ export default function Navigation() {
         <div className="flex items-center justify-center bg-transparent hover:border-y-teal-400 hover:bg-cyan-400 text-sky-400 hover:text-white hover:bg-opacity-1 hover:border-transparent w-20 rounded-lg mx-0.5">
           <button onClick={handleLogout}>Logout</button>
         </div>
+
         <div className="w-52">
           <form>
             <input
@@ -99,8 +102,9 @@ export default function Navigation() {
       </Button>
       {friendsRequestsList === true &&
         <FriendRequests userId={userIdDB} />}
-      <ColorTheme />
 
+
+      <DropdownColor />
       <ReactSwitch
         onChange={setDarkMode}
         checked={lightMode}
