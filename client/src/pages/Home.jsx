@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 import FriendRequests from "../components/FriendRequests";
 import { toast } from "react-hot-toast";
+import { ColorTheme } from "../components/ui/ColorTheme";
 
 
 export default function Home() {
@@ -42,6 +43,7 @@ export default function Home() {
 
   return (
     <div className="">
+         
       <Outlet />
       <HomeComponent />
     </div>

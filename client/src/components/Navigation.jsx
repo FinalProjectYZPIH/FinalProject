@@ -1,11 +1,16 @@
 import React, { useState } from "react";
-import { useDarkLightMode, useProfileStore } from "../context/data/dataStore";
+import { useDarkLightMode, useProfileStore, useColorStore } from "../context/data/dataStore";
 import { logoutRequest } from "../context/api/auth";
 import { AlignJustify, CloudMoon, Sun, User, UserPlus2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import ReactSwitch from "react-switch";
 import { Button } from "@mui/material";
-import FriendRequests from "../components/FriendRequests";
+import FriendRequests from "../components/FriendRequests"
+import Search from "./Search";
+import { ColorTheme } from "./ui/ColorTheme";
+import DropdownColor from "./ui/DropdownColor";
+
+
 
 // Beipiel
 export default function Navigation() {
@@ -19,6 +24,9 @@ export default function Navigation() {
   const { userIdDB } = useProfileStore((state) => state.defaultProfile);
 
   const { lightMode, setDarkMode } = useDarkLightMode();
+  const { colorPosition, setColorPosition, setSpecificColor, color } =
+    useColorStore();
+
   const { isOnline, notifications, avatar, settings, chatRooms, contacts } =
     useProfileStore((state) => state.defaultProfile);
   const navigate = useNavigate();
@@ -124,6 +132,23 @@ export default function Navigation() {
           uncheckedIcon={<Sun />}
         />
       </div>
+
+      <Button onClick={() => { setFriendsRequestsList(!friendsRequestsList) }}>
+        <UserPlus2 color="#22d3ee" />
+      </Button>
+      {friendsRequestsList === true &&
+        <FriendRequests userId={userIdDB} />}
+
+
+      <DropdownColor />
+      <ReactSwitch
+        onChange={setDarkMode}
+        checked={lightMode}
+        offColor={"#22d3ee"}
+        onColor={"#22d3ee"}
+        checkedIcon={<CloudMoon />}
+        uncheckedIcon={<Sun />}
+      />
     </div>
   );
 }
