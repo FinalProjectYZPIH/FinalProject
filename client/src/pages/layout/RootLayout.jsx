@@ -31,11 +31,16 @@ export default function RootLayout() {
       role: userData?.data?.role,
       username: userData?.data?.username,
       email: userData?.data?.email,
+
       avatar: userData?.data.avatarImage,
+
     });
   }
+  console.log(isSuccess)
+  console.log(isOnline)
+
   if (isOnline === false) {
-    return <Navigate to="/" />;
+    return <Navigate to="/login" />;
   }
 
   return (

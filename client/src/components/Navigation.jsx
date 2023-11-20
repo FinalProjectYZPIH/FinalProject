@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+
 import {
   useDarkLightMode,
   useProfileStore,
   useColorStore,
 } from "../context/data/dataStore";
+
 import { logoutRequest } from "../context/api/auth";
 import { AlignJustify, CloudMoon, Sun, User, UserPlus2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -14,6 +16,7 @@ import Search from "./Search";
 import { ColorTheme } from "./ui/ColorTheme";
 import DropdownColor from "./ui/DropdownColor";
 
+
 // Beipiel
 export default function Navigation() {
   const [friendsRequestsList, setFriendsRequestsList] = useState(false);
@@ -23,7 +26,11 @@ export default function Navigation() {
     setIsOpen(!isOpen);
   };
 
-  const { userIdDB } = useProfileStore((state) => state.defaultProfile);
+
+
+  const {userIdDB, username} = useProfileStore(state => state.defaultProfile)
+
+
 
   const { lightMode, setDarkMode } = useDarkLightMode();
   const { colorPosition, setColorPosition, setSpecificColor, color } =
@@ -70,6 +77,7 @@ export default function Navigation() {
         lightMode ? " bg-neutral-900" : " bg-white"
       }`}
     >
+
       <div className={`flex w-3/5`}>
         <button className={`md:hidden`} onClick={toggleNavbar}>
           <AlignJustify size={32} color="#22d3ee" />
@@ -99,6 +107,7 @@ export default function Navigation() {
         </div>
       </div>
       <div className="flex items-center justify-between w-96">
+
         <div className="w-52">
           <form>
             <input
@@ -116,6 +125,7 @@ export default function Navigation() {
           src={UserNav.avatar}
           alt="Profile"
         />
+
         <div className="h-8 w-12">
           <Button
             onClick={() => {
@@ -137,6 +147,7 @@ export default function Navigation() {
           uncheckedIcon={<Sun />}
         />
       </div>
+
     </div>
   );
 }
