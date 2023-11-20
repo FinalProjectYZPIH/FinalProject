@@ -34,13 +34,16 @@ console.log(userId, role, username, email, userIdDB);
       role: userData?.data?.role,
       username: userData?.data?.username,
       email: userData?.data?.email,
+      isOnline:userData?.data?.isOnline,
       avatar: "avatar",
     });
   }
-  if (isOnline === false) {
-    return <Navigate to="/" />;
-  }
+  console.log(isSuccess)
+  console.log(isOnline)
 
+  if (isOnline === false) {
+    return <Navigate to="/login" />;
+  }
 
 
   return (

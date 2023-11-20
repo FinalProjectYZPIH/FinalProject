@@ -58,12 +58,11 @@ export function registerRequest() {
   return registerMutation;
 }
 
-
-
 export function loginRequest() {
   const loginMutation = useMutation({
-    mutationFn: async (loginData) =>
-      await axios.post("/api/auth/login", loginData),
+    mutationFn: async (loginData) =>{
+      await axios.post("/api/auth/login", loginData)
+    },
     onSuccess: () => {
       // toast.custom(<Toast>Welcome back!</Toast>)
     },
@@ -124,8 +123,6 @@ export function logoutRequest() {
   return logoutQuery;
 }
 
-
-
 export function profileRequest(...key) {
   const { isOnline } = useProfileStore((state) => state.defaultProfile);
 
@@ -133,7 +130,7 @@ export function profileRequest(...key) {
   return useQuery({
     queryKey: key,
     queryFn: async () => await axios.get("/api/user/getProfile"),
-    enabled: !!isOnline, // kann nur gefetched werden, wenn isOnline sich auf true verändert
+    // enabled: !!isOnline, // kann nur gefetched werden, wenn isOnline sich auf true verändert
     onSuccess: () => {
       toast.custom(<ColorToast>WELCOME!</ColorToast>)
     },
