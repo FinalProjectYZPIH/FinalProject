@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDarkLightMode, useProfileStore } from "../context/data/dataStore";
+import { useDarkLightMode, useProfileStore, useColorStore } from "../context/data/dataStore";
 import { logoutRequest } from "../context/api/auth";
 import { CloudMoon, Sun, User, UserPlus2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -7,15 +7,23 @@ import ReactSwitch from "react-switch";
 import { Button } from "@mui/material";
 import FriendRequests from "../components/FriendRequests"
 import Search from "./Search";
+import { ColorTheme } from "./ui/ColorTheme";
+import DropdownColor from "./ui/DropdownColor";
+
 
 
 // Beipiel
 export default function Navigation() {
   const [friendsRequestsList, setFriendsRequestsList] = useState(false)
 
+
   const {userIdDB, username} = useProfileStore(state => state.defaultProfile)
 
+
   const { lightMode, setDarkMode } = useDarkLightMode();
+  const { colorPosition, setColorPosition, setSpecificColor, color } =
+    useColorStore();
+
   const { isOnline, notifications, avatar, settings, chatRooms, contacts } =
     useProfileStore((state) => state.defaultProfile);
   const navigate = useNavigate();
@@ -55,7 +63,7 @@ export default function Navigation() {
     <div
       className={`fixed top-0 left-0 z-10 flex justify-between items-center w-full h-10 shadow-lg ${lightMode ? " bg-neutral-900" : " bg-white"}`}
     >
-      <div className="flex justify-between w-2/3 h-full rounded-lg sm:pl-0">
+      <div className={`flex justify-between w-2/3 h-full rounded-lg sm:pl-0 ${color}`} >
         {PageNav.map((navObj) =>
           !navObj.isMember || isOnline ? (
             <div
@@ -69,6 +77,7 @@ export default function Navigation() {
         <div className="flex items-center justify-center bg-transparent hover:border-y-teal-400 hover:bg-cyan-400 text-sky-400 hover:text-white hover:bg-opacity-1 hover:border-transparent w-20 rounded-lg mx-0.5">
           <button onClick={handleLogout}>Logout</button>
         </div>
+
         <div className="w-52">
           <form>
             <input
@@ -87,14 +96,19 @@ export default function Navigation() {
           alt="Profile"
         />
       </div>
+
+
+      <Button onClick={() => { setFriendsRequestsList(!friendsRequestsList) }}>
+        <UserPlus2 color="#22d3ee" />
+
       <p className={`${lightMode ? " text-white" : " bg-white"}`}>{username}</p>
-      <Button onClick={()=>{setFriendsRequestsList(!friendsRequestsList)}}>
-      <UserPlus2 color="#22d3ee" />
+
       </Button>
       {friendsRequestsList === true &&
-        <FriendRequests userId = {userIdDB} />}
+        <FriendRequests userId={userIdDB} />}
 
 
+      <DropdownColor />
       <ReactSwitch
         onChange={setDarkMode}
         checked={lightMode}
