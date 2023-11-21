@@ -7,10 +7,17 @@ export async function handleRoomchat(socket, io, userId = null) {
   let rooms = [];
   ///////////////////////////////////////////////////////////////////////////////////////
   socket.on("groupRoom", async (data) => {
-    const foundRoom = rooms.find((room) => room?.chatName === data.chatName);
+
+    const foundRoom = rooms.find((room) => {
+      return (
+        room?.chatName === data?.chatName && room?.chatAdmin === data?.chatAdmin
+      );
+    });
 
     if (!foundRoom) {
       rooms.push(data);
+      console.log("room not found", Boolean(foundRoom));
+
       socket.join(data.chatName);
     }
     const members = io.sockets.adapter.rooms.get(data.chatName);
@@ -22,15 +29,21 @@ export async function handleRoomchat(socket, io, userId = null) {
 
   ///////////////////////////////////////////////////////////////////////////////////////
 
-  socket.on("updateRoom", (roomName) => {
+
+  socket.on("updateRoom", async (roomName, updateExistingRoom) => {
+    console.log("updateRoom", roomName);
+
     io.to(roomName).emit("joinRoom", () => {
       const currentMembers = io.sockets.adapter.rooms.get(roomName);
       rooms = rooms.map((room) => {
         if (room?.chatName === roomName) {
-          // Kein neuer Join, wenn der Benutzer bereits im Raum ist
-          if (!currentMembers.has(socket.id)) {
-            socket.join(roomName);
-          }
+
+          updateExistingRoom.participants.forEach((participant) => {
+            if (!currentMembers.has(participant)) {
+              socket.join(roomName);
+            }
+          });
+
           return {
             ...room,
             participants: [...currentMembers].filter(
@@ -41,10 +54,17 @@ export async function handleRoomchat(socket, io, userId = null) {
           return room;
         }
       });
-      const currentRoom = rooms.find((room) => room?.chatName === roomName);
+
+      const currentRoom = rooms.find(
+        (room) =>
+          room?.chatName === roomName &&
+          room?.chatAdmin === updateExistingRoom?.chatAdmin
+      );
+      console.log("socket", currentRoom, "frontend", updateExistingRoom);
       return {
         currentRoom: currentRoom,
-        participants: [...currentMembers || ""],
+        participants: [...(currentMembers || "")],
+
       };
     });
   });
@@ -66,19 +86,32 @@ export async function handleRoomchat(socket, io, userId = null) {
       return room?.chatName === roomName;
     });
 
-    console.log("newRoom", foundRoom);
-    console.log("newMessage", message);
 
+    console.log("newRoom and message", foundRoom, message);
+    //
     io.to(roomName).emit("messages_groupRoom", message, foundRoom);
   });
-  ///////////////////////////////////////////////////////////////////////////////////////
-  socket.on("leaveRoom", (data) => {
-    socket.leave(data.chatName);
+  ///////////////////////////////////////////////////////////////////////////////////////   
+  socket.on("leaveRoom", (chatName, user) => {
+    socket.leave(chatName);  
+    const foundRoom = rooms.find((room) => room?.chatName === chatName);
+    rooms = rooms.map((room) => {
+      if (room?.chatName === chatName) {
+        return {
+          ...room,
+          participants: room.participants.filter((id) => id !== user),
+        };
+      } else {
+        return room;
+      }
+    });
     console.log(
-      `User with ID: ${data.participants.find(
+      `User with ID: ${foundRoom?.participants.find(
         (id) => id !== userId
-      )} left room: ${data?.chatName}`
+      )} left room: ${foundRoom?.chatName}`
     );
+    io.to(chatName).emit("leavedRoom", foundRoom);
+
   });
   ///////////////////////////////////////////////////////////////////////////////////////
   socket.on("disconnect", () => {

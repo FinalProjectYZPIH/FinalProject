@@ -24,7 +24,6 @@ export function AppWrapper() {
     <ToastProvider>
       <SocketProvider>
         <QueryClientProvider client={queryClient}>
-          {/* <Navigation /> */}
           <Outlet />
           <ReactQueryDevtools initialIsOpen={true} />
         </QueryClientProvider>

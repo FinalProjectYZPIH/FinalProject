@@ -3,17 +3,19 @@ import { Button } from "../components/ui/Buttons";
 import { Search } from "lucide-react";
 import { useState } from "react";
 import SearchFriends from "./SearchFriends";
+import { useColorStore } from "../context/data/dataStore";
 
 export default function ContactSidebar() {
   const { lightMode, setDarkMode } = useDarkLightMode();
   const [friendSearch, setFriendSearch] = useState(false);
+
+  const { color } = useColorStore();
   const { contacts } = useProfileStore((state) => state.defaultProfile);
 
   return (
     <div
-      className={`h-screen w-72 font-orbitron ${
-        lightMode ? "dark bg-none" : "light bg-none"
-      }`}
+      className={`h-screen w-72 font-orbitron ${lightMode ? "dark bg-none" : "light bg-none"
+        }`}
     >
       <div className="h-4/5 mt-5 mx-2 overflow-x-hidden rounded-xl shadow-lg border border-cyan-400 p-1 flex flex-col">
         <div className="flex justify-between w-52 p-3">

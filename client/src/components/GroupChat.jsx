@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { getTime } from "date-fns";
 import { useSocketProvider } from "../context/data/SocketProvider";
-import { useProfileStore } from "../context/data/dataStore";
+import { useColorStore, useProfileStore } from "../context/data/dataStore";
 import { useNavigate, useParams } from "react-router-dom";
+
 import { useDarkLightMode } from "../context/data/dataStore.jsx";
 import ScrollToBottom from "react-scroll-to-bottom";
-import { Button } from "./ui/Buttons";
+import { ColorButton } from "./ui/Buttons";
 import { useKeyPress } from "../utils/keyEvent";
+
 
 function GroupChat() {
   //globale data
@@ -20,7 +22,11 @@ function GroupChat() {
 
   const { socket, sendMessage, createRoom } = useSocketProvider();
   const { lightMode, setDarkMode } = useDarkLightMode();
+
+    const { color } = useColorStore();
+
   console.log(chatRooms);
+
 
   //localdata
   const defaultMessageObj = {
@@ -36,38 +42,47 @@ function GroupChat() {
     time: getTime(new Date()),
   });
   const [messageList, setMessageList] = useState([]);
-  const [currentRoom, setCurrentRoom] = useState(null);
+
+  const [currentMember, setCurrentMember] = useState([]);
+
 
   console.log(chatRooms);
+
 
   useEffect(() => {
     const foundRoom = chatRooms?.find((room) => {
       return room?.chatName === chatName;
     });
     setMessageList([]);
-    setMessageList(foundRoom.chatMessages);
-    socket.emit("updateRoom", chatName);
-  }, [chatName]);
+    setMessageList(foundRoom?.chatMessages || []);
+    socket.emit("updateRoom", chatName, foundRoom);
+    setChatRooms(foundRoom);
+    console.log("updateRoom", foundRoom.chatMessages);
+  }, [chatName ]);
 
   // hier wird die daten aus backend immer mit dazugehörigen room aktualisiert
   useEffect(() => {
-    if (socket && socket.connected) {
+
+    if (socket && socket?.on) {
+
       socket.on("messages_groupRoom", (message, room) => {
         console.log(message);
-        setMessageList((prev) => [...prev, message]);
         setChatRooms(room);
+        setMessageList((prev) => [...prev, message]);
         console.log("roomtest", room);
-        setCurrentRoom(room);
       });
-
+      
       socket.on("joinRoom", (newParticipantRoom) => {
-        setChatRooms(newParticipantRoom?.currentRoom);
+        setCurrentMember(newParticipantRoom?.participants);
       });
+    }else{
+      console.log("socket is not connected");
+      navigate("/chat", { replace: true });
     }
+
     return () => {
-      if (socket) {
+      if (socket && socket?.off) {
         socket.off("messages_groupRoom");
-        socket.off("joinRoom");
       }
     };
   }, [socket]);
@@ -79,7 +94,7 @@ function GroupChat() {
   const sendMessages = async (e) => {
     e.preventDefault();
     if (currentMessage.content !== "") {
-      sendMessage(currentMessage, chatName, (cb) => console.log(cb));
+      await sendMessage(currentMessage, chatName, (cb) => console.log(cb));
 
       setCurrentMessage({
         ...defaultMessageObj,
@@ -87,7 +102,7 @@ function GroupChat() {
       });
     }
   };
-  console.log(currentRoom);
+
 
   useKeyPress(() => sendMessages(), ["Enter"]);
   return (
@@ -96,11 +111,17 @@ function GroupChat() {
         lightMode ? "dark bg-none" : "light bg-none"
       }`}
     >
-      <div className="chat-header border mt-5 border-cyan-400 rounded-lg p-5 h-4/5 w-auto shadow-lg backdrop-blur">
-        <p>
-          Live Chat {currentRoom?.participants.length || 0} Users are Online
-        </p>
-        <div className="chat-body flex flex-col border border-cyan-800 h-[500px] rounded-lg py-5 px-1">
+
+
+      <div
+        className={`chat-header border mt-5 border-cyan-400 rounded-lg p-5 h-4/5 w-auto shadow-lg backdrop-blur ${color}`}
+      >
+        <p>Live Chat</p>
+        <div
+          className={`chat-body flex flex-col border border-cyan-800 h-[500px] rounded-lg py-5 px-1 ${color}`}
+        >
+
+
           <ScrollToBottom className="overflow-x-hidden">
             {messageList?.map((messageContent, index) => {
               return (
@@ -112,9 +133,11 @@ function GroupChat() {
                       : "other-message flex justify-start rounded-lg break-words  "
                   }
                 >
-                  <div>
-                    <div className="message-content w-60 border border-cyan-400 p-2 m-1 rounded-lg ">
-                      <p>{messageContent.content}</p>
+
+                      <p>{messageContent.content}</p>                    <div
+                      className={`message-content w-60 border border-cyan-400 p-2 m-1 rounded-lg ${color}`}
+                    >
+
                       <div className="message-meta flex justify-end text-xs p-2">
                         <p id="author">{messageContent.sender}</p>
                         <p className="pl-2" id="time">
@@ -128,11 +151,13 @@ function GroupChat() {
             })}
           </ScrollToBottom>
         </div>
-        <div className="chat-footer flex fixed bottom-2 left-0">
+        <div className={`chat-footer flex fixed bottom-2 left-0 ml-5`}>
           <form>
+
+          <label className="flex">message</label>
             <input
-              className="bg-blue-950 bg-opacity-5 block w-full px-10 py-1 text-lg text-cyan-400 focus:ring-2 focus:ring-offset-2 focus:ring-sky-300 border-b-2 rounded-lg border-grey-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:text-white focus:bg-sky-600 focus:bg-opacity-25 focus:border-blue-600 hover:border-b-cyan-400"
-              type="text"
+              type="text" className={`${color} rounded-lg block bg-transparent `}
+
               value={currentMessage.content}
               placeholder="Hey..."
               onChange={(event) => {
@@ -143,10 +168,12 @@ function GroupChat() {
               }}
             />
 
+
             <div className="fixed bottom-1 right-0 w-32">
-              <Button onClick={sendMessages}>GO</Button>
+            <ColorButton onClick={sendMessages}>GO</ColorButton>
             </div>
           </form>
+
         </div>
       </div>
     </div>

@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useSocketProvider } from "../context/data/SocketProvider";
 
-import { useDarkLightMode } from "../context/data/dataStore.jsx";
+import { useDarkLightMode, useColorStore } from "../context/data/dataStore.jsx";
 import { Inputs } from "../components/ui/Inputs.jsx";
-import { Button } from "../components/ui/Buttons.jsx";
+import { Button, ColorButton } from "../components/ui/Buttons.jsx";
 import Navigation from "../components/Navigation.jsx";
 
 export default function ChatDashboard() {
@@ -19,6 +19,9 @@ export default function ChatDashboard() {
   console.log(userId, role, username, email, userIdDB);
   // console.log(userData.data);
 
+  const { lightMode, setDarkMode } = useDarkLightMode();
+  const { colorPosition, setColorPosition, setSpecificColor, color } =
+    useColorStore();
   //socket
   const { socket, sendMessage, createRoom } = useSocketProvider();
 
@@ -49,14 +52,14 @@ export default function ChatDashboard() {
         roomname
       ); 
       console.log("createRoom>>", roomData);
-      
+
+      socket.emit("joinRoom", roomData, username);
       setChatRooms(roomData);
-      setShowChat(true);
-      
+
     }
+    setShowChat(true);
   };
 
-  const { lightMode, setDarkMode } = useDarkLightMode();
 
   return (
     <div
@@ -67,8 +70,12 @@ export default function ChatDashboard() {
       <Navigation />
 
       {!showChat ? ( //hier soll für 2. sidebar gedacht sein. wenn der user in navbar klickt, es soll dann angezeigt werden.
-        <div className=" flex flex-col mt-5 h-4/5 items-center">
-          <div className="h-full w-full px-5 flex justify-evenly flex-col items-center border border-cyan-400 rounded-lg shadow-lg">
+        <div className={`flex flex-col mt-5 h-4/5 items-center`}>
+
+          <div
+            className={`h-full w-full px-5 flex justify-evenly flex-col items-center border border-cyan-400 rounded-lg shadow-lg ${color}`}
+          >
+
             <h3 className="text-4xl">Create or join a existing ChatRoom</h3>
             <Inputs
               className="border border-1"
@@ -79,7 +86,7 @@ export default function ChatDashboard() {
               }}
             />
             <div className="w-full">
-              <Button onClick={joinRoom}>Join a Room</Button>
+              <ColorButton onClick={joinRoom}>Join a Room</ColorButton>
             </div>
           </div>
         </div>
