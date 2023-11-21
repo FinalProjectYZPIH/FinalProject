@@ -13,15 +13,6 @@ import ScrollToBottom from "react-scroll-to-bottom";
 import Navigation from "./Navigation.jsx";
 import { ColorTheme } from "./ui/ColorTheme.jsx";
 
-import { produce } from "immer";
-
-
-import { Inputs } from "./ui/Inputs";
-
-
-
- 
-
 // {
 //   type: 'single',
 //   chatName: 'SingleRoomName',
@@ -80,14 +71,12 @@ function GroupChat() {
 
   const [roomConfig, setRoomConfig] = useState(
     chatRooms?.find((room) => {
-
-     if(room.chatName === ""){
-      return "Private_Chat"
-     }else{
-       return room?.chatName === chatName 
-     }
-    }) 
-
+      if (room.chatName === "") {
+        return "Private_Chat";
+      } else {
+        return room?.chatName === chatName;
+      }
+    })
   );
 
   console.log(messageList);
@@ -97,16 +86,13 @@ function GroupChat() {
   // console.log(roomConfig?.chatMessages);
   // console.log(roomConfig?.chatAdmin);
 
-
   useEffect(() => {
     setMessageList(roomConfig?.chatMessages || []);
   }, [chatName]);
 
   // hier wird die daten aus backend immer mit dazugehörigen room aktualisiert
   useEffect(() => {
-
     if (socket && socket.on) {
-
       socket.on("messages_groupRoom", (message, room) => {
         console.log(message);
         setMessageList((list) => [...list, message]);
@@ -119,7 +105,8 @@ function GroupChat() {
   const storedData = JSON.parse(sessionStorage.getItem("Profile"));
   console.log("Stored Data:", storedData?.defaultProfile?.chatMessages);
 
-  const sendMessages = async () => {
+  const sendMessages = async (e) => {
+    e.preventDefault();
     if (currentMessage.content !== "") {
       const message = sendMessage(currentMessage, (cb) => console.log(cb));
       console.log(message);
@@ -139,7 +126,6 @@ function GroupChat() {
         lightMode ? "dark bg-none" : "light bg-none"
       }`}
     >
-
       <div
         className={`chat-header border mt-5 border-cyan-400 rounded-lg p-5 h-4/5 w-auto shadow-lg backdrop-blur ${color}`}
       >
@@ -147,7 +133,6 @@ function GroupChat() {
         <div
           className={`chat-body flex flex-col border border-cyan-800 h-[500px] rounded-lg py-5 px-1 ${color}`}
         >
-
           <ScrollToBottom className="overflow-x-hidden">
             {(messageList ?? []).map((messageContent, index) => {
               return (
@@ -196,13 +181,12 @@ function GroupChat() {
                 event.key === "Enter" && sendMessages();
               }}
             />
+
+            <div className="fixed bottom-1 right-0 w-32">
+              {/* <ColorButton onClick={sendMessages}>GO</ColorButton> */}
+              <ColorButton onClick={sendMessages}>GO</ColorButton>
+            </div>
           </form>
-
-          <div className="fixed bottom-1 right-0 w-32">
-            {/* <ColorButton onClick={sendMessages}>GO</ColorButton> */}
-            <ColorButton onClick={sendMessages}>GO</ColorButton>
-
-          </div>
         </div>
       </div>
     </div>

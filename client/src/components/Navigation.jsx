@@ -16,7 +16,6 @@ import Search from "./Search";
 import { ColorTheme } from "./ui/ColorTheme";
 import DropdownColor from "./ui/DropdownColor";
 
-
 // Beipiel
 export default function Navigation() {
   const [friendsRequestsList, setFriendsRequestsList] = useState(false);
@@ -26,11 +25,9 @@ export default function Navigation() {
     setIsOpen(!isOpen);
   };
 
-
-
-  const {userIdDB, username} = useProfileStore(state => state.defaultProfile)
-
-
+  const { userIdDB, username } = useProfileStore(
+    (state) => state.defaultProfile
+  );
 
   const { lightMode, setDarkMode } = useDarkLightMode();
   const { colorPosition, setColorPosition, setSpecificColor, color } =
@@ -73,41 +70,42 @@ export default function Navigation() {
 
   return (
     <div
-      className={`fixed top-0 left-0 z-10 flex justify-between items-center w-full h-10 shadow-lg rounded-lg ${color} ${
+      className={`fixed top-0 left-0 z-10 flex justify-between items-center w-full h-10 shadow-lg rounded-sm ${color} ${
         lightMode ? " bg-neutral-900" : " bg-white"
       }`}
     >
       <div className={`flex w-1/3`}>
-        <button className={`lg:hidden`} onClick={toggleNavbar}>
+        <button className={`md:hidden`} onClick={toggleNavbar}>
           <AlignJustify size={32} className={`${color} border-0`} />
         </button>
         <div
-          className={`lg:flex lg:justify-between h-8 ${
+          className={`md:flex md:justify-between h-8 ${
             isOpen
               ? `${
                   lightMode ? " bg-neutral-900" : " bg-white"
-                } sm:flex-col sm:index-10 sm:px-5 sm:fixed sm:top-10 my-5 sm:left-2 sm:h-48 sm:w-32 sm:rounded-lg ${color}}`
+                } sm:flex-col sm:px-5 sm:fixed sm:top-10 sm:my-5 sm:left-2 sm:h-48 sm:w-32 sm:rounded-lg ${color}}`
               : "hidden"
           }`}
         >
           {PageNav.map((navObj) =>
             !navObj.isMember || isOnline ? (
               <div
-                className={`flex items-center justify-center bg-transparent hover:border-y-teal-400 hover:bg-cyan-400 text-sky-400 hover:text-white hover:bg-opacity-1 hover:border-transparent w-20 rounded-lg mx-0.5 sm:mb-5 md:mb-0 ${color} border-0`}
+                className={`flex items-center justify-center bg-transparent hover:border-y-teal-400 hover:bg-cyan-400 hover:text-white hover:bg-opacity-1 hover:border-transparent w-20 rounded-lg mx-0.5 sm:mb-5 md:mb-0 ${color} border-0`}
                 key={navObj.path}
               >
                 <Link to={navObj.path}>{navObj.name}</Link>
               </div>
             ) : null
           )}
-          <div className={`flex items-center justify-center bg-transparent hover:border-y-teal-400 hover:bg-cyan-400 text-sky-400 hover:text-white hover:bg-opacity-1 hover:border-transparent w-20 rounded-lg mx-0.5 ${color} border-0`}>
+          <div
+            className={`flex items-center justify-center bg-transparent hover:border-y-teal-400 hover:bg-cyan-400 hover:text-white hover:bg-opacity-1 hover:border-transparent w-20 rounded-lg mx-0.5 ${color} border-0`}
+          >
             <button onClick={handleLogout}>Logout</button>
           </div>
         </div>
       </div>
-
-      <div className="fixed right-0 flex items-center">
-        <div className="w-52">
+      <div className="fixed right-1 flex items-center">
+        {/* <div className="w-52">
           <form>
             <input
               className="sm:hidden lg:flex w-32 focus:w-52 h-8 pl-4 pr-8 text-gray-900 rounded-full border border-cyan-400 outline-cyan-400"
@@ -116,12 +114,14 @@ export default function Navigation() {
               placeholder="Search..."
             />
           </form>
+        </div> */}
+        <div className="w-9">
+          <img
+            className={`${color} w-8 h-8 rounded-full`}
+            src={UserNav.avatar}
+            alt="Profile"
+          />
         </div>
-        <img
-          className={`${color} w-8 h-8 rounded-full`}
-          src={UserNav.avatar}
-          alt="Profile"
-        />
 
         <div className="h-8 w-12">
           <Button
@@ -129,7 +129,7 @@ export default function Navigation() {
               setFriendsRequestsList(!friendsRequestsList);
             }}
           >
-            <UserPlus2  size={30} className={`${color} border-0`}/>
+            <UserPlus2 size={26} className={`${color} border-0`} />
           </Button>
           {friendsRequestsList === true && <FriendRequests userId={userIdDB} />}
         </div>
@@ -144,7 +144,6 @@ export default function Navigation() {
           uncheckedIcon={<Sun />}
         />
       </div>
-
     </div>
   );
 }
