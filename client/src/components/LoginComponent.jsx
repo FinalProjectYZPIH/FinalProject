@@ -18,6 +18,8 @@ import { useProfileStore } from "../context/data/dataStore.jsx";
 
 
 
+
+
 export const LoginComponent = () => {
   const [input, setInput] = useSearchParams({ i: "" });
   const inputParam = input.get("i");  
