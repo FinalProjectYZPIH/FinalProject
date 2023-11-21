@@ -27,7 +27,7 @@ function DropdownColor() {
     <div>
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className={`flex items-center justify-center bg-transparent hover:border-y-teal-400 hover:bg-cyan-400 text-sky-400 hover:text-white hover:bg-opacity-1 hover:border-transparent w-20 rounded-lg h-8 mr-2`}
+        className={`flex items-center justify-center bg-transparent hover:border-y-teal-400 hover:bg-cyan-400 text-sky-400 hover:text-white hover:bg-opacity-1 hover:border-transparent w-20 rounded-lg h-8 mr-2 ${color}`}
       >
         Color
       </button>

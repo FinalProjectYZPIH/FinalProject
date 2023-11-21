@@ -48,7 +48,7 @@ export default function Navigation() {
   const PageNav = [
     { path: "/", name: "Home", isMember: false }, // kann auch bei path componente sein
     // { path: "/about", name: "About", isMember: false },
-    { path: "/login", name: "Login", isMember: false },
+    // { path: "/login", name: "Login", isMember: false },
     // { path: "/logout", name: "Logout", isMember: true },
     { path: "/chat", name: "Chat", isMember: true },
     // { path: "/account", name: "Account", isMember: true },
@@ -66,53 +66,52 @@ export default function Navigation() {
 
   return (
     <div
-      className={`fixed top-0 left-0 z-10 flex justify-between items-center w-full h-10 shadow-lg ${
+      className={`fixed top-0 left-0 z-10 flex justify-between items-center w-full h-10 shadow-lg rounded-lg ${color} ${
         lightMode ? " bg-neutral-900" : " bg-white"
       }`}
     >
-      <div className={`flex w-3/5`}>
-        <button className={`md:hidden`} onClick={toggleNavbar}>
-          <AlignJustify size={32} color="#22d3ee" />
+      <div className={`flex w-1/3`}>
+        <button className={`lg:hidden`} onClick={toggleNavbar}>
+          <AlignJustify size={32} className={`${color} border-0`} />
         </button>
         <div
-          className={` md:flex md:justify-between h-8 ${
+          className={`lg:flex lg:justify-between h-8 ${
             isOpen
               ? `${
                   lightMode ? " bg-neutral-900" : " bg-white"
-                } sm:flex-col sm:index-10 sm:px-5 sm:fixed sm:top-10 my-5 sm:left-2 sm:h-48 sm:w-32 sm:border sm:border-cyan-400 sm:rounded-lg`
+                } sm:flex-col sm:index-10 sm:px-5 sm:fixed sm:top-10 my-5 sm:left-2 sm:h-48 sm:w-32 sm:rounded-lg ${color}}`
               : "hidden"
           }`}
         >
           {PageNav.map((navObj) =>
             !navObj.isMember || isOnline ? (
               <div
-                className="flex items-center justify-center bg-transparent hover:border-y-teal-400 hover:bg-cyan-400 text-sky-400 hover:text-white hover:bg-opacity-1 hover:border-transparent w-20 rounded-lg mx-0.5 sm:mb-5 md:mb-0"
+                className={`flex items-center justify-center bg-transparent hover:border-y-teal-400 hover:bg-cyan-400 text-sky-400 hover:text-white hover:bg-opacity-1 hover:border-transparent w-20 rounded-lg mx-0.5 sm:mb-5 md:mb-0 ${color} border-0`}
                 key={navObj.path}
               >
                 <Link to={navObj.path}>{navObj.name}</Link>
               </div>
             ) : null
           )}
-          <div className="flex items-center justify-center bg-transparent hover:border-y-teal-400 hover:bg-cyan-400 text-sky-400 hover:text-white hover:bg-opacity-1 hover:border-transparent w-20 rounded-lg mx-0.5">
+          <div className={`flex items-center justify-center bg-transparent hover:border-y-teal-400 hover:bg-cyan-400 text-sky-400 hover:text-white hover:bg-opacity-1 hover:border-transparent w-20 rounded-lg mx-0.5 ${color} border-0`}>
             <button onClick={handleLogout}>Logout</button>
           </div>
         </div>
       </div>
-      <div className="flex items-center justify-between w-96">
+
+      <div className="fixed right-0 flex items-center">
         <div className="w-52">
           <form>
             <input
-              className="w-32 focus:w-52 h-8 pl-4 pr-8 text-gray-900 rounded-full border border-cyan-400 outline-cyan-400"
+              className="sm:hidden lg:flex w-32 focus:w-52 h-8 pl-4 pr-8 text-gray-900 rounded-full border border-cyan-400 outline-cyan-400"
               id="search"
               type="search"
               placeholder="Search..."
             />
           </form>
         </div>
-      </div>
-      <div className="flex items-center mx-2">
         <img
-          className="w-8 h-8 rounded-full border border-cyan-400"
+          className={`${color} w-8 h-8 rounded-full`}
           src={UserNav.avatar}
           alt="Profile"
         />
@@ -122,7 +121,7 @@ export default function Navigation() {
               setFriendsRequestsList(!friendsRequestsList);
             }}
           >
-            <UserPlus2 color="#22d3ee" />
+            <UserPlus2  size={30} className={`${color} border-0`}/>
           </Button>
           {friendsRequestsList === true && <FriendRequests userId={userIdDB} />}
         </div>

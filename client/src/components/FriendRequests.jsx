@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useDarkLightMode } from "../context/data/dataStore";
+import { useColorStore, useDarkLightMode } from "../context/data/dataStore";
 import toast from "react-hot-toast";
 import { Toast } from "./ui/Toasts";
 
 const FriendRequests = (userId) => {
   const { lightMode, setDarkMode } = useDarkLightMode();
   const [friendRequests, setFriendRequests] = useState([]);
+  const { colorPosition, setColorPosition, setSpecificColor, color } =
+    useColorStore();
 
   useEffect(() => {
     const fetchFriendRequests = async () => {
@@ -40,9 +42,11 @@ const FriendRequests = (userId) => {
   return (
     <div className="text-cyan-400">
       {friendRequests.length === 0 ? (
-        <div className={`${
-          lightMode ? " bg-neutral-900" : " bg-white"
-        } fixed right-2 border border-cyan-400 rounded-lg sm:w-32 md:w-52 text-center pt-2 my-6 h-1/6`}>
+        <div
+          className={`${
+            lightMode ? " bg-neutral-900" : " bg-white"
+          } fixed right-2 ${color} rounded-lg sm:w-32 md:w-52 text-center pt-2 my-6 h-1/6`}
+        >
           No Friend Requests
         </div>
       ) : (
