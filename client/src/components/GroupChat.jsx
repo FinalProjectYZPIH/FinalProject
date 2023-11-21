@@ -50,7 +50,7 @@ function GroupChat() {
     setMessageList(foundRoom?.chatMessages || []);
     socket.emit("updateRoom", chatName, foundRoom);
     setChatRooms(foundRoom);
-    console.log("updateRoom", foundRoom.chatMessages);
+    console.log("updateRoom", foundRoom?.chatMessages);
   }, [chatName ]);
 
   // hier wird die daten aus backend immer mit dazugehörigen room aktualisiert

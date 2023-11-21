@@ -10,8 +10,6 @@ import App from "../App";
 
 import Navigation from "../../components/Navigation";
 import { profileRequest } from "../../context/api/auth";
-import toast from "react-hot-toast";
-import { ColorToast } from "../../components/ui/Toasts";
 
 export default function RootLayout() {
   // const { isOnline } = useProfileStore((state) => state.defaultProfile);
