@@ -1,9 +1,10 @@
 import axios from "../../libs/axiosProtected";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { useProfileStore } from "../data/dataStore";
+import { useProfileStore, useColorStore } from "../data/dataStore";
 import { redirect, useNavigate } from "react-router-dom";
-import { Toast } from "../../components/ui/Toasts";
+import { Toast, ColorToast } from "../../components/ui/Toasts";
+
 
 // const queryClient = useQueryClient();
 
@@ -26,7 +27,25 @@ export function registerRequest() {
   const registerMutation = useMutation({
 
     mutationFn: async (loginData) => {
-      return await axios.post("/api/user/createUser", loginData);
+      // Erstelle zuerst den Benutzer
+      const createUserResponse = await axios.post(
+        "/api/user/createUser",
+        loginData
+      );
+
+      // Dann sende die Verifizierungs-E-Mail
+      const verificationEmailResponse = await axios.post(
+        "/api/auth/sendMailVerify",
+        {
+          recipient: loginData.email,
+        }
+      );
+
+      return {
+        createUserResponse,
+        verificationEmailResponse
+        // verificationResponse,
+      };
     },
     onSuccess: () => {
       navigate("/login", { replace: true });
@@ -35,20 +54,18 @@ export function registerRequest() {
     onError: (error) => {
       toast.custom(<Toast> Failed to Sign In</Toast>)
     },
-
   });
   return registerMutation;
 }
 
-
-
 export function loginRequest() {
   const loginMutation = useMutation({
-    mutationFn: async (loginData) =>
-      await axios.post("/api/auth/login", loginData),
+    mutationFn: async (loginData) =>{
+      await axios.post("/api/auth/login", loginData)
+    },
     onSuccess: () => {
       // toast.custom(<Toast>Welcome back!</Toast>)
-    }, 
+    },
     onError: () => {
       toast.custom(<Toast> Failed to Login</Toast>)
     },
@@ -78,12 +95,12 @@ export function googleRequest(...key) {
     },
     {
       onSuccess: () => {
-       
-       
-      }, 
+
+
+      },
       onError: () => { },
       onSettled: () => {
-      //  toast.success("google fetching...");
+        //  toast.success("google fetching...");
       },
     }
   );
@@ -106,8 +123,6 @@ export function logoutRequest() {
   return logoutQuery;
 }
 
-
-
 export function profileRequest(...key) {
   const { isOnline } = useProfileStore((state) => state.defaultProfile);
 
@@ -115,15 +130,17 @@ export function profileRequest(...key) {
   return useQuery({
     queryKey: key,
     queryFn: async () => await axios.get("/api/user/getProfile"),
-    enabled: !!isOnline, // kann nur gefetched werden, wenn isOnline sich auf true verändert
     onSuccess: () => {
-      toast.custom(<Toast>WELCOME!</Toast>)
-    }, 
-    onError: () => { },
-    onSettled: () => { },
-
-    // refetchInterval: 60000*10, // 10minute,
-    staleTime: 60000 * 60, //daten bleiben 60sek lang gültig,
+      toast.custom(<Toast>Loading Profile</Toast>)
+    },
+    enabled: isOnline == false, //wenn false dann wird die query nicht automatisch ausgeführt
+    keepPreviousData:false,
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+    refetchInterval: 60000*10, // 10minute,
+    staleTime: 60000 * 60 *5, //daten bleiben 5minute lang gültig,
+    refetchOnReconnect:true,
+    refetchIntervalInBackground:false,
     // retry: 3,
     // retryDelay: 30000
   });

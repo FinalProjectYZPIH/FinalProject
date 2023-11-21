@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import io from "socket.io-client";
+import { useProfileStore } from "../context/data/dataStore";
 
 const useSocketIo = (
   userId,
@@ -22,10 +23,11 @@ const useSocketIo = (
     // timeout: 15000, // verbindungsabruch nach 15sek
     timestampRequests: true, // zeitstempel bei jeden request hinzufügen
     timestampParam: "zeitstempel",
-    reconnection:true,
+    // reconnection:true,
     // transports: ["websocket", "polling"], //verbindungsart nach partial
   }
 ) => {
+  const { chatRooms } = useProfileStore((state) => state.defaultProfile);
   const [socket, setSocket] = useState(null);
 
   //hier wird nachrichten verschickt
@@ -49,14 +51,14 @@ const useSocketIo = (
     //   newSocket.connect()
     // })
 
-    // return () => {
-    //   newSocket.disconnect();
-    // };
+    return () => {
+      newSocket.disconnect();
+    };
   }, []);
 
   const createRoom = (
-    { attachMessages, attachParticipants, attachComments,type },
-     // single or group  String
+    { attachMessages, attachParticipants, attachComments, type },
+    // single or group  String
     roomName = ""
   ) =>
     //roomObject = { chatMessages: [], participants: [], comments: [] }
@@ -64,17 +66,38 @@ const useSocketIo = (
       console.log([socket, roomName, userId].map((value) => Boolean(value)));
       let roomData;
       if (socket && type === "group" && userId) {
-        roomData = {
-          type,
-          chatName: roomName,
-          chatMessages: [...attachMessages],
-          participants: [...attachParticipants],
-          comments: [...attachComments],
-          chatAdmin: userId,
-        };
+  // !!! daten >> chatRooms >> werden nicht rechtzeitig aktualisiert ???
+        console.log("chatRooms", chatRooms)
+        const existingRoom = chatRooms?.find((room) => {
+          console.log("room", room)
+          return room?.chatName === roomName;
+        });
+        
+        console.log("existingRoom", existingRoom)
+        if(!existingRoom){
+          
+          roomData = {
+            type,
+            chatName: roomName,
+            chatMessages: [...attachMessages],
+            participants: [...attachParticipants],
+            comments: [...attachComments],
+            chatAdmin: userId,
+          };
+          console.log("createRoom", roomData)
+          socket.emit("groupRoom", roomData, roomName);
+          return roomData;
+        }
+        if (existingRoom) {
+          
+          const updateExistingRoom = {...existingRoom, participants: [...existingRoom.participants,...attachParticipants]}
 
-        socket.emit("groupRoom", roomData);
-        return roomData;
+          console.log("updateRoom", updateExistingRoom)
+          socket.emit("updateRoom", roomName, updateExistingRoom);
+          return updateExistingRoom;
+        }
+
+        console.log(roomData, "useSocketio >createRoom >> something is wrong");
       }
 
       if (socket && type === "single" && userId) {
@@ -95,34 +118,36 @@ const useSocketIo = (
 
   const sendMessage = (
     { content, likes, emojis, images, voices, videos },
+    roomName,
     option = undefined
   ) => {
-    if (socket) {
-      if (
-        typeof content !== "undefined" ||
-        typeof likes !== "undefined" ||
-        typeof emojis !== "undefined" ||
-        typeof images !== "undefined" ||
-        typeof voices !== "undefined" ||
-        typeof videos !== "undefined"
-      ) {
-        const messageData = {
-          sender: userId,
-          content, //string
-          likes: 0, //number
-          emojis: [], //[string]
-          images: [], //[string]
-          voices: [], //[string]?
-          videos: [], //[string]?
-          time:
-            new Date(Date.now()).getHours() +
-            ":" +
-            new Date(Date.now()).getMinutes(),
-        };
-        socket.emit("sendMessage", messageData, option);
+    if (!socket) {
+      return null, console.log("socket is not connected");
+    }
+    if (
+      typeof content !== "undefined" ||
+      typeof likes !== "undefined" ||
+      typeof emojis !== "undefined" ||
+      typeof images !== "undefined" ||
+      typeof voices !== "undefined" ||
+      typeof videos !== "undefined"
+    ) {
+      const messageData = {
+        sender: userId,
+        content, //string
+        likes: 0, //number
+        emojis: [], //[string]
+        images: [], //[string]
+        voices: [], //[string]?
+        videos: [], //[string]?
+        time:
+          new Date(Date.now()).getHours() +
+          ":" +
+          new Date(Date.now()).getMinutes(),
+      };
+      socket.emit("sendMessage", messageData, roomName, option);
 
-        return messageData;
-      }
+      return messageData;
     }
   };
   return { socket, createRoom, sendMessage };

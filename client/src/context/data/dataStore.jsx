@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { devtools, persist, createJSONStorage } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import { shallow } from "zustand/shallow";
 import { ThemeColors } from "./data";
 import { produce } from "immer";
 // import { mergeDeepLeft } from "ramda";
@@ -52,9 +51,7 @@ export const useDarkLightMode = create(
   )
 );
 
-
-
-export const useProfileStore = create( 
+export const useProfileStore = create(
   persist(
     immer(
       produce((set, get) => ({
@@ -123,30 +120,28 @@ export const useProfileStore = create(
             //   participants: ["Yan", "Zoe"],
             //   comments: [],
             // },
-            {
-              type: "group",
-
-              chatName: "FirstRoom",
-              chatAdmin: "Test",
-
-              chatMessages: [
-                {
-                    sender: "",
-                    content: "Welcome",
-                    likes :0,
-                    emojis :[],
-                    images : "",
-                    voices : "",
-                    videos: "",
-                    time:
-                    new Date(Date.now()).getHours() +
-                    ":" +
-                    new Date(Date.now()).getMinutes(),
-                  }
-              ],
-              participants: ["userid", "user2", "user3"],
-              comments: [],
-            },
+            // {
+            //   type: "group",
+            //   chatName: "FirstRoom",
+            //   chatAdmin: "Test",
+            //   chatMessages: [
+            //     {
+            //         sender: "",
+            //         content: "Welcome",
+            //         likes :0,
+            //         emojis :[],
+            //         images : "",
+            //         voices : "",
+            //         videos: "",
+            //         time:
+            //         new Date(Date.now()).getHours() +
+            //         ":" +
+            //         new Date(Date.now()).getMinutes(),
+            //       }
+            //   ],
+            //   participants: ["userid", "user2", "user3"],
+            //   comments: [],
+            // },
             //   {
             //   singleroom: {
             //     chatMessages: [{ content: "Guten Tag!", likes: 5, emojis: [] }],
@@ -154,7 +149,6 @@ export const useProfileStore = create(
             //     comments: [{ content: "sample coments", likes: 5, emojis: [] }],
             //   },
             // },
-
           ],
           settings: {},
         },
@@ -202,13 +196,6 @@ export const useProfileStore = create(
         setChatRooms: (newChatRoom) =>
           set((state) => {
             return produce(state, (draftState) => {
-              // Änderungen am draftState vornehmen
-              // const newRoom = draftState.defaultProfile.chatRooms.find(
-              //   (room) => room?.chatName === newChatRoom?.chatName
-              // );
-              // if (!newRoom ) {
-              //   draftState.defaultProfile.chatRooms.push(newChatRoom);
-              // }
               // Überprüfen, ob es ein Zimmer mit dem gleichen chatName gibt
               const existingRoomIndex =
                 draftState.defaultProfile.chatRooms.findIndex(
@@ -227,6 +214,11 @@ export const useProfileStore = create(
               }
             });
           }),
+        deleteChatRooms: (roomName) => set((state) => {
+          return produce(state, (draftState) => {
+            draftState.defaultProfile.chatRooms = draftState.defaultProfile.chatRooms.filter((room) => room?.chatName !== roomName);
+          })
+        }),
         setContacts: (contacts) =>
           set((state) => {
             state.defaultProfile.contacts.push(contacts);
@@ -247,9 +239,9 @@ export const useProfileStore = create(
     ),
     {
       name: "Profile",
-      onRehydrateStorage: (state) => {
+      onRehydrateStorage: async (state) => {
         console.log("Rehydration successful");
-        return produce(state, (draftState) => {
+        return await produce(state, (draftState) => {
           draftState.defaultProfile.chatRooms.forEach((room) => {
             if (room && room.chatMessages) {
               // Initialisiere chatMessages, wenn es nicht vorhanden ist
@@ -263,25 +255,6 @@ export const useProfileStore = create(
       // merge: (persistedState, currentState) => {
       //   mergeDeepLeft(persistedState, currentState)
       // },
-      // onRehydrateStorage: (state) => {
-      //   console.log("Rehydration successful");
-      //   console.log(state)
-      //   return state;
-      // },
-      
-      // {
-      //   console.log("hydration starts");
-      //   const storedData = JSON.parse(sessionStorage.getItem("Profile"));
-      //   // optional
-      //   if (storedData && typeof storedData === "object") {
-      //     // return deepRead(defaultProfile);
-
-      //     console.log("hydration finished");
-      //     return immer(() => state);
-      //   } else {
-      //     console.log("No valid data found in sessionStorage");
-      //   }
-      // },
 
       storage: createJSONStorage(() => {
         console.log("Persisting state to sessionStorage");
@@ -292,35 +265,6 @@ export const useProfileStore = create(
 );
 
 // Chatliste werden in Localstorage gepeichert messageLIste: [{ participants: [userId1, userId2]}, ...]  2 teilnehmer= direkter chat  >2 teinehmer = groupchat
-
-// hier sind chatdaten für die speicherung im localstorage damit der chat effizienter läuft
-// export const useChatStore = create(
-//   persist(
-//     immer((set, get) => ({
-//       messageListe: [],
-//       messageData: [],
-//       setMessageList: (message) =>
-//         set({ messageListe: get().messageListe.push(message) }),
-//     }))
-//   ),
-//   {
-//     name: "ChatStory",
-//     onRehydrateStorage: (state) => {
-//       console.log('hydration starts')
-
-//       // optional
-//       return ( error) => {
-//         if (error) {
-//           console.log('an error happened during hydration', error)
-//         } else {
-//           return immer(() => state)
-//           console.log('hydration finished')
-//         }
-//       }
-//     },
-//     storage: createJSONStorage(() => localStorage),
-//   }
-// );
 
 // hier sind chatdaten für die speicherung im localstorage damit der chat effizienter läuft
 //export const useChatStore = create(
@@ -336,15 +280,6 @@ export const useProfileStore = create(
 //    })
 //  )
 // );
-
-// daten vorstellungen
-// const roomChatData = {
-//   chatName: "",
-//   isGroupChat: false,
-//   chatMessages: [messageData,...], // Jedes mal wenn einen nachricht gesendet wird, wird einen chatMessages erstellt, und messagData wird reingepushed. paricipants sind required. Die anderen Optionenen sind für raumerstellungen wichtig ansonstens sind alle optional.
-//   participants: [userId1, userId2], // Teilnehmer des Gruppenchats (bei 3 oder mehr leute admin required)
-//   chatAdmin: userid,
-// };
 
 // messageData kann bei allen stelle angehängt werden also auch als attachdocument
 // const messageData = {

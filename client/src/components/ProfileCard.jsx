@@ -1,5 +1,5 @@
-import {useState} from 'react'
-import { useProfileStore } from '../context/data/dataStore'
+import { useState } from "react";
+import { useProfileStore } from "../context/data/dataStore";
 
 const ProfileCard = ({ post, socket, user }) => {
   const [liked, setLiked] = useState(false);

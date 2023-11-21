@@ -3,19 +3,19 @@ import { customAlphabet } from "nanoid";
 
 const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyz0123456789", 10);
 
-
-
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-    userId:{  // hier soll der Socketid für den User für privat nachrichten nach erst Verbindung zugewiesen werden
+    userId: {
+      // hier soll der Socketid für den User für privat nachrichten nach erst Verbindung zugewiesen werden
       type: String,
       unique: true,
     },
-    isOnline: {  // zur Verfolgung der UserStatus.  falls nötig?
+    isOnline: {
+      // zur Verfolgung der UserStatus.  falls nötig?
       type: Boolean,
-      default: false
+      default: false,
     },
     firstname: {
       type: String,
@@ -28,15 +28,19 @@ const userSchema = new mongoose.Schema(
     username: {
       type: String,
       min: [2, "Mindestens 2 Buchstaben"],
-      unique:true,
+      unique: true,
     },
     googleId: {
-      type:String,
+      type: String,
       unique: true,
     },
     facebookId: {
-      type:String,
+      type: String,
       unique: true,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
     },
     email: {
       type: String,
@@ -48,21 +52,20 @@ const userSchema = new mongoose.Schema(
       enum: {
         values: ["member", "admin"],
       },
-      default: "member"
+      default: "member",
     },
     password: {
       type: String,
     },
-    avatarImage: String,
+    avatarImage: {type : String},
     birthday: {
       type: Date,
     },
-    chats: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ChatRoom' }], // notifications = [...ChatRoom.....].length
-    friends: [{type: mongoose.Schema.Types.ObjectId, ref: "User"}]
+    chats: [{ type: mongoose.Schema.Types.ObjectId, ref: "ChatRoom" }], // notifications = [...ChatRoom.....].length
+    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },
   { timestamps: true }
 );
-
 
 // userSchema.pre('save', function (next) {
 //   if (!this.userId) {
@@ -72,8 +75,5 @@ const userSchema = new mongoose.Schema(
 // });
 
 const UserModel = mongoose.model("User", userSchema, "Users");
-
-
-
 
 export default UserModel;
