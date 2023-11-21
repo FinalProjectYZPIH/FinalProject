@@ -295,8 +295,9 @@ export const deleteAccount = async (req, res, next) => {
 //   }
 // };
 
-export const searchForUser = async (req,res) => {
+export const searchForUser = async (req, res) => {
   const { query } = req.query;
+ console.log("hallo")
   try {
     const users = await UserModel.find({
       $or: [
@@ -305,10 +306,10 @@ export const searchForUser = async (req,res) => {
         { displayname: { $regex: query, $options: 'i' } },
       ],
     });
+
     res.status(200).json(users);
   } catch (error) {
-    console.error(error);
-    res.status(500).send('Server Error');
+    console.error("Error in searchForUser:", error);
+    res.status(500).json({ error: "Server Error" }); // Respond with an error message
   }
-}
-
+};

@@ -127,7 +127,7 @@ app.use("/api/user", userRoute);
 app.use("/api/test", messengerTestRoute);
 // app.use("/dbUpload", fileRoute)
 
-app.use(errorHandler);
+// app.use(errorHandler);
 
 // Bei der einmalige connection mit Datenbank wird app.listen erst aufgerufen
 mongoose.connection.once("open", () => {

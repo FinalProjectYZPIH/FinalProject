@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import ReactSwitch from "react-switch";
 import { Button } from "@mui/material";
 import FriendRequests from "../components/FriendRequests"
-import Search from "./Search";
+import Search from "./SearchFriends";
 
 
 // Beipiel
