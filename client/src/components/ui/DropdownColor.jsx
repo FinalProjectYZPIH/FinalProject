@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useColorStore, useDarkLightMode } from "../../context/data/dataStore";
-import { Button, ColorButton } from "../ui/Buttons";
+import { ColorButton } from "../ui/Buttons";
 
 const ThemeColors = [
   "border border-rose-600 text-rose-700",
@@ -24,16 +24,18 @@ function DropdownColor() {
   const { lightMode, setDarkMode } = useDarkLightMode();
 
   return (
-    <div>
+    <div className="">
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className={`flex items-center justify-center bg-transparent hover:border-y-teal-400 hover:bg-cyan-400 text-sky-400 hover:text-white hover:bg-opacity-1 hover:border-transparent w-20 rounded-lg h-8 mr-2 ${color}`}
+        className={`${
+          lightMode ? "dark bg-none" : "light bg-none"
+        } border  flex items-center justify-between font-orbitron rounded-lg ${color} `}
       >
         Color
       </button>
 
       {isOpen && (
-        <div className="flex fixed top-8 right-1 ">
+        <div className="absolute flex  ">
           {ThemeColors.map((color, index) => (
             <button
               key={index}
