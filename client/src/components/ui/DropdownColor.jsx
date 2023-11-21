@@ -1,7 +1,5 @@
-
 import React, { useState } from "react";
 import { useColorStore, useDarkLightMode } from "../../context/data/dataStore";
-import { Button, ColorButton } from "../ui/Buttons";
 
 const ThemeColors = [
   "border border-rose-600 text-rose-700",
@@ -14,21 +12,20 @@ const ThemeColors = [
 
 function DropdownColor() {
   const [isOpen, setIsOpen] = useState(false);
+  const { colorPosition, setColorPosition, setSpecificColor, color } =
+    useColorStore();
 
   const handleColorClick = (index) => {
     console.log(index);
     setSpecificColor(index);
     setIsOpen(false);
   };
-  const { colorPosition, setColorPosition, setSpecificColor, color } =
-    useColorStore();
-  const { lightMode, setDarkMode } = useDarkLightMode();
 
   return (
     <div>
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className={`flex items-center justify-center bg-transparent hover:border-y-teal-400 hover:bg-cyan-400 border-0 hover:text-white hover:bg-opacity-1 hover:border-transparent w-20 rounded-lg h-8 mr-2 ${color}`}
+        className={`flex items-center justify-center border-0 hover:text-cyan-400 w-20 rounded-lg h-8 mr-2`}
       >
         Color
       </button>
@@ -39,7 +36,7 @@ function DropdownColor() {
             <button
               key={index}
               onClick={() => handleColorClick(index)}
-              className={`mx-3 h-4 w-4 rounded-full m-1 cursor-pointer ${color}`}
+              className={`mx-2 h-4 w-4 rounded-full m-1 cursor-pointer ${color}`}
             ></button>
           ))}
         </div>
@@ -63,10 +60,8 @@ export default DropdownColor;
 //     "border border-pink-400 text-pink-600"
 // ];
 
-
 // function DropdownColor() {
 //     const [isOpen, setIsOpen] = useState(false);
-
 
 //     const handleColorClick = (index) => {
 //         console.log(index)
@@ -87,9 +82,6 @@ export default DropdownColor;
 //                 Color
 //             </button>
 
-
-
-
 //             {isOpen && (
 //                 <div className='absolute flex  '>
 //                     {ThemeColors.map((color, index) => (
@@ -108,5 +100,3 @@ export default DropdownColor;
 // }
 
 // export default DropdownColor;
-
-
