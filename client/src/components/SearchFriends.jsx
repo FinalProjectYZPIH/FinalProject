@@ -51,16 +51,18 @@ export default function SearchFriends() {
         </form>
       </div>
       <div>
-          <ul>
-            {searchResults.map((user) => (
-              <li key={user._id}>
-                {user.username} - {user.displayname}{" "}
+        <ul>
+          {searchResults.map((user) => (
+            <li key={user._id}>
+              {user.username} - {user.displayname}{" "}
+              {!user.friends.includes(userIdDB) && (
                 <button onClick={() => handleSendFriendRequest(user._id)}>
                   Add Friend
                 </button>
-              </li>
-            ))}
-          </ul>
+              )}
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
