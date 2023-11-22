@@ -1,4 +1,6 @@
+
 import React, { useState } from "react";
+
 import {
   useDarkLightMode,
   useProfileStore,
@@ -11,6 +13,7 @@ import ReactSwitch from "react-switch";
 import { Button } from "@mui/material";
 import FriendRequests from "../components/FriendRequests";
 import DropdownColor from "./ui/DropdownColor";
+import { is } from "date-fns/locale";
 
 // Beipiel
 export default function Navigation() {
@@ -26,13 +29,13 @@ export default function Navigation() {
   );
 
   const { lightMode, setDarkMode } = useDarkLightMode();
-  const { colorPosition, setColorPosition, setSpecificColor, color } =
+  const { color } =
     useColorStore();
 
   const { isOnline, notifications, avatar, settings, chatRooms, contacts } =
     useProfileStore((state) => state.defaultProfile);
   const navigate = useNavigate();
-  const { setLogout } = useProfileStore();
+  const { setLogout, resetProfile } = useProfileStore();
 
   const UserNav = {
     friends: contacts,
@@ -56,8 +59,10 @@ export default function Navigation() {
 
   const handleLogout = async (e) => {
     e.preventDefault();
-    setLogout() && toast.success("You are logged out");
+    setLogout();
     clearCookies.mutate();
+    resetProfile();
+    
     // if (isOnline === false) {
     //   clearCookies.mutate();
     //   setLogout();
@@ -130,6 +135,28 @@ export default function Navigation() {
           {friendsRequestsList === true && <FriendRequests userId={userIdDB} />}
         </div>
 
+        <DropdownColor />
+        <ReactSwitch
+          onChange={setDarkMode}
+          checked={lightMode}
+          offColor={"#22d3ee"}
+          onColor={"#22d3ee"}
+          checkedIcon={<CloudMoon />}
+          uncheckedIcon={<Sun />}
+        />
+          <p className={`${lightMode ? "text-white" : `${color}`}`}>{username}</p>
+
+        <div className="h-8 w-12">
+          <Button
+            onClick={() => {
+              setFriendsRequestsList(!friendsRequestsList);
+            }}
+          >
+            <UserPlus2 color="#22d3ee" />
+            
+          </Button>
+          {friendsRequestsList === true && <FriendRequests userId={userIdDB} />}
+        </div>
         <DropdownColor />
         <ReactSwitch
           onChange={setDarkMode}

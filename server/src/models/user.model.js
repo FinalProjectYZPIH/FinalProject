@@ -57,7 +57,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
     },
-    avatarImage: { type: String },
+    avatarImage: {type : String},
     birthday: {
       type: Date,
     },

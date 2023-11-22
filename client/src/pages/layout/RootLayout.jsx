@@ -2,8 +2,6 @@ import ProtectionProvider from "../../context/auth/ProtectionProvider";
 import { useProfileStore } from "../../context/data/dataStore";
 
 import { Navigate } from "react-router-dom";
-import ChatSidebar from "../../components/ChatSidebar";
-import ContactSidebar from "../../components/ContactSidebar";
 
 import { Routes, Route } from "react-router-dom";
 import ChatDashboard from "../ChatDashboard";
@@ -31,10 +29,10 @@ export default function RootLayout() {
       role: userData?.data?.role,
       username: userData?.data?.username,
       email: userData?.data?.email,
-
       avatar: userData?.data.avatarImage,
 
     });
+
   }
   console.log(isSuccess)
   console.log(isOnline)

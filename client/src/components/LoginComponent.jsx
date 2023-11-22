@@ -1,5 +1,5 @@
 //module
-import { useState } from "react";
+
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 // ui
@@ -10,12 +10,13 @@ import { Inputs, InputPW } from "./ui/Inputs.jsx";
 import { useDarkLightMode } from "../context/data/dataStore.jsx";
 
 //api
-import { loginRequest, profileRequest } from "../context/api/auth.jsx";
+import { loginRequest,  } from "../context/api/auth.jsx";
 
 //context
 import { useProfileStore } from "../context/data/dataStore.jsx";
-import { useEffect } from "react";
-import { Facebook } from "lucide-react";
+
+
+
 
 
 
@@ -23,7 +24,7 @@ export const LoginComponent = () => {
   const [input, setInput] = useSearchParams({ i: "" });
   const inputParam = input.get("i");  
   
-  const { setLogin, setLogout, resetProfile, setProfile } = useProfileStore(); //benutze die globale variable um login und userobjekte einzusetzen und um zuverteilen
+  const { setLogin } = useProfileStore(); //benutze die globale variable um login und userobjekte einzusetzen und um zuverteilen
   const { isOnline } = useProfileStore((state) => state.defaultProfile);
   const navigate = useNavigate();
 

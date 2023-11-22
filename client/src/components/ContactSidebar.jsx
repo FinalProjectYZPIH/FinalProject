@@ -3,7 +3,7 @@ import { useColorStore } from "../context/data/dataStore";
 
 export default function ContactSidebar() {
   const { lightMode, setDarkMode } = useDarkLightMode();
-  const { colorPosition, setColorPosition, setSpecificColor, color } =
+  const { color } =
     useColorStore();
   const { contacts } = useProfileStore((state) => state.defaultProfile);
 

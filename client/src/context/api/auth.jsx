@@ -130,16 +130,16 @@ export function profileRequest(...key) {
   return useQuery({
     queryKey: key,
     queryFn: async () => await axios.get("/api/user/getProfile"),
-    // enabled: !!isOnline, // kann nur gefetched werden, wenn isOnline sich auf true verändert
     onSuccess: () => {
-      toast.custom(<ColorToast>WELCOME!</ColorToast>)
+      toast.custom(<Toast>Loading Profile</Toast>)
     },
-    onError: () => { },
-    onSettled: () => { },
-
-    // refetchInterval: 60000*10, // 10minute,
-    staleTime: 60000 * 60, //daten bleiben 60sek lang gültig,
-    refetchOnReconnect:false,
+    enabled: isOnline == false, //wenn false dann wird die query nicht automatisch ausgeführt
+    keepPreviousData:false,
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+    refetchInterval: 60000*10, // 10minute,
+    staleTime: 60000 * 60 *5, //daten bleiben 5minute lang gültig,
+    refetchOnReconnect:true,
     refetchIntervalInBackground:false,
     // retry: 3,
     // retryDelay: 30000

@@ -2,13 +2,8 @@ import { Outlet } from "react-router-dom";
 import { useSocketProvider } from "../context/data/SocketProvider";
 import { HomeComponent } from "../components/HomeComponent";
 import { useProfileStore } from "../context/data/dataStore";
-
-import { refreshRequest } from "../context/api/auth";
 import { useNavigate } from "react-router-dom";
 
-import FriendRequests from "../components/FriendRequests";
-import { toast } from "react-hot-toast";
-import { ColorTheme } from "../components/ui/ColorTheme";
 
 
 export default function Home() {
@@ -46,7 +41,6 @@ export default function Home() {
          
       <Outlet />
       <HomeComponent />
-
     </div>
   );
 }
