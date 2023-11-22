@@ -130,7 +130,7 @@ export function profileRequest(...key) {
   return useQuery({
     queryKey: key,
     queryFn: async () => await axios.get("/api/user/getProfile"),
-    // enabled: isOnline == false, //wenn false dann wird die query nicht automatisch ausgeführt
+    enabled: isOnline == false, //wenn false dann wird die query nicht automatisch ausgeführt
     keepPreviousData:false,
     refetchOnMount: true,
     refetchOnWindowFocus: false,

@@ -31,10 +31,10 @@ export default function RootLayout() {
       email: userData?.data?.email,
       avatar: userData?.data.avatarImage,
     });
-    setContacts(userData?.data?.friends);
+    // setContacts(userData?.data?.friends);
 
   }
-  console.log(userData?.data?.friends);
+  // console.log(userData?.data?.friends);
   console.log(isSuccess)
   console.log(isOnline)
 

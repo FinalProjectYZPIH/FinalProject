@@ -28,8 +28,7 @@ export default function Navigation() {
   );
 
   const { lightMode, setDarkMode } = useDarkLightMode();
-  const { color } =
-    useColorStore();
+  const { color } = useColorStore();
 
   const { isOnline, notifications, avatar, settings, chatRooms, contacts } =
     useProfileStore((state) => state.defaultProfile);
@@ -61,7 +60,7 @@ export default function Navigation() {
     setLogout();
     clearCookies.mutate();
     resetProfile();
-    
+
     // if (isOnline === false) {
     //   clearCookies.mutate();
     //   setLogout();
@@ -104,7 +103,7 @@ export default function Navigation() {
           </div>
         </div>
       </div>
-      <div className="fixed right-1 flex items-center">
+      <div className="w-[40%] fixed right-1 flex justify-between items-center">
         {/* <div className="w-52">
           <form>
             <input
@@ -122,6 +121,7 @@ export default function Navigation() {
             alt="Profile"
           />
         </div>
+        <p className={`w-8${lightMode ? "text-white" : `${color}`}`}>{username}</p>
 
         <div className="h-8 w-12">
           <Button
@@ -130,29 +130,6 @@ export default function Navigation() {
             }}
           >
             <UserPlus2 size={26} className={`${color} border-0`} />
-          </Button>
-          {friendsRequestsList === true && <FriendRequests userId={userIdDB} />}
-        </div>
-
-        <DropdownColor />
-        <ReactSwitch
-          onChange={setDarkMode}
-          checked={lightMode}
-          offColor={"#22d3ee"}
-          onColor={"#22d3ee"}
-          checkedIcon={<CloudMoon />}
-          uncheckedIcon={<Sun />}
-        />
-          <p className={`${lightMode ? "text-white" : `${color}`}`}>{username}</p>
-
-        <div className="h-8 w-12">
-          <Button
-            onClick={() => {
-              setFriendsRequestsList(!friendsRequestsList);
-            }}
-          >
-            <UserPlus2 color="#22d3ee" />
-            
           </Button>
           {friendsRequestsList === true && <FriendRequests userId={userIdDB} />}
         </div>
