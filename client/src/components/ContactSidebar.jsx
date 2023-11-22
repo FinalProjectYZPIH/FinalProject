@@ -19,7 +19,7 @@ export default function ContactSidebar() {
             className={`w-3/4 border border-cyan-400 p-2 mx-1 my-1 rounded-lg text-left hover:bg-cyan-400 hover:bg-opacity-50 ${contact.Online ? "text-green-500" : "text-red-500"} ${color} `}
             key={contact.username}
           >
-            {contact.username.toUpperCase()}
+            {contact?.username?.toUpperCase()}
             {/* ( {contact.Online ? '✅️' : '❌️'}) */}
           </div>
         ))}

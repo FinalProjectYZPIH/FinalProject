@@ -52,7 +52,7 @@ export async function handleRoomchat(socket, io, userId = null) {
         (room) =>
           room?.chatName === roomName &&
           room?.chatAdmin === updateExistingRoom?.chatAdmin
-      );
+      ) || {};
       console.log("socket", currentRoom, "frontend", updateExistingRoom);
       return {
         currentRoom: currentRoom,
