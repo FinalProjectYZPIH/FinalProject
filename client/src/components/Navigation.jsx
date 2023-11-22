@@ -5,15 +5,12 @@ import {
   useProfileStore,
   useColorStore,
 } from "../context/data/dataStore";
-
 import { logoutRequest } from "../context/api/auth";
 import { AlignJustify, CloudMoon, Sun, User, UserPlus2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import ReactSwitch from "react-switch";
 import { Button } from "@mui/material";
 import FriendRequests from "../components/FriendRequests";
-import Search from "./Search";
-import { ColorTheme } from "./ui/ColorTheme";
 import DropdownColor from "./ui/DropdownColor";
 import { is } from "date-fns/locale";
 
@@ -93,7 +90,7 @@ export default function Navigation() {
           {PageNav.map((navObj) =>
             !navObj.isMember || isOnline ? (
               <div
-                className={`flex items-center justify-center bg-transparent hover:border-y-teal-400 hover:bg-cyan-400 hover:text-white hover:bg-opacity-1 hover:border-transparent w-20 rounded-lg mx-0.5 sm:mb-5 md:mb-0 ${color} border-0`}
+                className={`flex items-center justify-center bg-transparent hover:text-cyan-400 hover: w-20 rounded-lg mx-0.5 sm:mb-5 md:mb-0 ${color} border-0`}
                 key={navObj.path}
               >
                 <Link to={navObj.path}>{navObj.name}</Link>
@@ -101,7 +98,7 @@ export default function Navigation() {
             ) : null
           )}
           <div
-            className={`flex items-center justify-center bg-transparent hover:border-y-teal-400 hover:bg-cyan-400 hover:text-white hover:bg-opacity-1 hover:border-transparent w-20 rounded-lg mx-0.5 ${color} border-0`}
+            className={`flex items-center justify-center bg-transparent hover:text-cyan-400 hover:bg-opacity-1 hover:border-transparent w-20 rounded-lg mx-0.5 ${color} border-0`}
           >
             <button onClick={handleLogout}>Logout</button>
           </div>
