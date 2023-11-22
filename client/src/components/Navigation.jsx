@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 
 import {
@@ -29,8 +28,7 @@ export default function Navigation() {
   );
 
   const { lightMode, setDarkMode } = useDarkLightMode();
-  const { color } =
-    useColorStore();
+  const { color } = useColorStore();
 
   const { isOnline, notifications, avatar, settings, chatRooms, contacts } =
     useProfileStore((state) => state.defaultProfile);
@@ -62,7 +60,7 @@ export default function Navigation() {
     setLogout();
     clearCookies.mutate();
     resetProfile();
-    
+
     // if (isOnline === false) {
     //   clearCookies.mutate();
     //   setLogout();
@@ -123,6 +121,7 @@ export default function Navigation() {
             alt="Profile"
           />
         </div>
+        <p className={`w-8 h-8 ${lightMode ? "text-white" : `${color}`}`}>{username}</p>
 
         <div className="h-8 w-12">
           <Button
@@ -135,28 +134,6 @@ export default function Navigation() {
           {friendsRequestsList === true && <FriendRequests userId={userIdDB} />}
         </div>
 
-        <DropdownColor />
-        <ReactSwitch
-          onChange={setDarkMode}
-          checked={lightMode}
-          offColor={"#22d3ee"}
-          onColor={"#22d3ee"}
-          checkedIcon={<CloudMoon />}
-          uncheckedIcon={<Sun />}
-        />
-          <p className={`${lightMode ? "text-white" : `${color}`}`}>{username}</p>
-
-        <div className="h-8 w-12">
-          <Button
-            onClick={() => {
-              setFriendsRequestsList(!friendsRequestsList);
-            }}
-          >
-            <UserPlus2 color="#22d3ee" />
-            
-          </Button>
-          {friendsRequestsList === true && <FriendRequests userId={userIdDB} />}
-        </div>
         <DropdownColor />
         <ReactSwitch
           onChange={setDarkMode}
