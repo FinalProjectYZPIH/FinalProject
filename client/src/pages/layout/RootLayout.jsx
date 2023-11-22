@@ -10,18 +10,19 @@ import App from "../App";
 
 import Navigation from "../../components/Navigation";
 import { profileRequest } from "../../context/api/auth";
+import { useSocketProvider } from "../../context/data/SocketProvider";
 
 export default function RootLayout() {
   // const { isOnline } = useProfileStore((state) => state.defaultProfile);
   // console.log(isOnline);
   const {  setProfile, setContacts } =
     useProfileStore();
+    const {setContact} = useSocketProvider();
 
   const { isOnline, userId, role, username, email, userIdDB, chatRooms } =
     useProfileStore((state) => state.defaultProfile);
   console.log(userId, role, username, email, userIdDB);
   const { data: userData, isSuccess, isError } = profileRequest("Yan");
-
   if (isSuccess) {
     setProfile({
       userIdDB: userData?.data?._id,
@@ -31,10 +32,12 @@ export default function RootLayout() {
       email: userData?.data?.email,
       avatar: userData?.data.avatarImage,
     });
-    setContacts(userData?.data?.friends);
-
+    
   }
-  console.log(userData?.data?.friends);
+  
+  // console.log(userData?.data?.friends)
+  setContact(userData?.data?.friends)
+
   console.log(isSuccess)
   console.log(isOnline)
 

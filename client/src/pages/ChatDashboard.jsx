@@ -6,12 +6,12 @@ import { useSocketProvider } from "../context/data/SocketProvider";
 
 import { useDarkLightMode, useColorStore } from "../context/data/dataStore.jsx";
 import { Inputs } from "../components/ui/Inputs.jsx";
-import { Button, ColorButton } from "../components/ui/Buttons.jsx";
+import { ColorButton } from "../components/ui/Buttons.jsx";
 import Navigation from "../components/Navigation.jsx";
 
 export default function ChatDashboard() {
   //globaldata
-  const { defaultProfile, resetProfile, setProfile, setChatRooms, setLogout } =
+  const {  setChatRooms } =
     useProfileStore();
 
   const { isOnline, userId, role, username, email, userIdDB, chatRooms } =
@@ -19,11 +19,11 @@ export default function ChatDashboard() {
   console.log(userId, role, username, email, userIdDB);
   // console.log(userData.data);
 
-  const { lightMode, setDarkMode } = useDarkLightMode();
-  const { colorPosition, setColorPosition, setSpecificColor, color } =
+  const { lightMode } = useDarkLightMode();
+  const { color } =
     useColorStore();
   //socket
-  const { socket, sendMessage, createRoom } = useSocketProvider();
+  const { socket, createRoom } = useSocketProvider();
 
   // local data
   const [roomname, setRoomName] = useState("");
