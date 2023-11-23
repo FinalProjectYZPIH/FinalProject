@@ -5,7 +5,6 @@ import { useProfileStore, useColorStore } from "../data/dataStore";
 import { redirect, useNavigate } from "react-router-dom";
 import { Toast, ColorToast } from "../../components/ui/Toasts";
 
-
 // const queryClient = useQueryClient();
 
 // queryClient.invalidateQueries({
@@ -25,7 +24,6 @@ export function registerRequest() {
   //   passwordConfirmation,
   // });
   const registerMutation = useMutation({
-
     mutationFn: async (loginData) => {
       // Erstelle zuerst den Benutzer
       const createUserResponse = await axios.post(
@@ -43,47 +41,46 @@ export function registerRequest() {
 
       return {
         createUserResponse,
-        verificationEmailResponse
+        verificationEmailResponse,
         // verificationResponse,
       };
     },
     onSuccess: () => {
       navigate("/login", { replace: true });
-      toast.custom(<Toast>successfully registered</Toast>)
+      toast.custom(<Toast>successfully registered</Toast>);
     },
     onError: (error) => {
-      toast.custom(<Toast> Failed to Sign In</Toast>)
+      toast.custom(<Toast> Failed to Sign In</Toast>);
     },
   });
   return registerMutation;
 }
 
 export function loginRequest() {
+  const { isOnline } = useProfileStore((state) => state.defaultProfile);
   const loginMutation = useMutation({
-    mutationFn: async (loginData) =>{
-      await axios.post("/api/auth/login", loginData)
+    mutationFn: async (loginData) => {
+      await axios.post("/api/auth/login", loginData);
     },
     onSuccess: () => {
       // toast.custom(<Toast>Welcome back!</Toast>)
     },
     onError: () => {
-      toast.custom(<Toast> Failed to Login</Toast>)
+      toast.custom(<Toast> Failed to Login</Toast>);
     },
-    onSettled: () => { },
+    onSettled: () => {},
+    enabled: isOnline == false,
   });
 
   return loginMutation;
 }
 
 export async function refreshRequest(...key) {
-  const { setLogin } = useProfileStore()
-  return useQuery(
-    key,
-    async () => {
-      const response = await axios.get("/api/auth/tokenRefresh");
-      return response;
-    },
-  );
+  const { setLogin } = useProfileStore();
+  return useQuery(key, async () => {
+    const response = await axios.get("/api/auth/tokenRefresh");
+    return response;
+  });
 }
 
 export function googleRequest(...key) {
@@ -94,11 +91,8 @@ export function googleRequest(...key) {
       return response;
     },
     {
-      onSuccess: () => {
-
-
-      },
-      onError: () => { },
+      onSuccess: () => {},
+      onError: () => {},
       onSettled: () => {
         //  toast.success("google fetching...");
       },
@@ -110,15 +104,14 @@ export function logoutRequest() {
   const logoutQuery = useMutation({
     mutationFn: async () => await axios.post("/api/auth/logout"),
     onSuccess: () => {
-      toast.custom(<Toast>you have been logged out</Toast>)
+      toast.custom(<Toast>you have been logged out</Toast>);
 
       redirect("/");
     }, // hier kann man success error und finally fälle einstellen
     onError: () => {
-      toast.custom(<Toast> Failed to clear Cookie</Toast>)
-
+      toast.custom(<Toast> Failed to clear Cookie</Toast>);
     },
-    onSettled: () => { },
+    onSettled: () => {},
   });
   return logoutQuery;
 }
@@ -130,14 +123,14 @@ export function profileRequest(...key) {
   return useQuery({
     queryKey: key,
     queryFn: async () => await axios.get("/api/user/getProfile"),
-    enabled: isOnline == false, //wenn false dann wird die query nicht automatisch ausgeführt
-    keepPreviousData:false,
-    refetchOnMount: true,
+    enabled: isOnline == true, //wenn false dann wird die query nicht automatisch ausgeführt
+    keepPreviousData: false,
+    refetchOnMount: false,
     refetchOnWindowFocus: false,
-    refetchInterval: 60000*10, // 10minute,
+    refetchInterval: 60000 * 10, // 10minute,
     // staleTime: 60000 * 60 *5, //daten bleiben 5minute lang gültig,
-    refetchOnReconnect:true,
-    refetchIntervalInBackground:false,
+    refetchOnReconnect: false,
+    refetchIntervalInBackground: false,
     // retry: 3,
     // retryDelay: 30000
   });

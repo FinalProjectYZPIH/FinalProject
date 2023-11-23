@@ -20,7 +20,7 @@ function GroupChat() {
 
   const { socket, sendMessage, createRoom } = useSocketProvider();
   const { lightMode, setDarkMode } = useDarkLightMode();
-    const { color } = useColorStore();
+  const { color } = useColorStore();
 
   console.log(chatRooms);
 
@@ -51,7 +51,7 @@ function GroupChat() {
     socket.emit("updateRoom", chatName, foundRoom);
     setChatRooms(foundRoom);
     console.log("updateRoom", foundRoom?.chatMessages);
-  }, [chatName ]);
+  }, [chatName]);
 
   // hier wird die daten aus backend immer mit dazugehörigen room aktualisiert
   useEffect(() => {
@@ -62,11 +62,11 @@ function GroupChat() {
         setMessageList((prev) => [...prev, message]);
         console.log("roomtest", room);
       });
-      
+
       socket.on("joinRoom", (newParticipantRoom) => {
         setCurrentMember(newParticipantRoom?.participants);
       });
-    }else{
+    } else {
       console.log("socket is not connected");
       navigate("/chat", { replace: true });
     }
@@ -94,7 +94,6 @@ function GroupChat() {
     }
   };
 
-
   useKeyPress(() => sendMessages(), ["Enter"]);
   return (
     <div
@@ -102,11 +101,15 @@ function GroupChat() {
         lightMode ? "dark bg-none" : "light bg-none"
       }`}
     >
-      <div className="chat-header border mt-5 border-cyan-400 rounded-lg p-5 h-4/5 w-auto shadow-lg backdrop-blur">
+      <div
+        className={`${color} chat-header border mt-5 border-cyan-400 rounded-lg p-5 h-4/5 w-auto shadow-lg backdrop-blur`}
+      >
         <p>
           Live Chat {currentMember?.participants?.length || 0} Users are Online
         </p>
-        <div className="chat-body flex flex-col border border-cyan-800 h-[500px] rounded-lg py-5 px-1">
+        <div
+          className={`${color} chat-body flex flex-col border border-cyan-800 h-[500px] rounded-lg py-5 px-1`}
+        >
           <ScrollToBottom className="overflow-x-hidden">
             {messageList?.map((messageContent, index) => {
               return (
@@ -118,16 +121,15 @@ function GroupChat() {
                       : "other-message flex justify-start rounded-lg break-words  "
                   }
                 >
-                  <div>
-                      <p>{messageContent.content}</p>                    <div
-                      className={`message-content w-60 border border-cyan-400 p-2 m-1 rounded-lg ${color}`}
-                    >
-                      <div className="message-meta flex justify-end text-xs p-2">
-                        <p id="author">{messageContent.sender}</p>
-                        <p className="pl-2" id="time">
-                          {messageContent.time}
-                        </p>
-                      </div>
+                  <div
+                    className={`message-content w-60 border border-cyan-400 px-2 my-1 rounded-lg ${color}`}
+                  >
+                    <p>{messageContent.content}</p>
+                    <div className="message-meta flex justify-end text-xs p-2">
+                      <p id="author">{messageContent.sender}</p>
+                      <p className="pl-2" id="time">
+                        {messageContent.time}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -137,9 +139,10 @@ function GroupChat() {
         </div>
         <div className="chat-footer flex fixed bottom-2 left-0">
           <form>
-          <label className="flex">message</label>
+            <label className="flex">message</label>
             <input
-              type="text" className={`${color} rounded-lg block bg-transparent `}
+              type="text"
+              className={`${color} rounded-lg block bg-transparent `}
               value={currentMessage.content}
               placeholder="Hey..."
               onChange={(event) => {
@@ -151,7 +154,7 @@ function GroupChat() {
             />
 
             <div className="fixed bottom-1 right-0 w-32">
-            <ColorButton onClick={sendMessages}>GO</ColorButton>
+              <ColorButton onClick={sendMessages}>GO</ColorButton>
             </div>
           </form>
         </div>

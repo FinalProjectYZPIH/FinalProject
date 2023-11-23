@@ -103,7 +103,7 @@ export default function Navigation() {
           </div>
         </div>
       </div>
-      <div className="w-[40%] fixed right-1 flex justify-between items-center">
+      <div className="lg:w-[40%] sm:w-[60%] fixed right-2 flex justify-between items-center">
         {/* <div className="w-52">
           <form>
             <input
