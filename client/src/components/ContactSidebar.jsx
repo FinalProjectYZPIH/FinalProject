@@ -14,7 +14,7 @@ export default function ContactSidebar() {
     >
       <div className={`h-4/5 mt-5  mx-2 overflow-x-hidden rounded-xl shadow-lg  border border-cyan-400 p-1 flex flex-col items-center ${color}`}>
         Contacts
-        {contacts.map((contact) => (
+        {contacts?.map((contact) => (
           <div
             className={`w-3/4 border border-cyan-400 p-2 mx-1 my-1 rounded-lg text-left hover:bg-cyan-400 hover:bg-opacity-50 ${contact.Online ? "text-green-500" : "text-red-500"} ${color} `}
             key={contact.username}
