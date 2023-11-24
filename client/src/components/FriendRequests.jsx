@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "../libs/axiosProtected";
 import { useDarkLightMode } from "../context/data/dataStore";
 import { useProfileStore } from "../context/data/dataStore";
+import { CopySlash } from "lucide-react";
 
 const FriendRequests = () => {
   const {userIdDB} = useProfileStore((state) => state.defaultProfile);
@@ -13,7 +14,18 @@ const FriendRequests = () => {
       try {
         const response = await axios.get(`/api/friendRequests?recipientId=${userIdDB}`);
         console.log("Friend requests:", response.data);
-        setFriendRequests(response.data);
+
+        const friendRequestsWithData = await Promise.all(
+          response.data.map(async (request) => {
+            const senderResponse = await axios.get(`/api/friendRequests/getSenderName?senderId=${request.sender_id}`);
+            console.log("Sender response:", senderResponse);
+            const senderName = senderResponse.data.name; 
+            console.log("Sender name:", senderName);
+            return { ...request, senderName };
+          })
+        );
+
+        setFriendRequests(friendRequestsWithData);
       } catch (error) {
         console.error("Error fetching friend requests:", error);
       }
@@ -52,7 +64,6 @@ const FriendRequests = () => {
             {friendRequests.map((request) => (
               <li key={request._id}>
                 <p> {request.senderName}</p>
-                <p> {request.status}</p>
                 <button onClick={() => handleResponse(request._id, "accepted")}>
                   Accept
                 </button>

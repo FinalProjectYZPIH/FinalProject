@@ -16,6 +16,22 @@ export const getFriendRequestsForUser = async (req, res) => {
   }
 };
 
+export const getSenderName =  async (req, res) => {
+  try {
+    const senderId = req.query.senderId;
+    const sender = await UserModel.findById(senderId);
+
+    if (sender) {
+      res.json({ name: sender.username });
+    } else {
+      res.status(404).json({ error: 'Sender not found' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 
 export const createFriendRequest = async (req, res, next) => {
   try {
