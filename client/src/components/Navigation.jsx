@@ -114,7 +114,7 @@ export default function Navigation() {
           </div>
         </div>
       </div>
-      <div className="flex items-center justify-between w-96">
+      {/* <div className="flex items-center justify-between w-96">
 
         <div className="w-52">
           <form>
@@ -126,7 +126,7 @@ export default function Navigation() {
             />
           </form>
         </div>
-      </div>
+      </div> */}
       <div className="flex items-center mx-2">
         <img
           className="w-8 h-8 rounded-full border border-cyan-400"
@@ -147,7 +147,7 @@ export default function Navigation() {
 
             
           </Button>
-          {friendsRequestsList === true && <FriendRequests userId={userIdDB} />}
+          {friendsRequestsList === true && <FriendRequests />}
         </div>
 
         <DropdownColor />

@@ -131,15 +131,12 @@ export function profileRequest(...key) {
     queryKey: key,
     queryFn: async () => await axios.get("/api/user/getProfile"),
  
-    onSuccess: () => {
-      toast.custom(<Toast>Loading Profile</Toast>)
-    },
-    enabled: isOnline == false, //wenn false dann wird die query nicht automatisch ausgeführt
+    enabled: isOnline == true, //wenn false dann wird die query nicht automatisch ausgeführt
     keepPreviousData:false,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchInterval: 60000*10, // 10minute,
-    staleTime: 60000 * 60 *5, //daten bleiben 5minute lang gültig,
+    // staleTime: 60000 * 60 *5, //daten bleiben 5minute lang gültig,
     refetchOnReconnect:false,
 
     refetchIntervalInBackground:false,

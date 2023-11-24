@@ -18,14 +18,15 @@ import { ColorToast } from "../../components/ui/Toasts";
 export default function RootLayout() {
   // const { isOnline } = useProfileStore((state) => state.defaultProfile);
   // console.log(isOnline);
-  const { defaultProfile, resetProfile, setProfile, setChatRooms, setLogout } =
-    useProfileStore();
-
+  const { setProfile,setContacts } =
+  useProfileStore();
+  
   const { isOnline, userId, role, username, email, userIdDB, chatRooms } =
-    useProfileStore((state) => state.defaultProfile);
+  useProfileStore((state) => state.defaultProfile);
   console.log(userId, role, username, email, userIdDB);
   const { data: userData, isSuccess, isError } = profileRequest("Yan");
 
+  
   if (isSuccess) {
     setProfile({
       userIdDB: userData?.data?._id,
@@ -33,12 +34,13 @@ export default function RootLayout() {
       role: userData?.data?.role,
       username: userData?.data?.username,
       email: userData?.data?.email,
-
       avatar: userData?.data.avatarImage,
-
+      
     });
-
+    // setContacts(userData?.data?.friends)
   }
+  
+  // console.log(userData?.data?.friends)
   console.log(isSuccess)
   console.log(isOnline)
 

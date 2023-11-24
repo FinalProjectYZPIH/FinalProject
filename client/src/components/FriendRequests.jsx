@@ -1,28 +1,28 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../libs/axiosProtected";
 import { useDarkLightMode } from "../context/data/dataStore";
+import { useProfileStore } from "../context/data/dataStore";
 
-
-
-
-const FriendRequests = (userId) => {
+const FriendRequests = () => {
+  const {userIdDB} = useProfileStore((state) => state.defaultProfile);
   const { lightMode, setDarkMode } = useDarkLightMode();
   const [friendRequests, setFriendRequests] = useState([]);
 
   useEffect(() => {
     const fetchFriendRequests = async () => {
       try {
-        const response = await axios.get(
-          `/api/friendRequests?recipientId=${userId}`
-        );
+        const response = await axios.get(`/api/friendRequests?recipientId=${userIdDB}`);
+        console.log("Friend requests:", response.data);
         setFriendRequests(response.data);
       } catch (error) {
-        console.error("Fehler beim Abrufen der Freundesanfragen:", error);
+        console.error("Error fetching friend requests:", error);
       }
     };
-
+  
     fetchFriendRequests();
-  }, [userId]);
+  }, [userIdDB]);
+  
+  
 
   const handleResponse = (requestId, response) => {
     axios

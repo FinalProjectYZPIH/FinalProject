@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useProfileStore } from "../context/data/dataStore";
-import axios from "axios";
+import axios from "../libs/axiosProtected";
 
 export default function SearchFriends() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -10,22 +10,24 @@ export default function SearchFriends() {
   useEffect(() => {
     const handleSearch = async () => {
       try {
-
-        const response = await axios.get(`http://localhost:3000/api/user/search`, {
-          params: {query:searchQuery}
-        });
+        const response = await axios.get(
+          `/api/user/search`,
+          {
+            params: { query: searchQuery },
+          }
+        );
         setSearchResults(response.data);
       } catch (error) {
         console.error("Error during search:", error);
       }
     };
 
-      handleSearch();
+    handleSearch();
   }, [searchQuery]);
 
   const handleSendFriendRequest = async (recipientId) => {
     try {
-      const response = await axios.post("/api/friendRequests/sendRequest", {
+      await axios.post("/api/friendRequests/sendRequest", {
         senderId: userIdDB,
         recipientId,
       });

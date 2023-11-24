@@ -55,9 +55,11 @@ export const LoginComponent = () => {
 
   const google = () => {
     window.open("http://localhost:3000/auth/google", "_self");
+    setLogin();
   };
   const facebook = () => {
     window.open("http://localhost:3000/auth/facebook", "_self");
+    setLogin();
   };
 
   const inputProps = {
