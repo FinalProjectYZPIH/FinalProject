@@ -43,10 +43,10 @@ export default function SearchFriends() {
 
   return (
     <div >
-   
-        <form className="">
+     <div className={` flex items-center justify-center flex-col  w-52 rounded-lg text-left mx-1 `}>
+        <form className=" ">
           <input
-            className={`w-2/4 text-gray-900 rounded-full ${lightMode ? "dark bg-none" : "light bg-none"
+            className={`ml-7 w-2/4 text-gray-900 rounded-full ${lightMode ? "dark bg-none" : "light bg-none"
           }   ${color}`}
             id="search"
             type="search"
@@ -57,10 +57,10 @@ export default function SearchFriends() {
           />
         </form>
 
-      <div className={` flex items-center  w-52 rounded-lg text-left `}>
+    
         <ul className="">
           {searchResults.map((user) => (
-            <li key={user._id} className={` hover:bg-cyan-400 hover:bg-opacity-50 mx-1 my-1 w-3/4 self-center rounded-lg py-3 my-1 text-sm w-3/4  ${color}`}  >
+            <li key={user._id} className={` hover:bg-cyan-400 hover:bg-opacity-50 mx-1 self-center rounded-lg py-3 my-1 text-sm w-3/4  ${color}`}  >
               {user.username} - {user.displayname}{" "}
               {!user.friends.includes(userIdDB) && (
                 <button className="" onClick={() => handleSendFriendRequest(user._id)}>
