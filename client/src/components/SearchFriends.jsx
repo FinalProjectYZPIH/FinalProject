@@ -2,10 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useProfileStore } from "../context/data/dataStore";
 import axios from "../libs/axiosProtected";
 
+import { useDarkLightMode, useColorStore } from "../context/data/dataStore";
+
 export default function SearchFriends() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const { userIdDB } = useProfileStore((state) => state.defaultProfile);
+  const { lightMode, setDarkMode } = useDarkLightMode();
+  const { color } = useColorStore();
 
   useEffect(() => {
     const handleSearch = async () => {
@@ -38,11 +42,12 @@ export default function SearchFriends() {
   };
 
   return (
-    <div>
-      <div className="w-52">
-        <form>
+    <div >
+   
+        <form className="">
           <input
-            className="w-52 h-8 pl-4 mt-0.5 pr-8 text-gray-900 rounded-full border border-cyan-400 outline-cyan-400"
+            className={`w-2/4 text-gray-900 rounded-full ${lightMode ? "dark bg-none" : "light bg-none"
+          }   ${color}`}
             id="search"
             type="search"
             placeholder="Search..."
@@ -51,15 +56,15 @@ export default function SearchFriends() {
             }}
           />
         </form>
-      </div>
-      <div>
-        <ul>
+
+      <div className={` flex items-center  w-52 rounded-lg text-left `}>
+        <ul className="">
           {searchResults.map((user) => (
-            <li key={user._id}>
+            <li key={user._id} className={` hover:bg-cyan-400 hover:bg-opacity-50 mx-1 my-1 w-3/4 self-center rounded-lg py-3 my-1 text-sm w-3/4  ${color}`}  >
               {user.username} - {user.displayname}{" "}
               {!user.friends.includes(userIdDB) && (
-                <button onClick={() => handleSendFriendRequest(user._id)}>
-                  Add Friend
+                <button className="" onClick={() => handleSendFriendRequest(user._id)}>
+                 🌟️
                 </button>
               )}
             </li>

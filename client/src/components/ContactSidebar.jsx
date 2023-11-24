@@ -15,10 +15,10 @@ export default function ContactSidebar() {
   return (
     <div
       className={`h-screen w-72 font-orbitron ${lightMode ? "dark bg-none" : "light bg-none"
-        }`}
+        } ` }
     >
-      <div className="h-4/5 mt-5 mx-2 overflow-x-hidden rounded-xl shadow-lg border border-cyan-400 p-1 flex flex-col">
-        <div className="flex justify-between w-52 p-3">
+      <div className={ ` h-4/5 mt-5 mx-2  rounded-xl shadow-lg border border-cyan-400 p-1 flex flex-col overflow-y-scroll ${color}`}>
+        <div className="flex justify-between items-center w-52 p-3">
           Contacts
           <button onClick={() => {setFriendSearch(!friendSearch)}}>
             <Search color="#22d3ee" />
