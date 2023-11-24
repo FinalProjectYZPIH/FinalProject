@@ -63,7 +63,7 @@ const FriendRequests = () => {
         <div
           className={`${
             lightMode ? " bg-neutral-900" : " bg-white"
-          } fixed right-2 ${color} rounded-lg sm:w-32 md:w-52 text-center pt-2 my-6 h-1/6`}
+          } fixed mx-auto inset-x-0 ${color} rounded-lg w-52 text-center pt-4 my-6 h-28`}
         >
           No Friend Requests
         </div>
@@ -71,19 +71,26 @@ const FriendRequests = () => {
         <div>
           <ul>
             {friendRequests.map((request) => (
-              <li key={request._id}>
-                <p> {request.senderName}</p>
-                <button
-                  onClick={() => handleResponse(request._id, "accepted ✅️")}
-                >
-                  Accept
-                </button>
-                <button
-                  onClick={() => handleResponse(request._id, "rejected ❌️")}
-                >
-                  Reject
-                </button>
-              </li>
+              <div
+                className={`${
+                  lightMode ? " bg-neutral-900" : " bg-white"
+                } fixed mx-auto inset-x-0 ${color} rounded-lg w-52 text-center pt-4 my-6 h-28`}
+              >
+                <li key={request._id}>
+                  <p> {request.senderName}</p>
+                  <button
+                    className="mr-2"
+                    onClick={() => handleResponse(request._id, "accepted")}
+                  >
+                    Accept ✅️
+                  </button>
+                  <button
+                    onClick={() => handleResponse(request._id, "rejected ")}
+                  >
+                    Reject ❌️
+                  </button>
+                </li>
+              </div>
             ))}
           </ul>
         </div>
