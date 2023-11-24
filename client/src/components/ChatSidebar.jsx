@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-
 import { useEffect, useState } from "react";
 import { useSocketProvider } from "../context/data/SocketProvider";
 import { toast } from "react-hot-toast";

@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useColorStore, useDarkLightMode } from "../context/data/dataStore";
-import toast from "react-hot-toast";
-import { Toast } from "./ui/Toasts";
+import axios from "../libs/axiosProtected";
+import {
+  useColorStore,
+  useDarkLightMode,
+  useProfileStore,
+} from "../context/data/dataStore";
+import { CopySlash } from "lucide-react";
 
-const FriendRequests = (userId) => {
+const FriendRequests = () => {
+  const { userIdDB } = useProfileStore((state) => state.defaultProfile);
   const { lightMode, setDarkMode } = useDarkLightMode();
   const [friendRequests, setFriendRequests] = useState([]);
   const { colorPosition, setColorPosition, setSpecificColor, color } =
@@ -14,16 +18,30 @@ const FriendRequests = (userId) => {
     const fetchFriendRequests = async () => {
       try {
         const response = await axios.get(
-          `/api/friendRequests?recipientId=${userId}`
+          `/api/friendRequests?recipientId=${userIdDB}`
         );
-        setFriendRequests(response.data);
+        console.log("Friend requests:", response.data);
+
+        const friendRequestsWithData = await Promise.all(
+          response.data.map(async (request) => {
+            const senderResponse = await axios.get(
+              `/api/friendRequests/getSenderName?senderId=${request.sender_id}`
+            );
+            console.log("Sender response:", senderResponse);
+            const senderName = senderResponse.data.name;
+            console.log("Sender name:", senderName);
+            return { ...request, senderName };
+          })
+        );
+
+        setFriendRequests(friendRequestsWithData);
       } catch (error) {
-        console.error("Fehler beim Abrufen der Freundesanfragen:", error);
+        console.error("Error fetching friend requests:", error);
       }
     };
 
     fetchFriendRequests();
-  }, [userId]);
+  }, [userIdDB]);
 
   const handleResponse = (requestId, response) => {
     axios
@@ -55,11 +73,14 @@ const FriendRequests = (userId) => {
             {friendRequests.map((request) => (
               <li key={request._id}>
                 <p> {request.senderName}</p>
-                <p> {request.status}</p>
-                <button onClick={() => handleResponse(request._id, "accepted")}>
+                <button
+                  onClick={() => handleResponse(request._id, "accepted ✅️")}
+                >
                   Accept
                 </button>
-                <button onClick={() => handleResponse(request._id, "rejected")}>
+                <button
+                  onClick={() => handleResponse(request._id, "rejected ❌️")}
+                >
                   Reject
                 </button>
               </li>

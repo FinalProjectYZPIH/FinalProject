@@ -11,6 +11,7 @@ import { Link, useNavigate } from "react-router-dom";
 import ReactSwitch from "react-switch";
 import { Button } from "@mui/material";
 import FriendRequests from "../components/FriendRequests";
+import SearchFriends from "./SearchFriends";
 import DropdownColor from "./ui/DropdownColor";
 import { is } from "date-fns/locale";
 
@@ -57,6 +58,7 @@ export default function Navigation() {
 
   const handleLogout = async (e) => {
     e.preventDefault();
+
     setLogout();
     clearCookies.mutate();
     resetProfile();
@@ -121,27 +123,31 @@ export default function Navigation() {
             alt="Profile"
           />
         </div>
-        <p className={`w-8${lightMode ? "text-white" : `${color}`}`}>{username}</p>
+        
+          <p className={`${lightMode ? "text-white" : `${color}`}`}>
+            {username}
+          </p>
 
-        <div className="h-8 w-12">
-          <Button
-            onClick={() => {
-              setFriendsRequestsList(!friendsRequestsList);
-            }}
-          >
-            <UserPlus2 size={26} className={`${color} border-0`} />
-          </Button>
-          {friendsRequestsList === true && <FriendRequests userId={userIdDB} />}
-        </div>
-        <DropdownColor />
-        <ReactSwitch
-          onChange={setDarkMode}
-          checked={lightMode}
-          offColor={"#22d3ee"}
-          onColor={"#22d3ee"}
-          checkedIcon={<CloudMoon />}
-          uncheckedIcon={<Sun />}
-        />
+          <div className="h-8">
+            <Button
+              onClick={() => {
+                setFriendsRequestsList(!friendsRequestsList);
+              }}
+            >
+              <UserPlus2 size={26} className={`${color} border-0`} />
+            </Button>
+            {friendsRequestsList === true && <FriendRequests />}
+          </div>
+          <DropdownColor />
+          <ReactSwitch
+            onChange={setDarkMode}
+            checked={lightMode}
+            offColor={"#22d3ee"}
+            onColor={"#22d3ee"}
+            checkedIcon={<CloudMoon />}
+            uncheckedIcon={<Sun />}
+          />
+        
       </div>
     </div>
   );

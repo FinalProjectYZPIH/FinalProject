@@ -3,6 +3,7 @@ import { getTime } from "date-fns";
 import { useSocketProvider } from "../context/data/SocketProvider";
 import { useColorStore, useProfileStore } from "../context/data/dataStore";
 import { useNavigate, useParams } from "react-router-dom";
+
 import { useDarkLightMode } from "../context/data/dataStore.jsx";
 import ScrollToBottom from "react-scroll-to-bottom";
 import { ColorButton } from "./ui/Buttons";
@@ -38,6 +39,7 @@ function GroupChat() {
     time: getTime(new Date()),
   });
   const [messageList, setMessageList] = useState([]);
+
   const [currentMember, setCurrentMember] = useState([]);
 
   console.log(chatRooms);
@@ -137,7 +139,7 @@ function GroupChat() {
             })}
           </ScrollToBottom>
         </div>
-        <div className="chat-footer flex fixed bottom-2 left-0">
+        <div className={`chat-footer flex fixed bottom-2 left-0 ml-5`}>
           <form>
             <label className="flex">message</label>
             <input

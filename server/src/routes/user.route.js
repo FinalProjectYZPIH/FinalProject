@@ -9,6 +9,7 @@ const router = express.Router();
 
 router
   .post("/createUser", UserController.createUser)
+  .get("/search",UserController.searchForUser)
   .use(verifyMember)
   .get("/getProfile", UserController.getProfile)
   .patch("/updateUserpassword", UserController.updateUserpasswordById)
@@ -20,7 +21,7 @@ router
   // .get("/:username", UserController.findFriend)
 
   // .get("/:username", UserController.findOneUser)
-  .get("/search",UserController.searchForUser)
+  
 
   // .delete("/deleteAllUsers", UserController.deleteAllUsers);
 

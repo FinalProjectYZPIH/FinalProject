@@ -50,10 +50,12 @@ export default function ChatDashboard() {
           type: "group",
         },
         roomname
-      );
+      ); 
       console.log("createRoom>>", roomData);
+
       socket.emit("joinRoom", roomData, username);
       setChatRooms(roomData);
+
     }
     setShowChat(true);
   };

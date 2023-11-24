@@ -18,10 +18,11 @@ export default function RootLayout() {
     useProfileStore();
 
   const { isOnline, userId, role, username, email, userIdDB, chatRooms } =
-    useProfileStore((state) => state.defaultProfile);
+  useProfileStore((state) => state.defaultProfile);
   console.log(userId, role, username, email, userIdDB);
   const { data: userData, isSuccess, isError } = profileRequest("Yan");
 
+  
   if (isSuccess) {
     setProfile({
       userIdDB: userData?.data?._id,

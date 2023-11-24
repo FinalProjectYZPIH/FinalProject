@@ -16,14 +16,17 @@ export const getFriendRequestsForUser = async (req, res) => {
   }
 };
 
-export const createFriendRequest = async (req, res) => {
+
+export const createFriendRequest = async (req, res, next) => {
   try {
     const {recipientId } = req.body;
-    const { accessJwt } = req?.cookies;
+    const { accessJwt } = req.cookies;
+   
   if (!accessJwt) {
     res.status(400);
     return next("Access token not found in cookies");
   }
+
   const { decoded, valid } = verifyJwt(accessJwt, process.env.ACCESS_TOKEN);
 
     // Check if the request already exists
