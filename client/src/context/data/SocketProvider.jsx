@@ -12,12 +12,13 @@ export function useSocketProvider() {
 
 export default function SocketProvider({ children }) {
   // benutze useSocketIo in libs ordner
-  const { isOnline, userId, role, username, email } = useProfileStore(
+
+  const {  userId,  username, } = useProfileStore(
     (state) => state.defaultProfile
   );
   console.log(userId);
 
-  
+    const [contact, setContact] = useState([]);
 
   const { socket, sendMessage, createRoom } = useSocketIo(username);
 
@@ -27,6 +28,8 @@ export default function SocketProvider({ children }) {
         socket,
         sendMessage,
         createRoom,
+        contact,
+        setContact
       }}
     >
       {children}

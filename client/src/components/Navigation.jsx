@@ -5,15 +5,13 @@ import {
   useProfileStore,
   useColorStore,
 } from "../context/data/dataStore";
-
 import { logoutRequest } from "../context/api/auth";
 import { AlignJustify, CloudMoon, Sun, User, UserPlus2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import ReactSwitch from "react-switch";
 import { Button } from "@mui/material";
 import FriendRequests from "../components/FriendRequests";
-import Search from "./Search";
-import { ColorTheme } from "./ui/ColorTheme";
+import SearchFriends from "./SearchFriends";
 import DropdownColor from "./ui/DropdownColor";
 import { is } from "date-fns/locale";
 
@@ -31,8 +29,7 @@ export default function Navigation() {
   );
 
   const { lightMode, setDarkMode } = useDarkLightMode();
-  const { color } =
-    useColorStore();
+  const { color } = useColorStore();
 
   const { isOnline, notifications, avatar, settings, chatRooms, contacts } =
     useProfileStore((state) => state.defaultProfile);
@@ -61,10 +58,11 @@ export default function Navigation() {
 
   const handleLogout = async (e) => {
     e.preventDefault();
+
     setLogout();
     clearCookies.mutate();
     resetProfile();
-    
+
     // if (isOnline === false) {
     //   clearCookies.mutate();
     //   setLogout();
@@ -93,7 +91,7 @@ export default function Navigation() {
           {PageNav.map((navObj) =>
             !navObj.isMember || isOnline ? (
               <div
-                className={`flex items-center justify-center bg-transparent hover:border-y-teal-400 hover:bg-cyan-400 hover:text-white hover:bg-opacity-1 hover:border-transparent w-20 rounded-lg mx-0.5 sm:mb-5 md:mb-0 ${color} border-0`}
+                className={`flex items-center justify-center bg-transparent hover:text-cyan-400 hover: w-20 rounded-lg mx-0.5 sm:mb-5 md:mb-0 ${color} border-0`}
                 key={navObj.path}
               >
                 <Link to={navObj.path}>{navObj.name}</Link>
@@ -101,73 +99,44 @@ export default function Navigation() {
             ) : null
           )}
           <div
-            className={`flex items-center justify-center bg-transparent hover:border-y-teal-400 hover:bg-cyan-400 hover:text-white hover:bg-opacity-1 hover:border-transparent w-20 rounded-lg mx-0.5 ${color} border-0`}
+            className={`flex items-center justify-center bg-transparent hover:text-cyan-400 hover:bg-opacity-1 hover:border-transparent w-20 rounded-lg mx-0.5 ${color} border-0`}
           >
             <button onClick={handleLogout}>Logout</button>
           </div>
         </div>
       </div>
-      <div className="fixed right-1 flex items-center">
-        {/* <div className="w-52">
-          <form>
-            <input
-              className="sm:hidden lg:flex w-32 focus:w-52 h-8 pl-4 pr-8 text-gray-900 rounded-full border border-cyan-400 outline-cyan-400"
-              id="search"
-              type="search"
-              placeholder="Search..."
-            />
-          </form>
-        </div> */}
-        <div className="w-9">
+      <div className="lg:w-[70%] sm:w-[60%] fixed right-2 flex justify-between items-center">
+          <p className={`w-8 text-bold ${lightMode ? `text-${color} border-0 text-lg` : `${color} border-0 text-lg`}`}>{username?.slice(0,5)}...</p>
+        <div className="flex justify-between w-9">
           <img
             className={`${color} w-8 h-8 rounded-full`}
             src={UserNav.avatar}
             alt="Profile"
           />
         </div>
+        
 
-        <div className="h-8 w-12">
-          <Button
-            onClick={() => {
-              setFriendsRequestsList(!friendsRequestsList);
-            }}
-          >
-            <UserPlus2 size={26} className={`${color} border-0`} />
-          </Button>
-          {friendsRequestsList === true && <FriendRequests userId={userIdDB} />}
-        </div>
 
-        <DropdownColor />
-        <ReactSwitch
-          onChange={setDarkMode}
-          checked={lightMode}
-          offColor={"#22d3ee"}
-          onColor={"#22d3ee"}
-          checkedIcon={<CloudMoon />}
-          uncheckedIcon={<Sun />}
-        />
-          <p className={`${lightMode ? "text-white" : `${color}`}`}>{username}</p>
-
-        <div className="h-8 w-12">
-          <Button
-            onClick={() => {
-              setFriendsRequestsList(!friendsRequestsList);
-            }}
-          >
-            <UserPlus2 color="#22d3ee" />
-            
-          </Button>
-          {friendsRequestsList === true && <FriendRequests userId={userIdDB} />}
-        </div>
-        <DropdownColor />
-        <ReactSwitch
-          onChange={setDarkMode}
-          checked={lightMode}
-          offColor={"#22d3ee"}
-          onColor={"#22d3ee"}
-          checkedIcon={<CloudMoon />}
-          uncheckedIcon={<Sun />}
-        />
+          <div className="h-8">
+            <Button
+              onClick={() => {
+                setFriendsRequestsList(!friendsRequestsList);
+              }}
+            >
+              <UserPlus2 size={26} className={`${color} border-0`} />
+            </Button>
+            {friendsRequestsList === true && <FriendRequests />}
+          </div>
+          <DropdownColor />
+          <ReactSwitch
+            onChange={setDarkMode}
+            checked={lightMode}
+            offColor={"#22d3ee"}
+            onColor={"#22d3ee"}
+            checkedIcon={<CloudMoon />}
+            uncheckedIcon={<Sun />}
+          />
+        
       </div>
     </div>
   );

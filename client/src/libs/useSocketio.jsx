@@ -92,12 +92,14 @@ const useSocketIo = (
           
           const updateExistingRoom = {...existingRoom, participants: [...existingRoom.participants,...attachParticipants]}
 
+
           console.log("updateRoom", updateExistingRoom)
           socket.emit("updateRoom", roomName, updateExistingRoom);
           return updateExistingRoom;
         }
 
         console.log(roomData, "useSocketio >createRoom >> something is wrong");
+
       }
 
       if (socket && type === "single" && userId) {
@@ -121,6 +123,7 @@ const useSocketIo = (
     roomName,
     option = undefined
   ) => {
+
     if (!socket) {
       return null, console.log("socket is not connected");
     }
@@ -149,6 +152,7 @@ const useSocketIo = (
 
       return messageData;
     }
+
   };
   return { socket, createRoom, sendMessage };
 };
