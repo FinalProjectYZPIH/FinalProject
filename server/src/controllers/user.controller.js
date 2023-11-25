@@ -313,3 +313,21 @@ export const searchForUser = async (req, res) => {
     res.status(500).json({ error: "Server Error" }); // Respond with an error message
   }
 };
+
+export const getUser =  async (req, res) => {
+  try {
+    const userId = req.query.userId;
+    console.log("userId",userId)
+    const user = await UserModel.findById(userId);
+    console.log("user",user)
+
+    if (user) {
+      res.json({ name: user.username, online:user.isOnline });
+    } else {
+      res.status(404).json({ error: 'Sender not found' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};

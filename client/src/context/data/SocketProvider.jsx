@@ -17,7 +17,7 @@ export default function SocketProvider({ children }) {
   );
   console.log(userId);
 
-  
+  const [contact, setContact] = useState([])
 
   const { socket, sendMessage, createRoom } = useSocketIo(username);
 
@@ -27,6 +27,8 @@ export default function SocketProvider({ children }) {
         socket,
         sendMessage,
         createRoom,
+        contact,
+        setContact
       }}
     >
       {children}

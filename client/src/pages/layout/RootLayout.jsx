@@ -13,13 +13,15 @@ import { profileRequest } from "../../context/api/auth";
 
 import toast from "react-hot-toast";
 import { ColorToast } from "../../components/ui/Toasts";
+import { useSocketProvider } from "../../context/data/SocketProvider";
 
 
 export default function RootLayout() {
   // const { isOnline } = useProfileStore((state) => state.defaultProfile);
   // console.log(isOnline);
-  const { setProfile,setContacts } =
+  const { setProfile } =
   useProfileStore();
+  const {setContact} = useSocketProvider();
   
   const { isOnline, userId, role, username, email, userIdDB, chatRooms } =
   useProfileStore((state) => state.defaultProfile);
@@ -37,7 +39,7 @@ export default function RootLayout() {
       avatar: userData?.data.avatarImage,
       
     });
-    // setContacts(userData?.data?.friends)
+   setContact(userData?.data?.friends)
   }
   
   // console.log(userData?.data?.friends)
