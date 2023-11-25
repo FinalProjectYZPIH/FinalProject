@@ -102,7 +102,6 @@ app.use(passport.initialize());
 socketInitiation();
 
 // Friendrequest route
-app.use("api/friendRequests", friendRequestRoute);
 
 // Chat erstellen route
 // app.use("chat", chatRoute);
@@ -125,9 +124,10 @@ app.use(deserializeUser) || app.use(passport.session());
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
 app.use("/api/test", messengerTestRoute);
+app.use("/api/friendRequests", friendRequestRoute);
 // app.use("/dbUpload", fileRoute)
 
-app.use(errorHandler);
+// app.use(errorHandler);
 
 // Bei der einmalige connection mit Datenbank wird app.listen erst aufgerufen
 mongoose.connection.once("open", () => {

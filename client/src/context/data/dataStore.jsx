@@ -66,49 +66,49 @@ export const useProfileStore = create(
           notifications: 0, //[chatroom].reduce((startvalue,f) => startvalue + f.length   ,0)
           contacts: [
             // {socketId, username, Online},
-            {
-              socketId: "add",
-              username: "Yan",
-              Online: true,
-              avatar:
-                "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
-              notifications: 0,
-            },
-            {
-              socketId: "add",
-              username: "Pawel",
-              Online: false,
-              avatar: "",
-              notifications: 0,
-            },
-            {
-              socketId: "add",
-              username: "Imad",
-              Online: true,
-              avatar: "",
-              notifications: 0,
-            },
-            {
-              socketId: "add",
-              username: "Zoe",
-              Online: true,
-              avatar: "",
-              notifications: 0,
-            },
-            {
-              socketId: "add",
-              username: "Berat",
-              Online: true,
-              avatar: "",
-              notifications: 0,
-            },
-            {
-              socketId: "add",
-              username: "Quan",
-              Online: false,
-              avatar: "",
-              notifications: 0,
-            },
+            // {
+            //   socketId: "add",
+            //   username: "Yan",
+            //   Online: true,
+            //   avatar:
+            //     "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+            //   notifications: 0,
+            // },
+            // {
+            //   socketId: "add",
+            //   username: "Pawel",
+            //   Online: false,
+            //   avatar: "",
+            //   notifications: 0,
+            // },
+            // {
+            //   socketId: "add",
+            //   username: "Imad",
+            //   Online: true,
+            //   avatar: "",
+            //   notifications: 0,
+            // },
+            // {
+            //   socketId: "add",
+            //   username: "Zoe",
+            //   Online: true,
+            //   avatar: "",
+            //   notifications: 0,
+            // },
+            // {
+            //   socketId: "add",
+            //   username: "Berat",
+            //   Online: true,
+            //   avatar: "",
+            //   notifications: 0,
+            // },
+            // {
+            //   socketId: "add",
+            //   username: "Quan",
+            //   Online: false,
+            //   avatar: "",
+            //   notifications: 0,
+            // },
             //friends
           ],
           chatRooms: [
@@ -122,8 +122,10 @@ export const useProfileStore = create(
             // },
             // {
             //   type: "group",
+
             //   chatName: "FirstRoom",
             //   chatAdmin: "Test",
+
             //   chatMessages: [
             //     {
             //         sender: "",
@@ -142,13 +144,7 @@ export const useProfileStore = create(
             //   participants: ["userid", "user2", "user3"],
             //   comments: [],
             // },
-            //   {
-            //   singleroom: {
-            //     chatMessages: [{ content: "Guten Tag!", likes: 5, emojis: [] }],
-            //     participants: ["Pawel", "Zoe"],
-            //     comments: [{ content: "sample coments", likes: 5, emojis: [] }],
-            //   },
-            // },
+
           ],
           settings: {},
         },
@@ -197,6 +193,7 @@ export const useProfileStore = create(
           set((state) => {
             return produce(state, (draftState) => {
               // Überprüfen, ob es ein Zimmer mit dem gleichen chatName gibt
+
               const existingRoomIndex =
                 draftState.defaultProfile.chatRooms.findIndex(
                   (room) => room?.chatName === newChatRoom?.chatName
@@ -216,12 +213,13 @@ export const useProfileStore = create(
           }),
         deleteChatRooms: (roomName) => set((state) => {
           return produce(state, (draftState) => {
+            console.log("draftState", draftState.defaultProfile.chatRooms)
             draftState.defaultProfile.chatRooms = draftState.defaultProfile.chatRooms.filter((room) => room?.chatName !== roomName);
           })
         }),
         setContacts: (contacts) =>
           set((state) => {
-            state.defaultProfile.contacts.push(contacts);
+            state.defaultProfile.contacts.push(...contacts);
           }),
         setConfigs: ({ configs }) =>
           set((state) => {
