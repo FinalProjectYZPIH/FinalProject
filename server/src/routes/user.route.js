@@ -10,12 +10,12 @@ const router = express.Router();
 router
   .post("/createUser", UserController.createUser)
   .get("/search",UserController.searchForUser)
+  .get("/getUser",UserController.getUser)
   .use(verifyMember)
   .get("/getProfile", UserController.getProfile)
   .patch("/updateUserpassword", UserController.updateUserpasswordById)
   .delete("/deleteAccount", UserController.deleteAccount)
   .get("/", UserController.findAllUsers)
-
   // .get("/addFriend", UserController.addFriend)
   // .get("/socketUpdate", UserController.updateSocketid)
   // .get("/:username", UserController.findFriend)

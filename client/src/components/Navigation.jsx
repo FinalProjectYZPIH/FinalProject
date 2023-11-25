@@ -106,7 +106,7 @@ export default function Navigation() {
         </div>
       </div>
       <div className="lg:w-[70%] sm:w-[60%] fixed right-2 flex justify-between items-center">
-          <p className={`w-8 text-bold ${lightMode ? `text-${color} border-0 text-lg` : `${color} border-0 text-lg`}`}>{username.slice(0,5)}...</p>
+          <p className={`w-8 text-bold ${lightMode ? `text-${color} border-0 text-lg` : `${color} border-0 text-lg`}`}>{username?.slice(0,5)}...</p>
         <div className="flex justify-between w-9">
           <img
             className={`${color} w-8 h-8 rounded-full`}
