@@ -10,20 +10,15 @@ import { Inputs, InputPW } from "./ui/Inputs.jsx";
 import { useDarkLightMode } from "../context/data/dataStore.jsx";
 
 //api
-import { loginRequest,  } from "../context/api/auth.jsx";
+import { loginRequest } from "../context/api/auth.jsx";
 
 //context
 import { useProfileStore } from "../context/data/dataStore.jsx";
 
-
-
-
-
-
 export const LoginComponent = () => {
   const [input, setInput] = useSearchParams({ i: "" });
-  const inputParam = input.get("i");  
-  
+  const inputParam = input.get("i");
+
   const { setLogin } = useProfileStore(); //benutze die globale variable um login und userobjekte einzusetzen und um zuverteilen
   const { isOnline } = useProfileStore((state) => state.defaultProfile);
   const navigate = useNavigate();
@@ -36,8 +31,6 @@ export const LoginComponent = () => {
     setLogin();
     navigate("/chat", { replace: true });
   }
-
-  
 
   const { lightMode, setDarkMode } = useDarkLightMode();
 
@@ -53,9 +46,11 @@ export const LoginComponent = () => {
 
   const google = () => {
     window.open("http://localhost:3000/auth/google", "_self");
+    setLogin();
   };
   const facebook = () => {
     window.open("http://localhost:3000/auth/facebook", "_self");
+    setLogin();
   };
 
   const inputProps = {
@@ -65,7 +60,7 @@ export const LoginComponent = () => {
   };
   return (
     <div
-      className={`font-orbitron grid grid-cols-1 lg:grid-cols-2  w-screen h-screen sm:bg-cover sm:bg-center bg-no-repeat lg:bg-contain lg:bg-right ${
+      className={`font-orbitron grid grid-cols-1 lg:grid-cols-2 w-screen h-screen sm:bg-cover sm:bg-center bg-no-repeat lg:bg-contain lg:bg-right ${
         lightMode ? "dark" : "light"
       }`}
     >
@@ -106,7 +101,7 @@ export const LoginComponent = () => {
               <div>
                 <div>
                   <input type="checkbox" name="checkbox" id="checkbox" />
-                  <label htmlFor="checkbox" className=" text-center">
+                  <label htmlFor="checkbox" className=" pl-2 text-center">
                     Remember Me
                   </label>
                   <Link to="/ResetPassword">

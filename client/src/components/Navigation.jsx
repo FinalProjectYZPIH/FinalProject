@@ -11,6 +11,7 @@ import { Link, useNavigate } from "react-router-dom";
 import ReactSwitch from "react-switch";
 import { Button } from "@mui/material";
 import FriendRequests from "../components/FriendRequests";
+import SearchFriends from "./SearchFriends";
 import DropdownColor from "./ui/DropdownColor";
 import { is } from "date-fns/locale";
 
@@ -57,6 +58,7 @@ export default function Navigation() {
 
   const handleLogout = async (e) => {
     e.preventDefault();
+
     setLogout();
     clearCookies.mutate();
     resetProfile();
@@ -103,7 +105,8 @@ export default function Navigation() {
           </div>
         </div>
       </div>
-      <div className="lg:w-[40%] sm:w-[60%] fixed right-1 flex justify-between items-center">
+      <div className="lg:w-[70%] sm:w-[60%] fixed right-2 flex justify-between items-center">
+          <p className={`w-8 text-bold ${lightMode ? "text-white border-0 text-lg" : `${color} border-0 text-lg`}`}>{username.slice(0,5)}...</p>
         <div className="flex justify-between w-9">
           <img
             className={`${color} w-8 h-8 rounded-full`}
@@ -111,27 +114,29 @@ export default function Navigation() {
             alt="Profile"
           />
         </div>
-        <p className={`w-8 text-bold ${lightMode ? "text-white" : `${color}`}`}>{username}</p>
+        
 
-        <div className="h-8 w-12">
-          <Button
-            onClick={() => {
-              setFriendsRequestsList(!friendsRequestsList);
-            }}
-          >
-            <UserPlus2 size={26} className={`${color} border-0`} />
-          </Button>
-          {friendsRequestsList === true && <FriendRequests userId={userIdDB} />}
-        </div>
-        <DropdownColor />
-        <ReactSwitch
-          onChange={setDarkMode}
-          checked={lightMode}
-          offColor={"#22d3ee"}
-          onColor={"#22d3ee"}
-          checkedIcon={<CloudMoon />}
-          uncheckedIcon={<Sun />}
-        />
+
+          <div className="h-8">
+            <Button
+              onClick={() => {
+                setFriendsRequestsList(!friendsRequestsList);
+              }}
+            >
+              <UserPlus2 size={26} className={`${color} border-0`} />
+            </Button>
+            {friendsRequestsList === true && <FriendRequests />}
+          </div>
+          <DropdownColor />
+          <ReactSwitch
+            onChange={setDarkMode}
+            checked={lightMode}
+            offColor={"#22d3ee"}
+            onColor={"#22d3ee"}
+            checkedIcon={<CloudMoon />}
+            uncheckedIcon={<Sun />}
+          />
+        
       </div>
     </div>
   );
