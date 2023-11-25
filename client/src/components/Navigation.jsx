@@ -124,7 +124,7 @@ export default function Navigation() {
           />
         </div>
         
-          <p className={`${lightMode ? "text-white" : `${color}`}`}>
+          <p className={`${color} border-0 text-lg`}>
             {username}
           </p>
 

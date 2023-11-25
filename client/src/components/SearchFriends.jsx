@@ -56,7 +56,7 @@ export default function SearchFriends() {
       <ul>
         {searchResults.map((user) => (
           <li
-            className={`flex items-center flex-col w-44 h-16 ${color} my-1 rounded-lg text-left hover:bg-cyan-400 hover:bg-opacity-50 `}
+            className={`flex items-center flex-col w-44 h-16 ${color} my-1 rounded-lg text-left hover:bg-cyan-400`}
             key={user._id}
           >
             {user.username} {user.displayname}{" "}
