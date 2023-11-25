@@ -122,10 +122,8 @@ export const useProfileStore = create(
             // },
             // {
             //   type: "group",
-
             //   chatName: "FirstRoom",
             //   chatAdmin: "Test",
-
             //   chatMessages: [
             //     {
             //         sender: "",
@@ -144,7 +142,13 @@ export const useProfileStore = create(
             //   participants: ["userid", "user2", "user3"],
             //   comments: [],
             // },
-
+            //   {
+            //   singleroom: {
+            //     chatMessages: [{ content: "Guten Tag!", likes: 5, emojis: [] }],
+            //     participants: ["Pawel", "Zoe"],
+            //     comments: [{ content: "sample coments", likes: 5, emojis: [] }],
+            //   },
+            // },
           ],
           settings: {},
         },
