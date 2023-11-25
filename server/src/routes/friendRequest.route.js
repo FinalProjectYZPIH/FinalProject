@@ -1,17 +1,15 @@
 import express from "express";
 const router = express.Router();
-import {
-  createFriendRequest,
-  getFriendRequestsForUser,
-  getSenderName,
-  respondToFriendRequest,
-} from "../controllers/friendRequest.js";
+import { createFriendRequest, getFriendRequestsForUser, respondToFriendRequest , getSenderName} from '../controllers/friendRequest.js';
 
 // GET: Get friendRequests for specific user using query
 router.get("/", getFriendRequestsForUser);
 
 // GET: Get sender name for specific friend request using query
 router.get("/getSenderName", getSenderName);
+
+// GET: Get sender name for specific friend request using query
+router.get("/getSenderName",getSenderName);
 
 // POST: Create a new friend request
 router.post("/sendRequest", createFriendRequest);
